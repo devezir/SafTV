@@ -2479,8 +2479,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             @Override
             public void run() {
                 String[] endpoints = new String[] {
-                    "https://raw.githubusercontent.com/devezir/SafTV/main/version.json?t=" + System.currentTimeMillis(),
-                    "https://archive.org/download/saftv-android/version.json?t=" + System.currentTimeMillis()
+                    "https://cdn.jsdelivr.net/gh/devezir/SafTV@main/version.json?t=" + System.currentTimeMillis(),
+                    "https://raw.githubusercontent.com/devezir/SafTV/main/version.json?t=" + System.currentTimeMillis()
                 };
 
                 JSONObject json = null;
