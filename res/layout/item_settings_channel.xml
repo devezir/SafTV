@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="38dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:layout_marginBottom="2dp"
+    android:background="@drawable/selector_channel_item">
+
+    <!-- Channel Number Badge -->
+    <TextView
+        android:id="@+id/tv_settings_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="28dp"
+        android:minHeight="28dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:gravity="center"
+        android:background="@drawable/bg_badge"
+        android:textColor="@color/text_white"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:text="1" />
+
+    <!-- Channel Name & Category -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="6dp">
+
+        <TextView
+            android:id="@+id/tv_settings_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="TRT 1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" • "
+            android:textColor="#556677"
+            android:textSize="11sp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp" />
+
+        <TextView
+            android:id="@+id/tv_settings_cat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_gray"
+            android:textSize="11sp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="Ulusal" />
+    </LinearLayout>
+
+    <!-- Active/Passive Status Badge -->
+    <TextView
+        android:id="@+id/tv_settings_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/accent_green"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:background="@drawable/bg_badge"
+        android:text="AKTİF ✓" />
+
+</LinearLayout>
