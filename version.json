@@ -1,8 +1,8 @@
 {
-  "versionCode": 14,
-  "versionName": "2.1.0",
-  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v2.1.0_vc14.apk",
-  "apkName": "SafTV_v2.1.0_vc14.apk",
+  "versionCode": 15,
+  "versionName": "2.2.0",
+  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.2.0/SafTV_v2.2.0_vc15.apk",
+  "apkName": "SafTV_v2.2.0_vc15.apk",
   "history": [
     {
       "versionCode": 1,
@@ -101,6 +101,13 @@
       "apkName": "SafTV_v2.1.0_vc14.apk",
       "date": "2026-11-15",
       "description": "v2.1.0: Yüzdesel Hassas Arayüz Ölçeği (%80 - %150 Skalası), Dinamik Çekmece Genişliği ve Ayar Yedekleme Entegrasyonu."
+    },
+    {
+      "versionCode": 15,
+      "versionName": "2.2.0",
+      "apkName": "SafTV_v2.2.0_vc15.apk",
+      "date": "2026-11-15",
+      "description": "7 Sekmeli Yatay Kayan Ayarlar Menüsü (Kanallar, Kalite, Görünüm, Uyku, Ses Modu, Yedekleme, Hakkında)"
     }
   ]
 }

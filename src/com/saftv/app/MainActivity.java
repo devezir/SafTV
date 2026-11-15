@@ -44,6 +44,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -195,6 +196,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private boolean isSettingsOpen = false;
     private boolean isQuickQualityOpen = false;
     private boolean isTouchDevice = false;
+
+    private HorizontalScrollView hsvSettingsTabs;
+    private Button[] settingsTabBtns;
+    private View[] settingsTabContents;
 
     private int aspectRatioMode = 0; // 0: Stretch, 1: Fit 16:9
     private int videoWidth = 0;
@@ -915,44 +920,51 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             }
         });
 
-        // 4 Sekmeli Ayarlar Paneli (2B)
+        // 7 Sekmeli Yatay Kayan Ayarlar Paneli
+        hsvSettingsTabs = findViewById(R.id.hsv_settings_tabs);
         final Button btnTabChannels = findViewById(R.id.btn_tab_channels);
         final Button btnTabQuality = findViewById(R.id.btn_tab_quality);
+        final Button btnTabScale = findViewById(R.id.btn_tab_scale);
+        final Button btnTabSleep = findViewById(R.id.btn_tab_sleep);
+        final Button btnTabAudio = findViewById(R.id.btn_tab_audio);
         final Button btnTabBackup = findViewById(R.id.btn_tab_backup);
         final Button btnTabAbout = findViewById(R.id.btn_tab_about);
 
         final View contentChannels = findViewById(R.id.tab_content_channels);
         final View contentQuality = findViewById(R.id.tab_content_quality);
+        final View contentScale = findViewById(R.id.tab_content_scale);
+        final View contentSleep = findViewById(R.id.tab_content_sleep);
+        final View contentAudio = findViewById(R.id.tab_content_audio);
         final View contentBackup = findViewById(R.id.tab_content_backup);
         final View contentAbout = findViewById(R.id.tab_content_about);
 
-        final Button[] tabBtns = { btnTabChannels, btnTabQuality, btnTabBackup, btnTabAbout };
-        final View[] tabContents = { contentChannels, contentQuality, contentBackup, contentAbout };
+        settingsTabBtns = new Button[] { btnTabChannels, btnTabQuality, btnTabScale, btnTabSleep, btnTabAudio, btnTabBackup, btnTabAbout };
+        settingsTabContents = new View[] { contentChannels, contentQuality, contentScale, contentSleep, contentAudio, contentBackup, contentAbout };
 
-        View.OnClickListener tabClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int clickedId = v.getId();
-                for (int i = 0; i < tabBtns.length; i++) {
-                    Button b = tabBtns[i];
-                    View c = tabContents[i];
-                    if (b == null || c == null) continue;
-                    if (b.getId() == clickedId) {
-                        c.setVisibility(View.VISIBLE);
-                        b.setTextColor(Color.WHITE);
-                        b.setTypeface(null, Typeface.BOLD);
-                    } else {
-                        c.setVisibility(View.GONE);
-                        b.setTextColor(Color.parseColor("#8b949e"));
-                        b.setTypeface(null, Typeface.NORMAL);
-                    }
-                }
-            }
-        };
-
-        for (Button b : tabBtns) {
+        for (int i = 0; i < settingsTabBtns.length; i++) {
+            final int tabIndex = i;
+            Button b = settingsTabBtns[i];
             if (b != null) {
-                b.setOnClickListener(tabClickListener);
+                b.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        selectSettingsTab(tabIndex);
+                    }
+                });
+                b.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(final View v, boolean hasFocus) {
+                        if (hasFocus && hsvSettingsTabs != null) {
+                            hsvSettingsTabs.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int scrollX = (v.getLeft() - (hsvSettingsTabs.getWidth() / 2)) + (v.getWidth() / 2);
+                                    hsvSettingsTabs.smoothScrollTo(Math.max(0, scrollX), 0);
+                                }
+                            });
+                        }
+                    }
+                });
             }
         }
 
@@ -1715,6 +1727,35 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         surfaceView.requestFocus();
     }
 
+    private void selectSettingsTab(int index) {
+        if (settingsTabBtns == null || settingsTabContents == null) return;
+        if (index < 0 || index >= settingsTabBtns.length) return;
+        for (int i = 0; i < settingsTabBtns.length; i++) {
+            Button b = settingsTabBtns[i];
+            View c = settingsTabContents[i];
+            if (b == null || c == null) continue;
+            if (i == index) {
+                c.setVisibility(View.VISIBLE);
+                b.setTextColor(Color.WHITE);
+                b.setTypeface(null, Typeface.BOLD);
+            } else {
+                c.setVisibility(View.GONE);
+                b.setTextColor(Color.parseColor("#8b949e"));
+                b.setTypeface(null, Typeface.NORMAL);
+            }
+        }
+        final View activeTab = settingsTabBtns[index];
+        if (hsvSettingsTabs != null && activeTab != null) {
+            hsvSettingsTabs.post(new Runnable() {
+                @Override
+                public void run() {
+                    int scrollX = (activeTab.getLeft() - (hsvSettingsTabs.getWidth() / 2)) + (activeTab.getWidth() / 2);
+                    hsvSettingsTabs.smoothScrollTo(Math.max(0, scrollX), 0);
+                }
+            });
+        }
+    }
+
     private void openSettings() {
         isSettingsOpen = true;
         closeDrawer();
@@ -1723,6 +1764,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         layoutOverlay.setVisibility(View.GONE);
         layoutSettings.setVisibility(View.VISIBLE);
         handler.removeCallbacks(hideOsdRunnable);
+        selectSettingsTab(0);
         settingsChannelAdapter.notifyDataSetChanged();
         lvSettingsChannels.requestFocus();
         if (settingsChannelAdapter.getCount() > 0) {

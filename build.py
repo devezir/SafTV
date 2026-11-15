@@ -57,7 +57,7 @@ if "--bump" in sys.argv:
     ver_data["versionCode"] = cur_vc
     ver_data["versionName"] = cur_vn
     ver_data["apkName"] = f"SafTV_v{cur_vn}_vc{cur_vc}.apk"
-    ver_data["apkUrl"] = f"https://archive.org/download/saftv-android/releases/SafTV_v{cur_vn}_vc{cur_vc}.apk"
+    ver_data["apkUrl"] = f"https://github.com/devezir/SafTV/releases/download/v{cur_vn}/SafTV_v{cur_vn}_vc{cur_vc}.apk"
     ver_data["history"].append({
         "versionCode": cur_vc,
         "versionName": cur_vn,
@@ -78,7 +78,7 @@ elif "--set" in sys.argv:
     ver_data["versionCode"] = cur_vc
     ver_data["versionName"] = cur_vn
     ver_data["apkName"] = f"SafTV_v{cur_vn}_vc{cur_vc}.apk"
-    ver_data["apkUrl"] = f"https://archive.org/download/saftv-android/releases/SafTV_v{cur_vn}_vc{cur_vc}.apk"
+    ver_data["apkUrl"] = f"https://github.com/devezir/SafTV/releases/download/v{cur_vn}/SafTV_v{cur_vn}_vc{cur_vc}.apk"
     ver_data["history"].append({
         "versionCode": cur_vc,
         "versionName": cur_vn,

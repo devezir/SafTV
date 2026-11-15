@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/devezir/SafTV/releases/latest"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v2.1.0_(vc_14)-blue?style=for-the-badge&logo=android" alt="Sürüm v2.1.0"></a>
+  <a href="https://github.com/devezir/SafTV/releases/latest"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v2.2.0_(vc_15)-blue?style=for-the-badge&logo=android" alt="Sürüm v2.2.0"></a>
   <a href="#"><img src="https://img.shields.io/badge/Boyut-Sadece_133_KB-brightgreen?style=for-the-badge" alt="Boyut 133 KB"></a>
   <a href="#"><img src="https://img.shields.io/badge/A%C3%A7%C4%B1l%C4%B1%C5%9F-0.1_Saniye-orange?style=for-the-badge" alt="0.1s Açılış Hızı"></a>
   <a href="#"><img src="https://img.shields.io/badge/Reklam-SIFIR_(%250)-red?style=for-the-badge" alt="Sıfır Reklam"></a>
@@ -19,10 +19,10 @@
 
 | Dosya | Boyut | Açıklama | Doğrudan İndir |
 |---|---|---|:---:|
-| 🚀 **Saf TV v2.1.0 (En Son Kararlı)** | **~133 KB** | Güncel, resmi imzalı en son APK | [⬇️ **SafTV_v2.1.0_vc14.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v2.1.0_vc14.apk) |
-| 📱 **SafTV.apk (Sabit Bağlantı)** | **~133 KB** | Daima en son stabil sürümü işaret eder | [⬇️ **SafTV.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV.apk) |
-| 📦 **Tüm 14 Sürümün Arşivi (ZIP)** | **~745 KB** | v1.0.0'dan v2.1.0'a tüm APK'lar tek pakette | [📦 **SafTV_All_Releases_Archive.zip**](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_All_Releases_Archive.zip) |
-| 📊 **Kanal Kataloğu (Excel)** | **~24 KB** | 61 kanalın kategori ve akış tablosu | [📊 **SafTV_Kanal_Listesi.xlsx**](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_Kanal_Listesi.xlsx) |
+| 🚀 **Saf TV v2.2.0 (En Son Kararlı)** | **~133 KB** | Güncel, resmi imzalı en son APK | [⬇️ **SafTV_v2.2.0_vc15.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.2.0/SafTV_v2.2.0_vc15.apk) |
+| 📱 **SafTV.apk (Sabit Bağlantı)** | **~133 KB** | Daima en son stabil sürümü işaret eder | [⬇️ **SafTV.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.2.0/SafTV.apk) |
+| 📦 **Tüm 15 Sürümün Arşivi (ZIP)** | **~817 KB** | v1.0.0'dan v2.2.0'a tüm APK'lar tek pakette | [📦 **SafTV_All_Releases_Archive.zip**](https://github.com/devezir/SafTV/releases/download/v2.2.0/SafTV_All_Releases_Archive.zip) |
+| 📊 **Kanal Kataloğu (Excel)** | **~24 KB** | 61 kanalın kategori ve akış tablosu | [📊 **SafTV_Kanal_Listesi.xlsx**](https://github.com/devezir/SafTV/releases/download/v2.2.0/SafTV_Kanal_Listesi.xlsx) |
 | 📜 **Değişim Günlüğü** | — | Tüm sürümlerin kronolojik teknik detayları | [📜 **DEGISIM_GUNLUGU.md İncele**](DEGISIM_GUNLUGU.md) |
 
 ---
@@ -50,7 +50,19 @@ Piyasadaki popüler televizyon uygulamalarının neredeyse tamamı (İnat Box vb
 
 ## 🚀 Başlıca Özellikler
 
-### 📏 1. Yüzdesel Hassas Arayüz Ölçeği (%80 — %150)
+### 🎛️ 1. 7 Bağımsız Sekmeli Yatay Kayan Ayarlar Menüsü (v2.2.0)
+* Kalabalık tercihler menüsü yerine 7 adet bağımsız, hedefe özel sekme:
+  * `📋 Kanallar`: Kanal aktif/pasif yönetimi, toplu açma/kapama.
+  * `📶 Kalite`: Otomatik, 1080p, 720p, 480p, 360p varsayılan akış kalitesi tercihi.
+  * `📏 Görünüm`: %80 - %150 arayüz ve yazı ölçekleme.
+  * `🌙 Uyku`: 15-120 dk canlı geri sayımlı uyku zamanlayıcısı.
+  * `🎧 Ses Modu`: Ekran kapalıyken yayını radyo gibi dinleme modu.
+  * `💾 Yedekleme`: JSON formatında ayarları dışa ve içe aktarma.
+  * `ℹ️ Hakkında`: Sürüm durumu ve doğrudan güncelleme denetimi.
+* **Akıllı Yatay Kaydırma & Kenar Yumuşatma:** Menünün sağ kenarındaki 28dp'lik gölge geçişi (fading edge) ile kaydırma sezgisel olarak hissedilir.
+* **TV Kumandası D-Pad Otomatik Ortalama:** Kumandayla sağa/sola odaklandığınız sekme anında ekranın tam ortasına pürüzsüzce hizalanır.
+
+### 📏 2. Yüzdesel Hassas Arayüz Ölçeği (%80 — %150)
 * Android TV, Google TV, TV Box, Tablet ve Telefonlar için IPTV & TiviMate endüstri standardı ölçekleme mimarisi:
   * `[● Otomatik]`: Cihazı akıllıca tespit eder (Televizyonda %130, Mobilde %100).
   * `[%80 (Ultra Kompakt)]`: Tek ekranda 12'den fazla kanal listelemek isteyenlere.

@@ -767,9 +767,12 @@
                 android:layout_marginRight="6dp" />
 
             <HorizontalScrollView
+                android:id="@+id/hsv_settings_tabs"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:requiresFadingEdge="horizontal"
+                android:fadingEdgeLength="28dp"
                 android:scrollbars="none">
 
                 <LinearLayout
@@ -795,7 +798,43 @@
                         android:id="@+id/btn_tab_quality"
                         android:layout_width="wrap_content"
                         android:layout_height="34dp"
-                        android:text="⚙️ Tercihler"
+                        android:text="📶 Kalite"
+                        android:textSize="11sp"
+                        android:textColor="@color/text_gray"
+                        android:background="@drawable/selector_chip"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:layout_marginRight="6dp" />
+
+                    <Button
+                        android:id="@+id/btn_tab_scale"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:text="📏 Görünüm"
+                        android:textSize="11sp"
+                        android:textColor="@color/text_gray"
+                        android:background="@drawable/selector_chip"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:layout_marginRight="6dp" />
+
+                    <Button
+                        android:id="@+id/btn_tab_sleep"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:text="🌙 Uyku"
+                        android:textSize="11sp"
+                        android:textColor="@color/text_gray"
+                        android:background="@drawable/selector_chip"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:layout_marginRight="6dp" />
+
+                    <Button
+                        android:id="@+id/btn_tab_audio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:text="🎧 Ses Modu"
                         android:textSize="11sp"
                         android:textColor="@color/text_gray"
                         android:background="@drawable/selector_chip"
@@ -905,7 +944,7 @@
                 android:fadingEdgeLength="14dp" />
         </LinearLayout>
 
-        <!-- Tab 2: KALİTE (Default Gone, ScrollView - Option R1) -->
+        <!-- Tab 2: YAYIN KALİTESİ (Default Gone, ScrollView) -->
         <ScrollView
             android:id="@+id/tab_content_quality"
             android:layout_width="match_parent"
@@ -986,16 +1025,24 @@
                     android:textSize="12sp"
                     android:textColor="@color/text_white"
                     android:background="@drawable/selector_chip" />
+            </LinearLayout>
+        </ScrollView>
 
-                <!-- Divider -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#23354D"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginBottom="12dp" />
+        <!-- Tab 3: GÖRÜNÜM & ARAYÜZ ÖLÇEĞİ (Default Gone, ScrollView) -->
+        <ScrollView
+            android:id="@+id/tab_content_scale"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:visibility="gone">
 
-                <!-- SECTION 2: ARAYÜZ ÖLÇEĞİ (%80 — %150) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="4dp"
+                android:paddingBottom="8dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1126,16 +1173,24 @@
                         android:textColor="@color/text_white"
                         android:background="@drawable/selector_chip" />
                 </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
 
-                <!-- Divider -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#23354D"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginBottom="12dp" />
+        <!-- Tab 4: UYKU ZAMANLAYICISI (Default Gone, ScrollView) -->
+        <ScrollView
+            android:id="@+id/tab_content_sleep"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:visibility="gone">
 
-                <!-- SECTION 3: UYKU ZAMANLAYICISI (SLEEP TIMER) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="4dp"
+                android:paddingBottom="8dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1247,16 +1302,24 @@
                         android:textColor="@color/text_white"
                         android:background="@drawable/selector_chip" />
                 </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
 
-                <!-- Divider -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#23354D"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginBottom="12dp" />
+        <!-- Tab 5: ARKA PLANDA SES MODU (Default Gone, ScrollView) -->
+        <ScrollView
+            android:id="@+id/tab_content_audio"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:visibility="gone">
 
-                <!-- SECTION 4: ARKA PLANDA SES (EKRAN KAPALIYKEN DİNLE) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="4dp"
+                android:paddingBottom="8dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

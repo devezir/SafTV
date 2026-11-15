@@ -10,6 +10,7 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 
 | Sürüm | Sürüm Kodu (versionCode) | Yayın Tarihi | APK Boyutu | Doğrudan APK İndir | Başlıca Yenilikler ve Odak Noktası |
 |:---:|:---:|:---:|:---:|:---:|---|
+| **v2.2.0** | 15 | 15.11.2026 | ~133.4 KB | [⬇️ **SafTV_v2.2.0_vc15.apk**](https://github.com/devezir/SafTV/releases/download/v2.2.0/SafTV_v2.2.0_vc15.apk) | 🎛️ **7 Bağımsız Sekmeli Yatay Kayan Ayarlar Menüsü:** Kalabalık tercihler menüsü 7 bağımsız sekmeye ayrıldı (📋 Kanallar, 📶 Kalite, 📏 Görünüm, 🌙 Uyku, 🎧 Ses Modu, 💾 Yedekleme, ℹ️ Hakkında). Kenar gölge geçişi (Fading Edge), TV kumandası D-Pad otomatik ortalama ve dokunmatik kaydırma. |
 | **v2.1.0** | 14 | 15.11.2026 | ~133.4 KB | [⬇️ **SafTV_v2.1.0_vc14.apk**](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v2.1.0_vc14.apk) | 📏 **Yüzdesel Hassas Arayüz Ölçeği (%80 - %150):** 7 kademeli akıllı ölçekleme, dinamik çekmece genişliği, GitHub tabanlı 0 saniye OTA güncelleme sistemi. |
 | **v2.0.0** | 13 | 15.11.2026 | ~129.4 KB | [⬇️ **SafTV_v2.0.0_vc13.apk**](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v2.0.0_vc13.apk) | 🚀 **Büyük Kilometre Taşı:** 📱 Resim İçinde Resim (PiP - Yüzen Pencere), 🌙 Akıllı Uyku Zamanlayıcısı, 🎧 Ekran Kapalı Dinleme Modu (Arka Planda Ses). |
 | **v1.9.0** | 12 | 15.11.2026 | ~117.4 KB | [⬇️ **SafTV_v1.9.0_vc12.apk**](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v1.9.0_vc12.apk) | 🚪 **Güvenli Çıkış:** Kazara kapanmayı önleyen çıkış onay penceresi, ⏸️ Canlı yayını duraklatma/oynatma, 📐 Başlıksız 7+ kanallı sol çekmece menüsü. |
@@ -28,6 +29,23 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 ---
 
 ## 🔍 Detaylı Sürüm Notları
+
+### 🎛️ v2.2.0 (versionCode: 15) — 15 Kasım 2026
+* **7 Bağımsız Sekmeli Yatay Kayan Ayarlar Menüsü:**
+  * Eski "Tercihler" sekmesi altında sıkışan tüm bağımsız ayarlar kendi özel sekmelerine ayrıldı:
+    1. `📋 Kanallar`: Aktif/pasif kanal yönetimi ve toplu açma/kapama butonları.
+    2. `📶 Kalite`: Otomatik, 1080p, 720p, 480p ve 360p varsayılan akış kalitesi tercihi.
+    3. `📏 Görünüm`: %80 - %150 arası hassas 7 kademeli arayüz ve yazı boyutu ölçekleme.
+    4. `🌙 Uyku`: 15, 30, 60, 90, 120 dakikalık geri sayımlı akıllı uyku zamanlayıcısı.
+    5. `🎧 Ses Modu`: Ekran kapalıyken yayının sesini kesintisiz dinleme modu (pil tasarruflu).
+    6. `💾 Yedekleme`: Kanalları, favorileri ve görünüm tercihlerini dışa/içe aktarma.
+    7. `ℹ️ Hakkında`: Sürüm bilgisi, doğrudan güncelleme denetleme ve GitHub bağlantısı.
+* **Akıllı Yatay Kaydırma ve Otomatik Ortalama (HorizontalScrollView):**
+  * **Kenar Yumuşatma (Fading Edge):** Sekmelerin sağ kenarında 28dp'lik şeffaflık/gölge geçişi uygulanarak kullanıcının menünün yatayda kaydığını ilk bakışta sezgisel olarak anlaması sağlandı.
+  * **TV Kumandası D-Pad Otomatik Ortalama:** Kumandanın sağ/sol tuşlarıyla sekmeler arasında gezinirken veya tıklandığında, odaklanan sekme akıcı bir animasyonla ekranın tam merkezine otomatik hizalanır.
+  * **Dokunmatik Kaydırma:** Telefon ve tabletlerde parmakla sağa-sola son derece akıcı ve takılmasız kaydırma desteği.
+
+---
 
 ### 📏 v2.1.0 (versionCode: 14) — 15 Kasım 2026
 * **Hassas Yüzdesel Arayüz Ölçeği (%80 — %150 Skalası):**
