@@ -1,0 +1,106 @@
+{
+  "versionCode": 14,
+  "versionName": "2.1.0",
+  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v2.1.0_vc14.apk",
+  "apkName": "SafTV_v2.1.0_vc14.apk",
+  "history": [
+    {
+      "versionCode": 1,
+      "versionName": "1.0.0",
+      "apkName": "SafTV_v1.0.0_vc1.apk",
+      "date": "2026-11-14",
+      "description": "İlk sürüm: 23 ulusal kanal, ultra hafif (54 KB) yerel mimari."
+    },
+    {
+      "versionCode": 2,
+      "versionName": "1.1.0",
+      "apkName": "SafTV_v1.1.0_vc2.apk",
+      "date": "2026-11-14",
+      "description": "51 TV Kanalı, OSD Dijital Saat ve Genişletilmiş Kategori Desteği"
+    },
+    {
+      "versionCode": 3,
+      "versionName": "1.2.0",
+      "apkName": "SafTV_v1.2.0_vc3.apk",
+      "date": "2026-11-14",
+      "description": "Favori Kanallar Desteği (Sarı Tuş / Yıldız) ve Aspect Ratio (Mavi Tuş - Tam Ekran / Fit)"
+    },
+    {
+      "versionCode": 4,
+      "versionName": "1.3.0",
+      "apkName": "SafTV_v1.3.0_vc4.apk",
+      "date": "2026-11-14",
+      "description": "Kanal Yönetimi (Aktif/Pasif Gizleme), Yayın Kalitesi Seçimi (Otomatik, 1080p, 720p, 480p, 360p), Hızlı Kalite Paneli (Yeşil Tuş)"
+    },
+    {
+      "versionCode": 5,
+      "versionName": "1.3.1",
+      "apkName": "SafTV_v1.3.1_vc5.apk",
+      "date": "2026-11-14",
+      "description": "Kanal listesinde OK ile kanal değiştirme düzeltildi, Ayarlar ekranında kanal açma/kapama D-Pad ve görsel iyileştirmeleri yapıldı"
+    },
+    {
+      "versionCode": 6,
+      "versionName": "1.4.0",
+      "apkName": "SafTV_v1.4.0_vc6.apk",
+      "date": "2026-11-14",
+      "description": "Tam Dokunmatik Ekran ve Telefon/Tablet Desteği: Ekran kaydırma jestleri, ◀/▶ butonları, üst dokunmatik bar, OSD tıkla-aç ve Immersive Fullscreen"
+    },
+    {
+      "versionCode": 7,
+      "versionName": "1.4.1",
+      "apkName": "SafTV_v1.4.1_vc7.apk",
+      "date": "2026-11-14",
+      "description": "Stabilite ve Hata Duzeltmeleri: Sonsuz yeniden baglanma sinirlandirildi (max 5 deneme), HlsParser soket sizintisi giderildi, onResume/uykudan donus donmasi cozuldu, cekmece anlik sayim ve aktif kanala scroll eklendi."
+    },
+    {
+      "versionCode": 8,
+      "versionName": "1.5.0",
+      "apkName": "SafTV_v1.5.0_vc8.apk",
+      "date": "2026-11-14",
+      "description": "Kalici saftv-release.jks resmi imzasi, yerel ag/internet kopmasi bildirimi (ConnectivityManager) ve kanal listesinde canli arama/filtreleme cubugu eklendi."
+    },
+    {
+      "versionCode": 9,
+      "versionName": "1.6.0",
+      "apkName": "SafTV_v1.6.0_vc9.apk",
+      "date": "2026-11-15",
+      "description": "10 yeni kanal eklendi (Lalegul TV, Semerkand TV, CNN Turk, DHA Canli, TGRT Belgesel, Nat Geo Wild, Ciftci TV, TRT EBA Ilkokul, Ortaokul, Lise)"
+    },
+    {
+      "versionCode": 10,
+      "versionName": "1.7.0",
+      "apkName": "SafTV_v1.7.0_vc10.apk",
+      "date": "2026-11-15",
+      "description": "v1.7.0: Kompakt 5+ kanal listesi, taşmayan iki satırlı üst bar, tarihli ayar yedekleme ve geri yükleme, hakkında ve güncelleme denetleme"
+    },
+    {
+      "versionCode": 11,
+      "versionName": "1.8.0",
+      "apkName": "SafTV_v1.8.0_vc11.apk",
+      "date": "2026-11-15",
+      "description": "Sekmeli Ayarlar Paneli (Kanallar, Kalite, Yedekleme, Hakkinda), Tumunu Devre Disi Birak butonu ve Yan Yana Esnek Hizalanan Akilli Ust Bar eklendi"
+    },
+    {
+      "versionCode": 12,
+      "versionName": "1.9.0",
+      "apkName": "SafTV_v1.9.0_vc12.apk",
+      "date": "2026-11-15",
+      "description": "v1.9.0: Onaylı Çıkış Diyaloğu (1B), Dokunmatik Yayını Duraklat/Oynat (2A), 7+ Kanallı Başlıksız Sol Menü (K2), Tek Satırlı & Kaydırılabilir Ayarlar Paneli (R1) ve Archive.org Link Butonu"
+    },
+    {
+      "versionCode": 13,
+      "versionName": "2.0.0",
+      "apkName": "SafTV_v2.0.0_vc13.apk",
+      "date": "2026-11-15",
+      "description": "v2.0.0: Resim İçinde Resim (PiP), Uyku Zamanlayıcısı (Sleep Timer), Ekran Kapalı Dinleme Modu (Arka Planda Ses) ve TV / Telefon Hibrit Arayüz Ölçeği (Yazı ve Buton Büyütme)."
+    },
+    {
+      "versionCode": 14,
+      "versionName": "2.1.0",
+      "apkName": "SafTV_v2.1.0_vc14.apk",
+      "date": "2026-11-15",
+      "description": "v2.1.0: Yüzdesel Hassas Arayüz Ölçeği (%80 - %150 Skalası), Dinamik Çekmece Genişliği ve Ayar Yedekleme Entegrasyonu."
+    }
+  ]
+}

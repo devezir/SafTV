@@ -1,0 +1,23 @@
+# Derleme ara çıktıları
+bin/
+gen/
+obj/
+out/
+base.apk
+compiled_res.zip
+__pycache__/
+*.pyc
+
+# Hassas API anahtarları ve şifreler
+archive.org api keys.txt
+keystore/
+*.jks
+*.keystore
+
+# Geçici ve medya dosyaları
+güncelleme sorunu.mp4
+*.mp4
+*.log
+*.tmp
+.idea/
+.vscode/
