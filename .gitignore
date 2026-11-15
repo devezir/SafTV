@@ -15,6 +15,7 @@ keystore/
 *.keystore
 
 # Geçici ve medya dosyaları
+~$*
 güncelleme sorunu.mp4
 *.mp4
 *.log
