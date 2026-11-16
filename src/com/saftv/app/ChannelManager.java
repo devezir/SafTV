@@ -12,10 +12,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,6 +31,7 @@ public class ChannelManager {
     private static final String KEY_DISABLED_CHANNELS = "disabled_channels";
 
     private static final String CHANNELS_FILE_NAME = "channels.json";
+    private static final String CHANNELS_DEFAULT_FILE = "channels_default.json";
     private static final String SEED_ASSET_NAME = "seed_channels.json";
 
     private static ChannelManager instance;
@@ -62,6 +66,7 @@ public class ChannelManager {
             if (loadedFromSeed && !channels.isEmpty()) {
                 // Tohumdan başarıyla yüklendi, artık yerel depolamaya kaydet
                 saveToLocalFile(context);
+                saveToDefaultFile(context);
             }
         }
 
@@ -172,6 +177,7 @@ public class ChannelManager {
         boolean ok = parseJsonChannelArray(jsonContent);
         if (ok) {
             saveToLocalFile(context);
+            saveToDefaultFile(context);
             syncChannelSettings(context);
         }
         return ok;
@@ -221,6 +227,7 @@ public class ChannelManager {
                 channels.clear();
                 channels.addAll(parsed);
                 saveToLocalFile(context);
+                saveToDefaultFile(context);
                 syncChannelSettings(context);
                 return true;
             }
@@ -236,9 +243,190 @@ public class ChannelManager {
             try {
                 File file = new File(context.getFilesDir(), CHANNELS_FILE_NAME);
                 if (file.exists()) file.delete();
+                File defFile = new File(context.getFilesDir(), CHANNELS_DEFAULT_FILE);
+                if (defFile.exists()) defFile.delete();
             } catch (Exception ignored) {}
             setDisabledChannelsSet(new HashSet<String>(), context);
             setFavoritesSet(new HashSet<String>(), context);
+        }
+    }
+
+    public synchronized boolean saveToDefaultFile(Context context) {
+        if (context == null) return false;
+        try {
+            String jsonStr = exportToJson();
+            File file = new File(context.getFilesDir(), CHANNELS_DEFAULT_FILE);
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(jsonStr.getBytes("UTF-8"));
+            fos.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public synchronized boolean moveChannel(int fromPos, int toPos, Context context) {
+        if (fromPos < 0 || fromPos >= channels.size() || toPos < 0 || toPos >= channels.size()) {
+            return false;
+        }
+        if (fromPos == toPos) return true;
+
+        Set<Channel> favChannels = new HashSet<>();
+        Set<Channel> disabledChannels = new HashSet<>();
+        for (Channel c : channels) {
+            if (isFavorite(c.getId(), context)) favChannels.add(c);
+            if (!c.isActive()) disabledChannels.add(c);
+        }
+
+        Channel item = channels.remove(fromPos);
+        channels.add(toPos, item);
+
+        renumberAndSave(favChannels, disabledChannels, context);
+        return true;
+    }
+
+    public synchronized boolean swapChannels(int pos1, int pos2, Context context) {
+        if (pos1 < 0 || pos1 >= channels.size() || pos2 < 0 || pos2 >= channels.size()) {
+            return false;
+        }
+        if (pos1 == pos2) return true;
+
+        Set<Channel> favChannels = new HashSet<>();
+        Set<Channel> disabledChannels = new HashSet<>();
+        for (Channel c : channels) {
+            if (isFavorite(c.getId(), context)) favChannels.add(c);
+            if (!c.isActive()) disabledChannels.add(c);
+        }
+
+        Collections.swap(channels, pos1, pos2);
+
+        renumberAndSave(favChannels, disabledChannels, context);
+        return true;
+    }
+
+    public synchronized void sortAlphabetical(Context context) {
+        if (channels.isEmpty()) return;
+
+        Set<Channel> favChannels = new HashSet<>();
+        Set<Channel> disabledChannels = new HashSet<>();
+        for (Channel c : channels) {
+            if (isFavorite(c.getId(), context)) favChannels.add(c);
+            if (!c.isActive()) disabledChannels.add(c);
+        }
+
+        final Collator collator = Collator.getInstance(new Locale("tr", "TR"));
+        collator.setStrength(Collator.PRIMARY);
+
+        Collections.sort(channels, new Comparator<Channel>() {
+            @Override
+            public int compare(Channel c1, Channel c2) {
+                return collator.compare(c1.getName(), c2.getName());
+            }
+        });
+
+        renumberAndSave(favChannels, disabledChannels, context);
+    }
+
+    public synchronized void sortByCategory(Context context) {
+        if (channels.isEmpty()) return;
+
+        Set<Channel> favChannels = new HashSet<>();
+        Set<Channel> disabledChannels = new HashSet<>();
+        for (Channel c : channels) {
+            if (isFavorite(c.getId(), context)) favChannels.add(c);
+            if (!c.isActive()) disabledChannels.add(c);
+        }
+
+        final Collator collator = Collator.getInstance(new Locale("tr", "TR"));
+        collator.setStrength(Collator.PRIMARY);
+
+        Collections.sort(channels, new Comparator<Channel>() {
+            private int getCategoryPriority(String cat) {
+                if (cat == null) return 99;
+                String c = cat.toLowerCase(new Locale("tr", "TR"));
+                if (c.contains("ulusal")) return 1;
+                if (c.contains("haber")) return 2;
+                if (c.contains("spor")) return 3;
+                if (c.contains("belgesel")) return 4;
+                if (c.contains("çocuk") || c.contains("cocuk")) return 5;
+                if (c.contains("müzik") || c.contains("muzik")) return 6;
+                if (c.contains("kültür") || c.contains("kultur")) return 7;
+                if (c.contains("eğlence") || c.contains("eglence") || c.contains("sinema")) return 8;
+                if (c.contains("kardeş") || c.contains("kardes") || c.contains("kıbrıs") || c.contains("kibris")) return 9;
+                if (c.contains("bölgesel") || c.contains("bolgesel")) return 10;
+                return 50;
+            }
+
+            @Override
+            public int compare(Channel c1, Channel c2) {
+                int p1 = getCategoryPriority(c1.getCategory());
+                int p2 = getCategoryPriority(c2.getCategory());
+                if (p1 != p2) return Integer.compare(p1, p2);
+                int catComp = collator.compare(c1.getCategory(), c2.getCategory());
+                if (catComp != 0) return catComp;
+                return collator.compare(c1.getName(), c2.getName());
+            }
+        });
+
+        renumberAndSave(favChannels, disabledChannels, context);
+    }
+
+    public synchronized boolean resetToOriginalOrder(Context context) {
+        if (context == null) return false;
+        try {
+            File defFile = new File(context.getFilesDir(), CHANNELS_DEFAULT_FILE);
+            if (defFile.exists() && defFile.length() > 0) {
+                FileInputStream fis = new FileInputStream(defFile);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+                reader.close();
+                fis.close();
+                boolean ok = parseJsonChannelArray(sb.toString());
+                if (ok) {
+                    saveToLocalFile(context);
+                    syncChannelSettings(context);
+                    return true;
+                }
+            }
+
+            boolean ok = loadFromSeedAsset(context);
+            if (ok) {
+                saveToLocalFile(context);
+                syncChannelSettings(context);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private void renumberAndSave(Set<Channel> favChannels, Set<Channel> disabledChannels, Context context) {
+        Set<String> newFavs = new HashSet<>();
+        Set<String> newDisabled = new HashSet<>();
+
+        for (int i = 0; i < channels.size(); i++) {
+            Channel c = channels.get(i);
+            int newId = i + 1;
+            c.setId(newId);
+
+            if (favChannels != null && favChannels.contains(c)) {
+                newFavs.add(String.valueOf(newId));
+            }
+            if (disabledChannels != null && disabledChannels.contains(c)) {
+                newDisabled.add(String.valueOf(newId));
+            }
+        }
+
+        if (context != null) {
+            setFavoritesSet(newFavs, context);
+            setDisabledChannelsSet(newDisabled, context);
+            saveToLocalFile(context);
+            syncChannelSettings(context);
         }
     }
 

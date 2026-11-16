@@ -13,10 +13,20 @@ public class SettingsChannelAdapter extends BaseAdapter {
     private final Context context;
     private final List<Channel> channels;
     private float scaleFactor = 1.0f;
+    private int movingPosition = -1;
 
     public SettingsChannelAdapter(Context context, List<Channel> channels) {
         this.context = context;
         this.channels = channels;
+    }
+
+    public void setMovingPosition(int pos) {
+        this.movingPosition = pos;
+        notifyDataSetChanged();
+    }
+
+    public int getMovingPosition() {
+        return movingPosition;
     }
 
     public void setTvMode(boolean isTvMode) {
@@ -77,16 +87,25 @@ public class SettingsChannelAdapter extends BaseAdapter {
 
         holder.tvStatus.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scaleFactor));
 
-        if (channel.isActive()) {
-            holder.tvStatus.setText("AÇIK ✓");
-            holder.tvStatus.setTextColor(0xFF10B981); // Emerald Green
-            holder.tvName.setTextColor(0xFFFFFFFF); // White
+        if (position == movingPosition) {
+            convertView.setBackgroundColor(0xFF78350F); // Deep amber
+            holder.tvStatus.setText("↕ TAŞINIYOR");
+            holder.tvStatus.setTextColor(0xFFFBBF24); // Amber gold
+            holder.tvName.setTextColor(0xFFFBBF24);
             holder.tvName.setPaintFlags(holder.tvName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         } else {
-            holder.tvStatus.setText("KAPALI ✕");
-            holder.tvStatus.setTextColor(0xFFEF4444); // Red
-            holder.tvName.setTextColor(0xFF64748B); // Muted gray
-            holder.tvName.setPaintFlags(holder.tvName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            convertView.setBackgroundResource(R.drawable.selector_channel_item);
+            if (channel.isActive()) {
+                holder.tvStatus.setText("AÇIK ✓");
+                holder.tvStatus.setTextColor(0xFF10B981); // Emerald Green
+                holder.tvName.setTextColor(0xFFFFFFFF); // White
+                holder.tvName.setPaintFlags(holder.tvName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            } else {
+                holder.tvStatus.setText("KAPALI ✕");
+                holder.tvStatus.setTextColor(0xFFEF4444); // Red
+                holder.tvName.setTextColor(0xFF64748B); // Muted gray
+                holder.tvName.setPaintFlags(holder.tvName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
         }
 
         return convertView;

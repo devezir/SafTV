@@ -638,6 +638,7 @@
 
         <!-- Drawer Footer -->
         <TextView
+            android:id="@+id/tv_drawer_footer_hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -903,24 +904,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="6dp">
+                android:layout_marginBottom="4dp">
 
                 <Button
                     android:id="@+id/btn_settings_reset_all"
                     android:layout_width="0dp"
-                    android:layout_height="34dp"
+                    android:layout_height="32dp"
                     android:layout_weight="1"
-                    android:text="✓ Tümünü Aktif Et"
+                    android:text="✓ Tümünü Aç"
                     android:textSize="11sp"
                     android:textStyle="bold"
                     android:textColor="@color/accent_green"
                     android:background="@drawable/selector_chip"
-                    android:layout_marginRight="6dp" />
+                    android:layout_marginRight="4dp" />
 
                 <Button
                     android:id="@+id/btn_settings_disable_all"
                     android:layout_width="0dp"
-                    android:layout_height="34dp"
+                    android:layout_height="32dp"
                     android:layout_weight="1"
                     android:text="✕ Tümünü Kapat"
                     android:textSize="11sp"
@@ -928,6 +929,57 @@
                     android:textColor="@color/accent_yellow"
                     android:background="@drawable/selector_chip" />
             </LinearLayout>
+
+            <!-- Quick Sorting Presets (A-Z, Kategori, Varsayılan) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp">
+
+                <Button
+                    android:id="@+id/btn_sort_az"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:text="🔤 A-Z"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:textColor="#38BDF8"
+                    android:background="@drawable/selector_chip"
+                    android:layout_marginRight="4dp" />
+
+                <Button
+                    android:id="@+id/btn_sort_category"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1.2"
+                    android:text="📑 Kategori"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:textColor="#A78BFA"
+                    android:background="@drawable/selector_chip"
+                    android:layout_marginRight="4dp" />
+
+                <Button
+                    android:id="@+id/btn_sort_reset"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1.1"
+                    android:text="🔄 Sıfırla"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_gray"
+                    android:background="@drawable/selector_chip" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_gray"
+                android:textSize="10sp"
+                android:layout_marginBottom="4dp"
+                android:text="💡 İpucu: [Tıkla] Aç/Kapat | [Uzun Bas] Sıralama &amp; Taşıma" />
 
             <!-- All Channels Settings ListView -->
             <ListView
