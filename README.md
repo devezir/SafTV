@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/devezir/SafTV/releases/latest"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v2.2.0_(vc_15)-blue?style=for-the-badge&logo=android" alt="Sürüm v2.2.0"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Boyut-Sadece_133_KB-brightgreen?style=for-the-badge" alt="Boyut 133 KB"></a>
+  <a href="https://github.com/devezir/SafTV/releases/latest"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v2.3.0_(vc_16)-blue?style=for-the-badge&logo=android" alt="Sürüm v2.3.0"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Boyut-Sadece_137_KB-brightgreen?style=for-the-badge" alt="Boyut 137 KB"></a>
   <a href="#"><img src="https://img.shields.io/badge/A%C3%A7%C4%B1l%C4%B1%C5%9F-0.1_Saniye-orange?style=for-the-badge" alt="0.1s Açılış Hızı"></a>
   <a href="#"><img src="https://img.shields.io/badge/Reklam-SIFIR_(%250)-red?style=for-the-badge" alt="Sıfır Reklam"></a>
   <a href="#"><img src="https://img.shields.io/badge/Kanal-61_Canl%C4%B1_Yay%C4%B1n-purple?style=for-the-badge" alt="61 Canlı Kanal"></a>
@@ -19,10 +19,10 @@
 
 | Dosya | Boyut | Açıklama | Doğrudan İndir |
 |---|---|---|:---:|
-| 🚀 **Saf TV v2.2.0 (En Son Kararlı)** | **~133 KB** | Güncel, resmi imzalı en son APK | [⬇️ **SafTV_v2.2.0_vc15.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.2.0/SafTV_v2.2.0_vc15.apk) |
-| 📱 **SafTV.apk (Sabit Bağlantı)** | **~133 KB** | Daima en son stabil sürümü işaret eder | [⬇️ **SafTV.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.2.0/SafTV.apk) |
-| 📦 **Tüm 15 Sürümün Arşivi (ZIP)** | **~817 KB** | v1.0.0'dan v2.2.0'a tüm APK'lar tek pakette | [📦 **SafTV_All_Releases_Archive.zip**](https://github.com/devezir/SafTV/releases/download/v2.2.0/SafTV_All_Releases_Archive.zip) |
-| 📊 **Kanal Kataloğu (Excel)** | **~24 KB** | 61 kanalın kategori ve akış tablosu | [📊 **SafTV_Kanal_Listesi.xlsx**](https://github.com/devezir/SafTV/releases/download/v2.2.0/SafTV_Kanal_Listesi.xlsx) |
+| 🚀 **Saf TV v2.3.0 (En Son Kararlı)** | **~137 KB** | Güncel, resmi imzalı en son APK | [⬇️ **SafTV_v2.3.0_vc16.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.3.0/SafTV_v2.3.0_vc16.apk) |
+| 📱 **SafTV.apk (Sabit Bağlantı)** | **~137 KB** | Daima en son stabil sürümü işaret eder | [⬇️ **SafTV.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.3.0/SafTV.apk) |
+| 📦 **Tüm 16 Sürümün Arşivi (ZIP)** | **~888 KB** | v1.0.0'dan v2.3.0'a tüm APK'lar tek pakette | [📦 **SafTV_All_Releases_Archive.zip**](https://github.com/devezir/SafTV/releases/download/v2.3.0/SafTV_All_Releases_Archive.zip) |
+| 📊 **Kanal Kataloğu (Excel)** | **~24 KB** | 61 kanalın kategori ve akış tablosu | [📊 **SafTV_Kanal_Listesi.xlsx**](https://github.com/devezir/SafTV/releases/download/v2.3.0/SafTV_Kanal_Listesi.xlsx) |
 | 📜 **Değişim Günlüğü** | — | Tüm sürümlerin kronolojik teknik detayları | [📜 **DEGISIM_GUNLUGU.md İncele**](DEGISIM_GUNLUGU.md) |
 
 ---
@@ -62,18 +62,19 @@ Piyasadaki popüler televizyon uygulamalarının neredeyse tamamı (İnat Box vb
 * **Akıllı Yatay Kaydırma & Kenar Yumuşatma:** Menünün sağ kenarındaki 28dp'lik gölge geçişi (fading edge) ile kaydırma sezgisel olarak hissedilir.
 * **TV Kumandası D-Pad Otomatik Ortalama:** Kumandayla sağa/sola odaklandığınız sekme anında ekranın tam ortasına pürüzsüzce hizalanır.
 
-### 📏 2. Yüzdesel Hassas Arayüz Ölçeği (%80 — %150)
-* Android TV, Google TV, TV Box, Tablet ve Telefonlar için IPTV & TiviMate endüstri standardı ölçekleme mimarisi:
+### 📏 2. Genişletilmiş Arayüz Ölçeği (%60 — %200) (v2.3.0)
+* Android TV, Google TV, TV Box, Tablet ve Telefonlar için IPTV & TiviMate endüstri standardı 8 kademeli genişletilmiş ölçekleme mimarisi:
   * `[● Otomatik]`: Cihazı akıllıca tespit eder (Televizyonda %130, Mobilde %100).
-  * `[%80 (Ultra Kompakt)]`: Tek ekranda 12'den fazla kanal listelemek isteyenlere.
-  * `[%90 (Kompakt)]`: Küçük ekranlı telefonlar için ideal yerleşim.
+  * `[%60 (Ultra Mikro)]`: Tek ekranda 18'den fazla kanal listelemek isteyen kompakt kullanıcılara.
+  * `[%80 (Kompakt)]`: Küçük ekranlı telefonlar için ideal yerleşim.
   * `[%100 (Standart Mobil)]`: Standart dikey/yatay mobil düzen.
-  * `[%115 (Tablet / Yakın TV)]`: Tabletler, katlanabilir ekranlar veya 1-2 metre mesafeler için.
-  * `[%130 (Büyük TV / 3m)]`: 3 metreden kumandayla net okunan standart televizyon boyutu.
-  * `[%150 (Dev / Uzak TV)]`: 65"+ dev ekranlar ve görme kolaylığı isteyen kullanıcılar için devasa puntolar.
-* **Dinamik Çekmece Genişliği:** Kanal listesi genişliği ölçekle orantılı hesaplanır (`270dp * ölçek`) ve ekranın %52'sini asla aşmayarak arkadaki canlı yayının görünürlüğünü garanti eder.
+  * `[%125 (Tablet / Küçük TV)]`: Tabletler veya yakın mesafeden izlenen mutfak TV'leri için.
+  * `[%150 (Büyük TV / 3m)]`: 3 metreden kumandayla net okunan standart televizyon boyutu.
+  * `[%175 (Dev Ekran / 75"+ TV)]`: 75 inç ve üzeri dev televizyonlar için optimize büyük butonlar.
+  * `[%200 (Maksimum Erişilebilirlik)]`: 4+ metre koltuk mesafesinden veya gözlük takmadan rahatça okunan devasa puntolar.
+* **Dinamik Çift Yönlü Çekmece Koruması:** Kanal listesi genişliği ölçekle orantılı hesaplanır (`270dp * ölçek`); ekranın %52'sini kesinlikle aşmaz ve %60 ölçekte dahi kanal adlarının kesilmemesi için en az 180dp taban genişliği korunur.
 
-### 📱 2. Resim İçinde Resim (PiP - Yüzen Küçük Pencere)
+### 📱 3. Resim İçinde Resim (PiP - Yüzen Küçük Pencere)
 * Android 8.0 (API 26) ve üzeri cihazlarda üst bardaki `[🗗 PiP]` butonuyla veya yayındayken **Ana Ekran (Home)** tuşuna basıldığında küçülerek ekranda yüzen pencereye geçer.
 * WhatsApp'ta yazışırken, internette gezinirken veya başka bir uygulamadayken canlı televizyon yayını kesintisiz devam eder.
 
