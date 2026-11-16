@@ -5,11 +5,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/devezir/SafTV/releases/latest"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v2.4.0_(vc_17)-blue?style=for-the-badge&logo=android" alt="Sürüm v2.4.0"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Boyut-Sadece_137_KB-brightgreen?style=for-the-badge" alt="Boyut 137 KB"></a>
+  <a href="https://github.com/devezir/SafTV/releases/latest"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v2.5.0_(vc_18)-blue?style=for-the-badge&logo=android" alt="Sürüm v2.5.0"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Boyut-Sadece_149_KB-brightgreen?style=for-the-badge" alt="Boyut 149 KB"></a>
   <a href="#"><img src="https://img.shields.io/badge/A%C3%A7%C4%B1l%C4%B1%C5%9F-0.1_Saniye-orange?style=for-the-badge" alt="0.1s Açılış Hızı"></a>
   <a href="#"><img src="https://img.shields.io/badge/Reklam-SIFIR_(%250)-red?style=for-the-badge" alt="Sıfır Reklam"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Mimari-Yasal_IPTV_Oynat%C4%B1c%C4%B1-purple?style=for-the-badge" alt="Yasal IPTV Oynatıcı"></a>
+  <a href="#"><img src="https://img.shields.io/badge/S%C4%B1ralama-A%2BB_Hibrit-purple?style=for-the-badge" alt="Kanal Sıralama Hibrit"></a>
   <a href="#"><img src="https://img.shields.io/badge/Android-5.0%2B_(API_21%2B)-success?style=for-the-badge&logo=android" alt="Android 5.0+"></a>
 </p>
 
@@ -19,9 +19,9 @@
 
 | Dosya | Boyut | Açıklama | Doğrudan İndir |
 |---|---|---|:---:|
-| 🚀 **Saf TV v2.4.0 (En Son Kararlı - Yasal)** | **~137 KB** | Güncel, resmi imzalı en son APK (M3U/JSON Destekli) | [⬇️ **SafTV_v2.4.0_vc17.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.4.0/SafTV_v2.4.0_vc17.apk) |
-| 📱 **SafTV.apk (Sabit Bağlantı)** | **~137 KB** | Daima en son stabil sürümü işaret eder | [⬇️ **SafTV.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.4.0/SafTV.apk) |
-| 📦 **Tüm 17 Sürümün Arşivi (ZIP)** | **~1.0 MB** | v1.0.0'dan v2.4.0'a tüm APK'lar tek pakette | [📦 **SafTV_All_Releases_Archive.zip**](https://github.com/devezir/SafTV/releases/download/v2.4.0/SafTV_All_Releases_Archive.zip) |
+| 🚀 **Saf TV v2.5.0 (En Son Kararlı - Yasal)** | **~149 KB** | Güncel, resmi imzalı en son APK (Kanal Sıralama & M3U/JSON Destekli) | [⬇️ **SafTV_v2.5.0_vc18.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.5.0/SafTV_v2.5.0_vc18.apk) |
+| 📱 **SafTV.apk (Sabit Bağlantı)** | **~149 KB** | Daima en son stabil sürümü işaret eder | [⬇️ **SafTV.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.5.0/SafTV.apk) |
+| 📦 **Tüm 18 Sürümün Arşivi (ZIP)** | **~1.1 MB** | v1.0.0'dan v2.5.0'a tüm APK'lar tek pakette | [📦 **SafTV_All_Releases_Archive.zip**](https://github.com/devezir/SafTV/releases/download/v2.5.0/SafTV_All_Releases_Archive.zip) |
 | 📜 **Değişim Günlüğü** | — | Tüm sürümlerin kronolojik teknik detayları | [📜 **DEGISIM_GUNLUGU.md İncele**](DEGISIM_GUNLUGU.md) |
 
 ---

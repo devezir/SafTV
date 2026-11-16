@@ -10,6 +10,7 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 
 | Sürüm | Sürüm Kodu (versionCode) | Yayın Tarihi | APK Boyutu | Doğrudan APK İndir | Başlıca Yenilikler ve Odak Noktası |
 |:---:|:---:|:---:|:---:|:---:|---|
+| **v2.5.0** | 18 | 16.11.2026 | ~149.4 KB | [⬇️ **SafTV_v2.5.0_vc18.apk**](https://github.com/devezir/SafTV/releases/download/v2.5.0/SafTV_v2.5.0_vc18.apk) | 🎛️ **Kanal Sıralama (A+B Hibrit), Otomatik Sıralama Şablonları & Alt Bilgi Ölçeklemesi:** Ayarlar menüsünden D-Pad ile canlı kanal taşıma, hedef sıra numarasıyla anında ışınlama, A-Z / Kategori / Varsayılan sıralama şablonları, Liste Sırası = Kanal No eşlemesi ve çekmece alt ipucu yazısının arayüz ölçeğiyle birebir büyümesi. |
 | **v2.4.0** | 17 | 16.11.2026 | ~137.4 KB | [⬇️ **SafTV_v2.4.0_vc17.apk**](https://github.com/devezir/SafTV/releases/download/v2.4.0/SafTV_v2.4.0_vc17.apk) | 🛡️ **%100 Yasal Çekirdek & Çift APK Mimarisi:** Açık kaynak koddan tüm yayınlar çıkarıldı (tamamen yasal IPTV oynatıcı). M3U/M3U8 ve JSON dosya/URL yükleme desteği, Ayarlar menüsünden tek tıkla liste sıfırlama, tohumlu özel APK desteği. |
 | **v2.3.0** | 16 | 16.11.2026 | ~137.4 KB | [⬇️ **SafTV_v2.3.0_vc16.apk**](https://github.com/devezir/SafTV/releases/download/v2.3.0/SafTV_v2.3.0_vc16.apk) | 📐 **Genişletilmiş Arayüz Ölçeği (%60 — %200):** Ultra mikro %60'tan dev ekran %200'e 8 kademeli skala, dinamik yüzde koruması, internet yeniden bağlantısında uyarıların anında silinmesi güvencesi. |
 | **v2.2.0** | 15 | 15.11.2026 | ~133.4 KB | [⬇️ **SafTV_v2.2.0_vc15.apk**](https://github.com/devezir/SafTV/releases/download/v2.2.0/SafTV_v2.2.0_vc15.apk) | 🎛️ **7 Bağımsız Sekmeli Yatay Kayan Ayarlar Menüsü:** Kalabalık tercihler menüsü 7 bağımsız sekmeye ayrıldı (📋 Kanallar, 📶 Kalite, 📏 Görünüm, 🌙 Uyku, 🎧 Ses Modu, 💾 Yedekleme, ℹ️ Hakkında). Kenar gölge geçişi (Fading Edge), TV kumandası D-Pad otomatik ortalama ve dokunmatik kaydırma. |
@@ -31,6 +32,25 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 ---
 
 ## 🔍 Detaylı Sürüm Notları
+
+### 🎛️ v2.5.0 (versionCode: 18) — 16 Kasım 2026
+* **Kanal Sıralama & Yeniden Düzenleme (A+B Hibrit Mimarisi):**
+  * **Ayarlar -> Kanallar Sekmesine Entegre:** Kullanıcı güvenliği için sıralama işlemleri doğrudan ayarlar menüsündeki kanal yönetim listesine yerleştirildi.
+  * **[Yöntem A] Canlı Taşı (Seç & Taşı Modu):** Kumandadan kanala uzun basıldığında *"Canlı Taşı"* seçilebilir. Kanal kehribar rengiyle vurgulanır; kumandanın **YUKARI / AŞAĞI** tuşlarına basarak kanal canlı olarak yer değiştirir, **OK** tuşuyla yeni yerine kilitlenir.
+  * **[Yöntem B] Numarayla Işınla:** 100+ kanallı listelerde tuşa onlarca kez basmak yerine doğrudan hedef sıra numarası (örn: 1) girilerek kanal istenen sıraya ışınlanır.
+  * **En Başa / En Sona Taşı:** Tek tıkla kanalı 1. sıraya veya en sona alma kısayolları.
+* **Klasik TV Mantığı (Liste Sırası = Kanal Numarası):**
+  * Bir kanal taşındığında sıra numarası (`id`) otomatik olarak `1, 2, 3...` şeklinde güncellenir. Kumandadan `1` tuşlandığında artık 1. sıradaki kanal açılır.
+  * **Favori ve Gizleme Koruması:** Kanallar yeniden numaralandırılsa dahi kullanıcının favorileri ve pasif kanal ayarları akıllı nesne eşlemesiyle %100 korunur.
+  * **Yedekleme Uyumluluğu:** Ayarlar dışa aktarıldığında (`saftv_backup.json`), kanallar kullanıcının belirlediği yeni sıralamayla kaydedilir ve içe aktarıldığında bu sıra bozulmadan geri yüklenir.
+* **Otomatik Sıralama Şablonları:**
+  * `[🔤 A-Z]`: Kanalları Türkçe alfabetik sıraya dizer.
+  * `[📑 Kategori]`: Kanalları öncelikli yayın türlerine göre (Ulusal, Haber, Spor, Belgesel, Çocuk, Müzik, Kültür, Bölgesel) bloklar halinde gruplar.
+  * `[🔄 Sıfırla]`: İstenildiği an listenin ilk orijinal dizilimine tek tıkla geri dönme güvencesi.
+* **Çekmece Alt Bilgi & Arama Kutusu Ölçeklemesi:**
+  * Çekmecenin en altındaki `[OK/Dokun] İzle | [Uzun Bas] Favori | [✕/GERİ] Kapat` rehber metni ve arama kutusu fontları arayüz ölçeğiyle (`10 * scale`) birebir uyumlu hale getirildi. %200 dev ekranda 20sp, %60'ta 6sp olarak ölçeklenir.
+
+---
 
 ### 🛡️ v2.4.0 (versionCode: 17) — 16 Kasım 2026
 * **%100 Yasal Açık Kaynak Çekirdeği (Tamamen Bağımsız IPTV Oynatıcı):**

@@ -1,7 +1,7 @@
 package com.saftv.app;
 
 public class Channel {
-    private final int id;
+    private int id;
     private final String name;
     private final String category;
     private final String url;
@@ -20,6 +20,7 @@ public class Channel {
     }
 
     public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
     public String getName() { return name; }
     public String getCategory() { return category; }
     public String getUrl() { return url; }

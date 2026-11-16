@@ -170,6 +170,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     // Drawer Views
     private LinearLayout layoutDrawer;
     private TextView tvDrawerSubtitle;
+    private TextView tvDrawerFooterHint;
     private ListView lvChannels;
     private ChannelAdapter channelAdapter;
 
@@ -180,6 +181,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private LinearLayout layoutSettings;
     private ListView lvSettingsChannels;
     private SettingsChannelAdapter settingsChannelAdapter;
+    private Button btnSortAz;
+    private Button btnSortCategory;
+    private Button btnSortReset;
 
     // Network Alert Views
     private View layoutNetworkAlert;
@@ -439,6 +443,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         settingsChannelAdapter = new SettingsChannelAdapter(this, channelManager.getAllChannels());
         lvSettingsChannels.setAdapter(settingsChannelAdapter);
 
+        tvDrawerFooterHint = findViewById(R.id.tv_drawer_footer_hint);
+        btnSortAz = findViewById(R.id.btn_sort_az);
+        btnSortCategory = findViewById(R.id.btn_sort_category);
+        btnSortReset = findViewById(R.id.btn_sort_reset);
+
         // 1. Kanal listesinde tıklama
         lvChannels.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -464,11 +473,58 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             }
         });
 
-        // 3. Ayarlar ekranında kanal tıklama (Aktif/Pasif)
+        // 3. Ayarlar ekranında kanal tıklama (Aktif/Pasif veya Taşıma sabitleme)
         lvSettingsChannels.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (settingsChannelAdapter.getMovingPosition() != -1) {
+                    settingsChannelAdapter.setMovingPosition(-1);
+                    refreshChannelsAfterSort("✅ Yeni kanal sırası kaydedildi");
+                    return;
+                }
                 toggleChannelSettingAt(position);
+            }
+        });
+
+        // 4. Ayarlar ekranında kanal uzun tıklama (Sıralama / Taşıma Menüsü - A+B Hibrit)
+        lvSettingsChannels.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                showChannelSortMenu(position);
+                return true;
+            }
+        });
+
+        // 5. Ayarlar kanal listesinde kumanda tuşları (Canlı taşıma esnasında YUKARI / AŞAĞI ile yer değiştirme)
+        lvSettingsChannels.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
+                int movingPos = settingsChannelAdapter.getMovingPosition();
+                if (movingPos == -1) return false;
+
+                if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                    if (movingPos > 0) {
+                        channelManager.swapChannels(movingPos, movingPos - 1, MainActivity.this);
+                        settingsChannelAdapter.setMovingPosition(movingPos - 1);
+                        lvSettingsChannels.setSelection(movingPos - 1);
+                        refreshListsSilent();
+                    }
+                    return true;
+                } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                    if (movingPos < channelManager.getAllChannels().size() - 1) {
+                        channelManager.swapChannels(movingPos, movingPos + 1, MainActivity.this);
+                        settingsChannelAdapter.setMovingPosition(movingPos + 1);
+                        lvSettingsChannels.setSelection(movingPos + 1);
+                        refreshListsSilent();
+                    }
+                    return true;
+                } else if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_BACK) {
+                    settingsChannelAdapter.setMovingPosition(-1);
+                    refreshChannelsAfterSort("✅ Yeni kanal sırası kaydedildi");
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -833,6 +889,113 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         Toast.makeText(MainActivity.this, ch.getName() + " " + statusStr, Toast.LENGTH_SHORT).show();
     }
 
+    private void showChannelSortMenu(final int position) {
+        if (position < 0 || position >= channelManager.getAllChannels().size()) return;
+        final Channel ch = channelManager.getAllChannels().get(position);
+
+        String[] options = {
+            "↕ Canlı Taşı (Yukarı / Aşağı Kaydır)",
+            "🔢 Sıra Numarası Girerek Taşı",
+            "⬆️ En Başa Taşı (1. Sıra Yap)",
+            "⬇️ En Sona Taşı"
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("📺 " + ch.getName() + " (Sıra: " + ch.getId() + ")");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0: // Canlı Taşı (Seç & Taşı)
+                        settingsChannelAdapter.setMovingPosition(position);
+                        lvSettingsChannels.setSelection(position);
+                        Toast.makeText(MainActivity.this, "↕ YUKARI/AŞAĞI ile taşıyın, sabitlemek için OK'a basın", Toast.LENGTH_LONG).show();
+                        break;
+                    case 1: // Numarayla Işınla
+                        promptTargetPosition(position, ch);
+                        break;
+                    case 2: // En Başa Taşı
+                        channelManager.moveChannel(position, 0, MainActivity.this);
+                        refreshChannelsAfterSort(ch.getName() + " 1. sıraya taşındı ⬆️");
+                        lvSettingsChannels.setSelection(0);
+                        break;
+                    case 3: // En Sona Taşı
+                        int lastIdx = channelManager.getAllChannels().size() - 1;
+                        channelManager.moveChannel(position, lastIdx, MainActivity.this);
+                        refreshChannelsAfterSort(ch.getName() + " en sona taşındı ⬇️");
+                        lvSettingsChannels.setSelection(lastIdx);
+                        break;
+                }
+            }
+        });
+        builder.setNegativeButton("İptal", null);
+        builder.show();
+    }
+
+    private void promptTargetPosition(final int fromPosition, final Channel ch) {
+        final int totalCount = channelManager.getAllChannels().size();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("🔢 Kanal Sırası Belirle");
+        builder.setMessage(ch.getName() + " kanalını kaçıncı sıraya taşımak istiyorsunuz? (1 - " + totalCount + ")");
+
+        final EditText input = new EditText(this);
+        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        input.setHint("Örn: 1");
+        input.setTextColor(Color.WHITE);
+        input.setHintTextColor(0xFF888888);
+
+        FrameLayout container = new FrameLayout(this);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        int margin = (int) (18 * getResources().getDisplayMetrics().density);
+        params.leftMargin = margin;
+        params.rightMargin = margin;
+        input.setLayoutParams(params);
+        container.addView(input);
+        builder.setView(container);
+
+        builder.setPositiveButton("Taşı", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String text = input.getText().toString().trim();
+                if (text.isEmpty()) return;
+                try {
+                    int targetNum = Integer.parseInt(text);
+                    if (targetNum < 1) targetNum = 1;
+                    if (targetNum > totalCount) targetNum = totalCount;
+                    int targetIndex = targetNum - 1;
+
+                    channelManager.moveChannel(fromPosition, targetIndex, MainActivity.this);
+                    refreshChannelsAfterSort(ch.getName() + " " + targetNum + ". sıraya taşındı");
+                    lvSettingsChannels.setSelection(targetIndex);
+                } catch (NumberFormatException ignored) {}
+            }
+        });
+        builder.setNegativeButton("İptal", null);
+        builder.show();
+    }
+
+    private void refreshChannelsAfterSort(String toastMsg) {
+        channelAdapter.updateList(channelManager.getActiveChannels());
+        settingsChannelAdapter.notifyDataSetChanged();
+        if (tvDrawerSubtitle != null) {
+            tvDrawerSubtitle.setText("Aktif Kanallar (" + channelManager.getChannelCount() + ")");
+        }
+        if (toastMsg != null && !toastMsg.isEmpty()) {
+            Toast.makeText(this, toastMsg, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void refreshListsSilent() {
+        channelAdapter.updateList(channelManager.getActiveChannels());
+        settingsChannelAdapter.notifyDataSetChanged();
+        if (tvDrawerSubtitle != null) {
+            tvDrawerSubtitle.setText("Aktif Kanallar (" + channelManager.getChannelCount() + ")");
+        }
+    }
+
     private void setupCategories() {
         int[] buttonIds = {
                 R.id.btn_cat_all,
@@ -1003,6 +1166,41 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                         tvDrawerSubtitle.setText("Aktif Kanallar (" + channelManager.getActiveChannels().size() + ")");
                     }
                     Toast.makeText(MainActivity.this, "Tüm kanallar KAPATILDI (İstediklerinizi tek tek açabilirsiniz)", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        // Hızlı Sıralama Butonları (Sekme 1: A-Z, Kategori, Orijinal Sıra)
+        if (btnSortAz != null) {
+            btnSortAz.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    channelManager.sortAlphabetical(MainActivity.this);
+                    refreshChannelsAfterSort("🔤 Kanallar alfabetik (A-Z) sıralandı");
+                }
+            });
+        }
+
+        if (btnSortCategory != null) {
+            btnSortCategory.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    channelManager.sortByCategory(MainActivity.this);
+                    refreshChannelsAfterSort("📑 Kanallar kategorilere göre sıralandı");
+                }
+            });
+        }
+
+        if (btnSortReset != null) {
+            btnSortReset.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean ok = channelManager.resetToOriginalOrder(MainActivity.this);
+                    if (ok) {
+                        refreshChannelsAfterSort("🔄 Kanallar orijinal sırasına döndürüldü");
+                    } else {
+                        Toast.makeText(MainActivity.this, "Orijinal liste bulunamadı", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
@@ -1293,6 +1491,14 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         if (btnTouchPip != null) btnTouchPip.setTextSize(TypedValue.COMPLEX_UNIT_SP, btnFontSz);
         if (btnTouchSettings != null) btnTouchSettings.setTextSize(TypedValue.COMPLEX_UNIT_SP, btnFontSz);
         if (btnTouchExit != null) btnTouchExit.setTextSize(TypedValue.COMPLEX_UNIT_SP, btnFontSz);
+
+        // Çekmece Alt Bilgilendirme ve Arama Kutusu Fontu Ölçekleme
+        if (tvDrawerFooterHint != null) {
+            tvDrawerFooterHint.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(10 * scale));
+        }
+        if (etChannelSearch != null) {
+            etChannelSearch.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(12 * scale));
+        }
     }
 
     private void setupSleepTimerControls() {
