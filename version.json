@@ -1,8 +1,8 @@
 {
-  "versionCode": 16,
-  "versionName": "2.3.0",
-  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.3.0/SafTV_v2.3.0_vc16.apk",
-  "apkName": "SafTV_v2.3.0_vc16.apk",
+  "versionCode": 17,
+  "versionName": "2.4.0",
+  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.4.0/SafTV_v2.4.0_vc17.apk",
+  "apkName": "SafTV_v2.4.0_vc17.apk",
   "history": [
     {
       "versionCode": 1,
@@ -115,6 +115,13 @@
       "apkName": "SafTV_v2.3.0_vc16.apk",
       "date": "2026-11-16",
       "description": "Genişletilmiş Arayüz Ölçeği (%60 - %200 Skalası), İnternet Yeniden Bağlantı Güvencesi"
+    },
+    {
+      "versionCode": 17,
+      "versionName": "2.4.0",
+      "apkName": "SafTV_v2.4.0_vc17.apk",
+      "date": "2026-11-16",
+      "description": "Tohumlu ve Tohumsuz Çift APK Mimarisi, %100 Yasal Çekirdek, M3U/JSON ve Web URL ile Liste İçe/Dışa Aktarma"
     }
   ]
 }

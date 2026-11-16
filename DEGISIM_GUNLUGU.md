@@ -10,6 +10,7 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 
 | Sürüm | Sürüm Kodu (versionCode) | Yayın Tarihi | APK Boyutu | Doğrudan APK İndir | Başlıca Yenilikler ve Odak Noktası |
 |:---:|:---:|:---:|:---:|:---:|---|
+| **v2.4.0** | 17 | 16.11.2026 | ~137.4 KB | [⬇️ **SafTV_v2.4.0_vc17.apk**](https://github.com/devezir/SafTV/releases/download/v2.4.0/SafTV_v2.4.0_vc17.apk) | 🛡️ **%100 Yasal Çekirdek & Çift APK Mimarisi:** Açık kaynak koddan tüm yayınlar çıkarıldı (tamamen yasal IPTV oynatıcı). M3U/M3U8 ve JSON dosya/URL yükleme desteği, Ayarlar menüsünden tek tıkla liste sıfırlama, tohumlu özel APK desteği. |
 | **v2.3.0** | 16 | 16.11.2026 | ~137.4 KB | [⬇️ **SafTV_v2.3.0_vc16.apk**](https://github.com/devezir/SafTV/releases/download/v2.3.0/SafTV_v2.3.0_vc16.apk) | 📐 **Genişletilmiş Arayüz Ölçeği (%60 — %200):** Ultra mikro %60'tan dev ekran %200'e 8 kademeli skala, dinamik yüzde koruması, internet yeniden bağlantısında uyarıların anında silinmesi güvencesi. |
 | **v2.2.0** | 15 | 15.11.2026 | ~133.4 KB | [⬇️ **SafTV_v2.2.0_vc15.apk**](https://github.com/devezir/SafTV/releases/download/v2.2.0/SafTV_v2.2.0_vc15.apk) | 🎛️ **7 Bağımsız Sekmeli Yatay Kayan Ayarlar Menüsü:** Kalabalık tercihler menüsü 7 bağımsız sekmeye ayrıldı (📋 Kanallar, 📶 Kalite, 📏 Görünüm, 🌙 Uyku, 🎧 Ses Modu, 💾 Yedekleme, ℹ️ Hakkında). Kenar gölge geçişi (Fading Edge), TV kumandası D-Pad otomatik ortalama ve dokunmatik kaydırma. |
 | **v2.1.0** | 14 | 15.11.2026 | ~133.4 KB | [⬇️ **SafTV_v2.1.0_vc14.apk**](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v2.1.0_vc14.apk) | 📏 **Yüzdesel Hassas Arayüz Ölçeği (%80 - %150):** 7 kademeli akıllı ölçekleme, dinamik çekmece genişliği, GitHub tabanlı 0 saniye OTA güncelleme sistemi. |
@@ -30,6 +31,26 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 ---
 
 ## 🔍 Detaylı Sürüm Notları
+
+### 🛡️ v2.4.0 (versionCode: 17) — 16 Kasım 2026
+* **%100 Yasal Açık Kaynak Çekirdeği (Tamamen Bağımsız IPTV Oynatıcı):**
+  * Uygulamanın Java kaynak kodlarından tüm sabit kanal isimleri, kategorileri ve yayın URL'leri kaldırıldı.
+  * Saf TV artık VLC, Kodi veya TiviMate gibi tamamen tarafsız, yasal ve bağımsız bir medya oynatıcıdır.
+* **Gelişmiş Çalma Listesi İçe ve Dışa Aktarma (M3U & JSON):**
+  * **Dosyadan İçe Aktar:** Cihazın `Download` klasöründeki standart `.m3u`, `.m3u8` veya `.json` çalma listelerini otomatik algılar. Birden fazla dosya varsa şık bir seçim penceresi sunar.
+  * **Web Bağlantısından İndir (URL):** Doğrudan HTTP/HTTPS bağlantısı veya kısaltılmış linkler (`tinyurl.com/...`, `is.gd/...`) üzerinden canlı liste indirme. Otomatik HTTP yönlendirme (301/302) ve modern tarayıcı User-Agent başlığı ile tam uyumluluk.
+  * **Tek Tıkla Sıfırlama:** Ayarlar menüsüne eklenen *"Çalma Listesini Temizle"* butonuyla liste istenildiği an sıfırlanabilir.
+  * **Tam Sistem Yedeği:** "Ayarları & Kanalları Dışa Aktar" özelliği artık kullanıcının özel kanallarını da tek bir JSON dosyasına eksiksiz yedekler.
+* **Çift APK Mimarisi (Tohumlu & Tohumsuz):**
+  * **SafTV.apk (Yasal Sürüm):** Açık kaynak repoda ve GitHub'da yer alan, sıfır kanalla açılan, harici liste ekleme özellikli tertemiz medya oynatıcı.
+  * **SafTV_Full.apk (Özel Tohumlu Sürüm):** Özel dağıtım için; ilk kurulumda 160 onaylı kanalı otomatik yükleyen, uygulamanın kendisinin bile sonradan eklenmiş gibi gördüğü dinamik tohum mimarisi.
+  * İki sürüm de aynı paket adı (`com.saftv.app`) ve aynı imza anahtarını kullandığından, birbirlerinin üzerine veri kaybı olmadan doğrudan güncellenebilir.
+* **0 Kanal Güvenlik Koruması:**
+  * Çalma listesi boşken veya temizlendiğinde uygulamanın çökmesi engellendi; kullanıcıya yönlendirici bir bilgilendirme ekranı sunuldu.
+* **Yol Haritası Notu:**
+  * Gelecek sürümler için (v2.6.0) *"Kanal Sıralama & Yeniden Düzenleme"* özelliği planlama havuzuna alındı.
+
+---
 
 ### 📐 v2.3.0 (versionCode: 16) — 16 Kasım 2026
 * **Genişletilmiş Arayüz Ölçeği (%60 — %200 Skalası):**

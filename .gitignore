@@ -8,11 +8,15 @@ compiled_res.zip
 __pycache__/
 *.pyc
 
-# Hassas API anahtarları ve şifreler
+# Hassas API anahtarları, tohumlar ve özel dağıtım APK'ları
 archive.org api keys.txt
 keystore/
 *.jks
 *.keystore
+channels_master.json
+assets/seed_channels.json
+SafTV_Full.apk
+releases/SafTV_Full*
 
 # Geçici ve medya dosyaları
 ~$*
