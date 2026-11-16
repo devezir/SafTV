@@ -10,6 +10,7 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 
 | Sürüm | Sürüm Kodu (versionCode) | Yayın Tarihi | APK Boyutu | Doğrudan APK İndir | Başlıca Yenilikler ve Odak Noktası |
 |:---:|:---:|:---:|:---:|:---:|---|
+| **v2.3.0** | 16 | 16.11.2026 | ~137.4 KB | [⬇️ **SafTV_v2.3.0_vc16.apk**](https://github.com/devezir/SafTV/releases/download/v2.3.0/SafTV_v2.3.0_vc16.apk) | 📐 **Genişletilmiş Arayüz Ölçeği (%60 — %200):** Ultra mikro %60'tan dev ekran %200'e 8 kademeli skala, dinamik yüzde koruması, internet yeniden bağlantısında uyarıların anında silinmesi güvencesi. |
 | **v2.2.0** | 15 | 15.11.2026 | ~133.4 KB | [⬇️ **SafTV_v2.2.0_vc15.apk**](https://github.com/devezir/SafTV/releases/download/v2.2.0/SafTV_v2.2.0_vc15.apk) | 🎛️ **7 Bağımsız Sekmeli Yatay Kayan Ayarlar Menüsü:** Kalabalık tercihler menüsü 7 bağımsız sekmeye ayrıldı (📋 Kanallar, 📶 Kalite, 📏 Görünüm, 🌙 Uyku, 🎧 Ses Modu, 💾 Yedekleme, ℹ️ Hakkında). Kenar gölge geçişi (Fading Edge), TV kumandası D-Pad otomatik ortalama ve dokunmatik kaydırma. |
 | **v2.1.0** | 14 | 15.11.2026 | ~133.4 KB | [⬇️ **SafTV_v2.1.0_vc14.apk**](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v2.1.0_vc14.apk) | 📏 **Yüzdesel Hassas Arayüz Ölçeği (%80 - %150):** 7 kademeli akıllı ölçekleme, dinamik çekmece genişliği, GitHub tabanlı 0 saniye OTA güncelleme sistemi. |
 | **v2.0.0** | 13 | 15.11.2026 | ~129.4 KB | [⬇️ **SafTV_v2.0.0_vc13.apk**](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v2.0.0_vc13.apk) | 🚀 **Büyük Kilometre Taşı:** 📱 Resim İçinde Resim (PiP - Yüzen Pencere), 🌙 Akıllı Uyku Zamanlayıcısı, 🎧 Ekran Kapalı Dinleme Modu (Arka Planda Ses). |
@@ -29,6 +30,22 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 ---
 
 ## 🔍 Detaylı Sürüm Notları
+
+### 📐 v2.3.0 (versionCode: 16) — 16 Kasım 2026
+* **Genişletilmiş Arayüz Ölçeği (%60 — %200 Skalası):**
+  * Kullanıcı ihtiyaçları ve dev salon televizyonları göz önüne alınarak ölçek sınırları radikal şekilde genişletildi:
+    * `[%60 Ultra Mikro (18+ Kanal)]`: Yüksek çözünürlüklü tablet ve monitörlerde tek ekranda maksimum kanal listelemek isteyenlere.
+    * `[%80 Kompakt]`: Küçük ekranlar ve kompakt telefonlar için.
+    * `[%100 Standart Mobil]`: Standart mobil ve tablet düzeni.
+    * `[%125 Tablet / Küçük TV]`: Mutfak TV'leri ve yakın mesafeden izleme.
+    * `[%150 Büyük TV / 3m]`: 3 metreden kumandayla net okunan standart televizyon boyutu.
+    * `[%175 Dev Ekran / 75"+ TV]`: 75 inç ve üzeri dev televizyonlar için optimize büyük butonlar.
+    * `[%200 Maksimum Erişilebilirlik (4m+ Salon TV)]`: 4+ metre koltuk mesafesinden veya gözlük takmadan rahatça okunan devasa puntolar.
+  * **Dinamik Çift Yönlü Güvenlik Koruması:** Sol menü ekranın %52'sini kesinlikle aşamaz; %60 ölçekte dahi kanal adlarının kesilmemesi için asgari 180dp taban genişliği güvenceye alındı.
+* **İnternet Yeniden Bağlantı Güvencesi:**
+  * Ağ koptuğunda çıkan üst kırmızı rozet ve ekranın ortasındaki *"📶 İnternet bağlantısı kesildi!"* uyarısının internet geldiği ilk milisaniyede ekrandan silinmesi garanti altına alındı; yayının otomatik ve pürüzsüzce devam etmesi sağlandı.
+
+---
 
 ### 🎛️ v2.2.0 (versionCode: 15) — 15 Kasım 2026
 * **7 Bağımsız Sekmeli Yatay Kayan Ayarlar Menüsü:**

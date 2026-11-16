@@ -114,16 +114,17 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private Button btnCloseSettingsTop;
     private Button btnCloseQuickQuality;
 
-    // UI Scale Views & State (%80 - %150)
+    // UI Scale Views & State (%60 - %200)
     private static final String KEY_UI_SCALE = "pref_ui_scale";
     private TextView tvScaleStatus;
     private Button btnScaleAuto;
+    private Button btnScale60;
     private Button btnScale80;
-    private Button btnScale90;
     private Button btnScale100;
-    private Button btnScale115;
-    private Button btnScale130;
+    private Button btnScale125;
     private Button btnScale150;
+    private Button btnScale175;
+    private Button btnScale200;
     private String currentUiScale = "auto";
 
     // Sleep Timer Views & State
@@ -361,12 +362,13 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
         tvScaleStatus = findViewById(R.id.tv_scale_status);
         btnScaleAuto = findViewById(R.id.btn_scale_auto);
+        btnScale60 = findViewById(R.id.btn_scale_60);
         btnScale80 = findViewById(R.id.btn_scale_80);
-        btnScale90 = findViewById(R.id.btn_scale_90);
         btnScale100 = findViewById(R.id.btn_scale_100);
-        btnScale115 = findViewById(R.id.btn_scale_115);
-        btnScale130 = findViewById(R.id.btn_scale_130);
+        btnScale125 = findViewById(R.id.btn_scale_125);
         btnScale150 = findViewById(R.id.btn_scale_150);
+        btnScale175 = findViewById(R.id.btn_scale_175);
+        btnScale200 = findViewById(R.id.btn_scale_200);
 
         tvSleepStatus = findViewById(R.id.tv_sleep_status);
         btnSleepOff = findViewById(R.id.btn_sleep_off);
@@ -1105,16 +1107,17 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     }
 
     private float getScaleFactor() {
-        if ("80".equals(currentUiScale)) return 0.80f;
-        if ("90".equals(currentUiScale)) return 0.90f;
-        if ("100".equals(currentUiScale)) return 1.00f;
-        if ("115".equals(currentUiScale)) return 1.15f;
-        if ("130".equals(currentUiScale)) return 1.30f;
-        if ("150".equals(currentUiScale)) return 1.50f;
-        if ("normal".equals(currentUiScale)) return 1.00f;
-        if ("tv".equals(currentUiScale)) return 1.30f;
-        // "auto": TV ise %130, Mobil ise %100
-        return isTvHardware() ? 1.30f : 1.00f;
+        try {
+            if ("auto".equals(currentUiScale) || currentUiScale == null) {
+                return isTvHardware() ? 1.30f : 1.00f;
+            }
+            if ("normal".equals(currentUiScale)) return 1.00f;
+            if ("tv".equals(currentUiScale)) return 1.30f;
+            float val = Float.parseFloat(currentUiScale);
+            return Math.max(0.60f, Math.min(2.00f, val / 100f));
+        } catch (Exception ignored) {
+            return isTvHardware() ? 1.30f : 1.00f;
+        }
     }
 
     private void setupUiScaleControls() {
@@ -1129,14 +1132,14 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 }
             });
         }
+        if (btnScale60 != null) {
+            btnScale60.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { setUiScale("60"); }
+            });
+        }
         if (btnScale80 != null) {
             btnScale80.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) { setUiScale("80"); }
-            });
-        }
-        if (btnScale90 != null) {
-            btnScale90.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setUiScale("90"); }
             });
         }
         if (btnScale100 != null) {
@@ -1144,19 +1147,24 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 @Override public void onClick(View v) { setUiScale("100"); }
             });
         }
-        if (btnScale115 != null) {
-            btnScale115.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setUiScale("115"); }
-            });
-        }
-        if (btnScale130 != null) {
-            btnScale130.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setUiScale("130"); }
+        if (btnScale125 != null) {
+            btnScale125.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { setUiScale("125"); }
             });
         }
         if (btnScale150 != null) {
             btnScale150.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) { setUiScale("150"); }
+            });
+        }
+        if (btnScale175 != null) {
+            btnScale175.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { setUiScale("175"); }
+            });
+        }
+        if (btnScale200 != null) {
+            btnScale200.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { setUiScale("200"); }
             });
         }
 
@@ -1195,15 +1203,16 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             btnScaleAuto.setTypeface(null, active ? Typeface.BOLD : Typeface.NORMAL);
         }
 
-        Button[] btns = { btnScale80, btnScale90, btnScale100, btnScale115, btnScale130, btnScale150 };
-        String[] scales = { "80", "90", "100", "115", "130", "150" };
+        Button[] btns = { btnScale60, btnScale80, btnScale100, btnScale125, btnScale150, btnScale175, btnScale200 };
+        String[] scales = { "60", "80", "100", "125", "150", "175", "200" };
         String[] titles = {
-            "%80 (Ultra Kompakt)",
-            "%90 (Kompakt)",
+            "%60 (Ultra Mikro)",
+            "%80 (Kompakt)",
             "%100 (Standart Mobil)",
-            "%115 (Tablet / Yakın TV)",
-            "%130 (Büyük TV / 3m)",
-            "%150 (Dev / Uzak TV)"
+            "%125 (Tablet / Küçük TV)",
+            "%150 (Büyük TV / 3m)",
+            "%175 (Dev / 75\"+ TV)",
+            "%200 (Maksimum / 4m+ Salon TV)"
         };
 
         for (int i = 0; i < btns.length; i++) {
@@ -1241,7 +1250,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 int newWidth = (int) (270 * scale * density);
                 int screenWidth = getResources().getDisplayMetrics().widthPixels;
                 int maxWidth = (int) (screenWidth * 0.52f);
+                int minWidth = (int) (180 * density);
                 if (newWidth > maxWidth && maxWidth > 0) newWidth = maxWidth;
+                if (newWidth < minWidth && minWidth > 0) newWidth = minWidth;
                 lp.width = newWidth;
                 layoutDrawer.setLayoutParams(lp);
             }
@@ -2208,6 +2219,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                         if (!isNetworkAvailable) {
                             isNetworkAvailable = true;
                             if (layoutNetworkAlert != null) layoutNetworkAlert.setVisibility(View.GONE);
+                            if (tvStatus != null) tvStatus.setVisibility(View.GONE);
                             Toast.makeText(MainActivity.this, "İnternet bağlantısı sağlandı ✓", Toast.LENGTH_SHORT).show();
                             if (isSurfaceCreated && (mediaPlayer == null || !mediaPlayer.isPlaying())) {
                                 playbackRetryCount = 0;
