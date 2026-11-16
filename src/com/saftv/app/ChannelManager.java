@@ -3,11 +3,22 @@ package com.saftv.app;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChannelManager {
     private static final String PREFS_FAV = "saf_tv_favs";
@@ -16,12 +27,15 @@ public class ChannelManager {
     private static final String PREFS_SETTINGS = "saf_tv_channel_settings";
     private static final String KEY_DISABLED_CHANNELS = "disabled_channels";
 
+    private static final String CHANNELS_FILE_NAME = "channels.json";
+    private static final String SEED_ASSET_NAME = "seed_channels.json";
+
     private static ChannelManager instance;
     private final List<Channel> channels;
+    private boolean isInitialized = false;
 
     private ChannelManager() {
         channels = new ArrayList<>();
-        initChannels();
     }
 
     public static synchronized ChannelManager getInstance() {
@@ -31,263 +45,284 @@ public class ChannelManager {
         return instance;
     }
 
-    private void initChannels() {
-        String defaultUa = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
+    public synchronized void init(Context context) {
+        if (isInitialized && !channels.isEmpty()) {
+            return;
+        }
+        if (context == null) return;
 
-        // 1-14: ULUSAL & GENEL YAYINLAR
-        channels.add(new Channel(1, "TRT 1", "Ulusal",
-                "https://tv-trt1.medya.trt.com.tr/master.m3u8", defaultUa, null));
+        channels.clear();
 
-        channels.add(new Channel(2, "Kanal D", "Ulusal",
-                "https://demiroren.daioncdn.net/kanald/kanald.m3u8?app=kanald_web&ce=3", defaultUa, "https://www.kanald.com.tr/"));
+        // 1. Önce cihazın yerel depolama alanındaki (files/channels.json) dosyaya bak
+        boolean loadedFromLocal = loadFromLocalFile(context);
 
-        channels.add(new Channel(3, "ATV", "Ulusal",
-                "https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/atv/atv_720p.m3u8", defaultUa, "https://www.atv.com.tr/"));
+        // 2. Eğer yerel dosya yoksa veya boşsa, APK içindeki tohum (seed) dosyasına bak (Full sürüm tohumu)
+        if (!loadedFromLocal || channels.isEmpty()) {
+            boolean loadedFromSeed = loadFromSeedAsset(context);
+            if (loadedFromSeed && !channels.isEmpty()) {
+                // Tohumdan başarıyla yüklendi, artık yerel depolamaya kaydet
+                saveToLocalFile(context);
+            }
+        }
 
-        channels.add(new Channel(4, "Show TV", "Ulusal",
-                "https://ciner.daioncdn.net/showtv/showtv.m3u8?app=showtv_web", defaultUa, "https://www.showtv.com.tr/"));
-
-        channels.add(new Channel(5, "Star TV", "Ulusal",
-                "https://dogus.daioncdn.net/startv/startv_720p.m3u8?app=a20ac41e-bdc3-4aa1-934d-26b484480ac9&ce=3&sid=8l4w3lst4co5", defaultUa, "https://www.startv.com.tr/"));
-
-        channels.add(new Channel(6, "NOW TV", "Ulusal",
-                "https://uycyyuuzyh.turknet.ercdn.net/nphindgytw/nowtv/nowtv.m3u8", defaultUa, "https://www.nowtv.com.tr/"));
-
-        channels.add(new Channel(7, "TV8", "Ulusal",
-                "https://tv8.daioncdn.net/tv8/tv8.m3u8?app=7ddc255a-ef47-4e81-ab14-c0e5f2949788&ce=3", defaultUa, "https://www.tv8.com.tr/"));
-
-        channels.add(new Channel(8, "Kanal 7", "Ulusal",
-                "https://kanal7-live.daioncdn.net/kanal7/kanal7.m3u8", defaultUa, "https://www.kanal7.com/"));
-
-        channels.add(new Channel(9, "A2 TV", "Ulusal",
-                "https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/a2tv/a2tv.m3u8", defaultUa, "https://www.a2tv.com.tr/"));
-
-        channels.add(new Channel(10, "Teve2", "Ulusal",
-                "https://demiroren.daioncdn.net/teve2/teve2.m3u8?ce=3&app=6aab838a-437e-4a1b-bbd0-e30f79cdbbbd", defaultUa, "https://www.teve2.com.tr/"));
-
-        channels.add(new Channel(11, "Beyaz TV", "Ulusal",
-                "https://beyaztv-live.daioncdn.net/beyaztv/beyaztv.m3u8", defaultUa, "https://www.beyaztv.com.tr/"));
-
-        channels.add(new Channel(12, "360 TV", "Ulusal",
-                "https://turkmedya-live.ercdn.net/tv360/tv360.m3u8", defaultUa, "https://www.tv360.com.tr/"));
-
-        channels.add(new Channel(13, "TV4", "Ulusal",
-                "https://turkmedya-live.ercdn.net/tv4/tv4.m3u8", defaultUa, "https://www.tv4.com.tr/"));
-
-        channels.add(new Channel(14, "TRT Türk", "Ulusal",
-                "https://tv-trtturk.medya.trt.com.tr/master.m3u8", defaultUa, null));
-
-        // 15-28: HABER
-        channels.add(new Channel(15, "TRT Haber", "Haber",
-                "https://tv-trthaber.medya.trt.com.tr/master.m3u8", defaultUa, null));
-
-        channels.add(new Channel(16, "NTV", "Haber",
-                "https://dogus.daioncdn.net/ntv/ntv.m3u8?app=ntv_web", defaultUa, "https://www.ntv.com.tr/"));
-
-        channels.add(new Channel(17, "HaberTürk", "Haber",
-                "https://tv.ensonhaber.com/haberturk/haberturk.m3u8", defaultUa, null));
-
-        channels.add(new Channel(18, "A Haber", "Haber",
-                "https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/ahaber/ahaber_720p.m3u8", defaultUa, "https://www.ahaber.com.tr/"));
-
-        channels.add(new Channel(19, "Sözcü TV", "Haber",
-                "https://raw.githubusercontent.com/yaskar661-lgtm/stream/refs/heads/main/filbox/szchd.m3u8", defaultUa, null));
-
-        channels.add(new Channel(20, "Haber Global", "Haber",
-                "https://tv.ensonhaber.com/haberglobal/haberglobal.m3u8", defaultUa, null));
-
-        channels.add(new Channel(21, "Halk TV", "Haber",
-                "https://halktv-live.daioncdn.net/halktv/halktv.m3u8", defaultUa, "https://halktv.com.tr/"));
-
-        channels.add(new Channel(22, "24 TV", "Haber",
-                "https://turkmedya-live.ercdn.net/tv24/tv24.m3u8", defaultUa, "https://www.yirmidort.tv/"));
-
-        channels.add(new Channel(23, "TGRT Haber", "Haber",
-                "https://canli.tgrthaber.com/tgrt.m3u8", defaultUa, "https://www.tgrthaber.com/"));
-
-        channels.add(new Channel(24, "Bloomberg HT", "Haber",
-                "https://tv.ensonhaber.com/bloomberght/bloomberght.m3u8", defaultUa, null));
-
-        channels.add(new Channel(25, "Tele1", "Haber",
-                "https://tele1-live.ercdn.net/tele1/tele1.m3u8", defaultUa, "https://tele1.com.tr/"));
-
-        channels.add(new Channel(26, "TVNET", "Haber",
-                "https://tvnet-live.lg.mncdn.com/tvnet-live/tvnet/playlist.m3u8", defaultUa, "https://www.tvnet.com.tr/"));
-
-        channels.add(new Channel(27, "Flash Haber", "Haber",
-                "https://b01c02nl.mediatriple.net/videoonlylive/mtyycglqauzjhlive/broadcast_67c053c48829f.smil/playlist.m3u8", defaultUa, "https://www.flashhabertv.com/"));
-
-        channels.add(new Channel(28, "TRT 3 / TBMM TV", "Haber",
-                "https://tv-trt3.live.trt.com.tr/master.m3u8", defaultUa, null));
-
-        // 29-34: SPOR
-        channels.add(new Channel(29, "TRT Spor", "Spor",
-                "https://trt.daioncdn.net/trtspor/master.m3u8?app=web&platform=trtspor", defaultUa, "https://www.trtspor.com.tr/"));
-
-        channels.add(new Channel(30, "TRT Spor Yıldız", "Spor",
-                "https://trt.daioncdn.net/trtspor-yildiz/master.m3u8?app=web&platform=trtspor", defaultUa, "https://www.trtspor.com.tr/"));
-
-        channels.add(new Channel(31, "A Spor", "Spor",
-                "https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/aspor/aspor_1080p.m3u8", defaultUa, "https://www.aspor.com.tr/"));
-
-        channels.add(new Channel(32, "TV8.5", "Spor",
-                "https://tv8.daioncdn.net/tv8bucuk/tv8bucuk.m3u8?app=tv8bucuk_web", defaultUa, "https://www.tv8bucuk.com/"));
-
-        channels.add(new Channel(33, "HT Spor", "Spor",
-                "https://ciner.daioncdn.net/ht-spor/ht-spor.m3u8?app=web", defaultUa, "https://www.htspor.com/"));
-
-        channels.add(new Channel(34, "FB TV", "Spor",
-                "http://1hskrdto.rocketcdn.com/fenerbahcetv.smil/playlist.m3u8", defaultUa, "https://www.fenerbahce.org/"));
-
-        // 35-37: BELGESEL
-        channels.add(new Channel(35, "TRT Belgesel", "Belgesel",
-                "https://tv-trtbelgesel.medya.trt.com.tr/master.m3u8", defaultUa, null));
-
-        channels.add(new Channel(36, "DMAX", "Belgesel",
-                "https://dogus.daioncdn.net/dmax/dmax.m3u8?app=dmax_web", defaultUa, "https://www.dmax.com.tr/"));
-
-        channels.add(new Channel(37, "TLC", "Belgesel",
-                "https://dogus.daioncdn.net/tlc/tlc.m3u8?app=tlc_web", defaultUa, "https://www.tlctv.com.tr/"));
-
-        // 38-41: ÇOCUK
-        channels.add(new Channel(38, "TRT Çocuk", "Çocuk",
-                "https://tv-trtcocuk.medya.trt.com.tr/master.m3u8", defaultUa, null));
-
-        channels.add(new Channel(39, "Minika Çocuk", "Çocuk",
-                "https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/minikago_cocuk/minikago_cocuk.m3u8", defaultUa, "https://www.minikacocuk.com.tr/"));
-
-        channels.add(new Channel(40, "Minika GO", "Çocuk",
-                "https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/minikago/minikago.m3u8", defaultUa, "https://www.minikago.com.tr/"));
-
-        channels.add(new Channel(41, "TRT Diyanet Çocuk", "Çocuk",
-                "https://tv-trtdiyanetcocuk.medya.trt.com.tr/master.m3u8", defaultUa, null));
-
-        // 42-45: MÜZİK
-        channels.add(new Channel(42, "TRT Müzik", "Müzik",
-                "https://tv-trtmuzik.medya.trt.com.tr/master.m3u8", defaultUa, null));
-
-        channels.add(new Channel(43, "Power TV", "Müzik",
-                "https://livetv.powerapp.com.tr/powerTV/powerhd.smil/playlist.m3u8", defaultUa, "https://www.powerapp.com.tr/"));
-
-        channels.add(new Channel(44, "Dream Türk", "Müzik",
-                "https://live.duhnet.tv/S2/HLS_LIVE/dreamturknp/playlist.m3u8", defaultUa, "https://www.dreamturk.com.tr/"));
-
-        channels.add(new Channel(45, "Kral Pop TV", "Müzik",
-                "https://dogus-live.daioncdn.net/kralpoptv/playlist.m3u8", defaultUa, "https://www.kralmuzik.com.tr/"));
-
-        // 46-51: KÜLTÜR
-        channels.add(new Channel(46, "TRT 2", "Kültür",
-                "https://tv-trt2.medya.trt.com.tr/master.m3u8", defaultUa, null));
-
-        channels.add(new Channel(47, "Diyanet TV", "Kültür",
-                "https://eustr73.mediatriple.net/videoonlylive/mtikoimxnztxlive/broadcast_5e3bf95a47e07.smil/playlist.m3u8", defaultUa, "https://www.diyanet.tv/"));
-
-        channels.add(new Channel(48, "TRT World", "Kültür",
-                "https://tv-trtworld.medya.trt.com.tr/master.m3u8", defaultUa, null));
-
-        channels.add(new Channel(49, "TRT Avaz", "Kültür",
-                "https://tv-trtavaz.medya.trt.com.tr/master.m3u8", defaultUa, null));
-
-        channels.add(new Channel(50, "TRT Arabi", "Kültür",
-                "https://tv-trtarabi.medya.trt.com.tr/master.m3u8", defaultUa, null));
-
-        channels.add(new Channel(51, "TRT Kurdî", "Kültür",
-                "https://tv-trtkurdi.medya.trt.com.tr/master.m3u8", defaultUa, null));
-
-        // 52-53: KÜLTÜR & DİNİ
-        channels.add(new Channel(52, "Lalegül TV", "Kültür",
-                "https://lbl.netmedya.net/hls/lalegultv.m3u8", defaultUa, "https://lalegultv.com.tr/"));
-
-        channels.add(new Channel(53, "Semerkand TV", "Kültür",
-                "https://b01c02nl.mediatriple.net/videoonlylive/mtisvwurbfcyslive/broadcast_58d915bd40efc.smil/playlist.m3u8", defaultUa, "https://www.semerkandtv.com.tr/"));
-
-        // 54-55: HABER
-        channels.add(new Channel(54, "CNN Türk", "Haber",
-                "http://85.117.61.84/cnnturk/index.m3u8", defaultUa, "https://www.cnnturk.com/"));
-
-        channels.add(new Channel(55, "DHA Canlı", "Haber",
-                "https://603c568fccdf5.streamlock.net/live/dhaweb1_C5efC/playlist.m3u8", defaultUa, "https://www.dha.com.tr/"));
-
-        // 56-58: BELGESEL & YAŞAM
-        channels.add(new Channel(56, "TGRT Belgesel", "Belgesel",
-                "https://b01c02nl.mediatriple.net/videoonlylive/mtsxxkzwwuqtglive/broadcast_5fe462afc6a0e.smil/playlist.m3u8", defaultUa, "https://www.tgrtbelgesel.com.tr/"));
-
-        channels.add(new Channel(57, "National Geographic Wild", "Belgesel",
-                "https://saran-live.ercdn.net/natgeowild/index.m3u8", defaultUa, "https://www.natgeotv.com/"));
-
-        channels.add(new Channel(58, "Çiftçi TV", "Belgesel",
-                "https://live.artidijitalmedya.com/artidijital_ciftcitv/ciftcitv/playlist.m3u8", defaultUa, "https://ciftcitv.com/"));
-
-        // 59-61: ÇOCUK & EĞİTİM
-        channels.add(new Channel(59, "TRT EBA İlkokul", "Çocuk",
-                "https://tv-e-okul00.medya.trt.com.tr/master.m3u8", defaultUa, null));
-
-        channels.add(new Channel(60, "TRT EBA Ortaokul", "Çocuk",
-                "https://tv-e-okul01.medya.trt.com.tr/master.m3u8", defaultUa, null));
-
-        channels.add(new Channel(61, "TRT EBA Lise", "Çocuk",
-                "https://tv-e-okul02.medya.trt.com.tr/master.m3u8", defaultUa, null));
+        isInitialized = true;
+        syncChannelSettings(context);
     }
 
+    private boolean loadFromLocalFile(Context context) {
+        try {
+            File file = new File(context.getFilesDir(), CHANNELS_FILE_NAME);
+            if (!file.exists() || file.length() == 0) return false;
+
+            FileInputStream fis = new FileInputStream(file);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            reader.close();
+            fis.close();
+
+            return parseJsonChannelArray(sb.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean loadFromSeedAsset(Context context) {
+        try {
+            InputStream is = context.getAssets().open(SEED_ASSET_NAME);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            reader.close();
+            is.close();
+
+            return parseJsonChannelArray(sb.toString());
+        } catch (Exception ignored) {
+            // Seed dosyası yok (Yasal / Tohumsuz sürüm)
+            return false;
+        }
+    }
+
+    private synchronized boolean parseJsonChannelArray(String jsonStr) {
+        try {
+            if (jsonStr == null || jsonStr.trim().isEmpty()) return false;
+            JSONArray arr;
+            String trimmed = jsonStr.trim();
+            if (trimmed.startsWith("{")) {
+                JSONObject obj = new JSONObject(trimmed);
+                arr = obj.optJSONArray("channels");
+                if (arr == null) return false;
+            } else if (trimmed.startsWith("[")) {
+                arr = new JSONArray(trimmed);
+            } else {
+                return false;
+            }
+
+            List<Channel> newChannels = new ArrayList<>();
+            String defaultUa = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
+
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject item = arr.getJSONObject(i);
+                int id = item.optInt("id", i + 1);
+                String name = item.optString("name", "Kanal " + id);
+                String category = item.optString("category", "Genel");
+                String url = item.optString("url", "");
+                String ua = item.optString("userAgent", defaultUa);
+                String referer = item.has("referer") && !item.isNull("referer") ? item.optString("referer", null) : null;
+
+                if (!url.isEmpty()) {
+                    newChannels.add(new Channel(id, name, category, url, ua, referer));
+                }
+            }
+
+            if (!newChannels.isEmpty()) {
+                channels.clear();
+                channels.addAll(newChannels);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public synchronized boolean saveToLocalFile(Context context) {
+        if (context == null) return false;
+        try {
+            String jsonStr = exportToJson();
+            File file = new File(context.getFilesDir(), CHANNELS_FILE_NAME);
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(jsonStr.getBytes("UTF-8"));
+            fos.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public synchronized boolean importFromJson(String jsonContent, Context context) {
+        boolean ok = parseJsonChannelArray(jsonContent);
+        if (ok) {
+            saveToLocalFile(context);
+            syncChannelSettings(context);
+        }
+        return ok;
+    }
+
+    public synchronized boolean importFromM3u(String m3uContent, Context context) {
+        if (m3uContent == null || m3uContent.trim().isEmpty()) return false;
+        try {
+            String[] lines = m3uContent.split("\\r?\\n");
+            List<Channel> parsed = new ArrayList<>();
+            String curName = null;
+            String curCat = "Genel";
+            String defaultUa = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
+
+            Pattern groupPattern = Pattern.compile("group-title=\"([^\"]+)\"", Pattern.CASE_INSENSITIVE);
+
+            for (String rawLine : lines) {
+                String line = rawLine.trim();
+                if (line.isEmpty()) continue;
+
+                if (line.toUpperCase().startsWith("#EXTINF")) {
+                    Matcher m = groupPattern.matcher(line);
+                    if (m.find()) {
+                        curCat = m.group(1).trim();
+                    } else {
+                        curCat = "Genel";
+                    }
+
+                    int commaIdx = line.lastIndexOf(',');
+                    if (commaIdx != -1 && commaIdx < line.length() - 1) {
+                        curName = line.substring(commaIdx + 1).trim();
+                    } else {
+                        curName = "Kanal " + (parsed.size() + 1);
+                    }
+                } else if (!line.startsWith("#")) {
+                    if (line.startsWith("http://") || line.startsWith("https://")) {
+                        String chName = curName != null ? curName : "Kanal " + (parsed.size() + 1);
+                        int id = parsed.size() + 1;
+                        parsed.add(new Channel(id, chName, curCat, line, defaultUa, null));
+                        curName = null;
+                        curCat = "Genel";
+                    }
+                }
+            }
+
+            if (!parsed.isEmpty()) {
+                channels.clear();
+                channels.addAll(parsed);
+                saveToLocalFile(context);
+                syncChannelSettings(context);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public synchronized void clearChannels(Context context) {
+        channels.clear();
+        if (context != null) {
+            try {
+                File file = new File(context.getFilesDir(), CHANNELS_FILE_NAME);
+                if (file.exists()) file.delete();
+            } catch (Exception ignored) {}
+            setDisabledChannelsSet(new HashSet<String>(), context);
+            setFavoritesSet(new HashSet<String>(), context);
+        }
+    }
+
+    public synchronized String exportToJson() {
+        try {
+            JSONArray arr = new JSONArray();
+            for (Channel c : channels) {
+                JSONObject obj = new JSONObject();
+                obj.put("id", c.getId());
+                obj.put("name", c.getName());
+                obj.put("category", c.getCategory());
+                obj.put("url", c.getUrl());
+                obj.put("userAgent", c.getUserAgent());
+                if (c.getReferer() != null) {
+                    obj.put("referer", c.getReferer());
+                }
+                arr.put(obj);
+            }
+            return arr.toString(2);
+        } catch (Exception e) {
+            return "[]";
+        }
+    }
+
+    // ==========================================
+    // KANAL YÖNETİMİ & AKTİF / PASİF DURUMU
+    // ==========================================
     public void syncChannelSettings(Context context) {
         if (context == null) return;
         SharedPreferences prefs = context.getSharedPreferences(PREFS_SETTINGS, Context.MODE_PRIVATE);
         Set<String> disabled = prefs.getStringSet(KEY_DISABLED_CHANNELS, null);
-        if (disabled == null || disabled.isEmpty()) {
-            // İlk kuruluşta tüm kanallar varsayılan olarak AKTİFTİR
+        if (disabled == null) {
             for (Channel c : channels) {
                 c.setActive(true);
             }
-        } else {
-            for (Channel c : channels) {
-                c.setActive(!disabled.contains(String.valueOf(c.getId())));
-            }
+            return;
+        }
+        for (Channel c : channels) {
+            c.setActive(!disabled.contains(String.valueOf(c.getId())));
         }
     }
 
     public boolean toggleChannelActive(int channelId, Context context) {
-        if (context == null) return false;
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_SETTINGS, Context.MODE_PRIVATE);
-        Set<String> curDisabled = prefs.getStringSet(KEY_DISABLED_CHANNELS, new HashSet<String>());
-        Set<String> newDisabled = new HashSet<>(curDisabled);
-
-        String idStr = String.valueOf(channelId);
-        boolean nowActive;
-        if (newDisabled.contains(idStr)) {
-            newDisabled.remove(idStr);
-            nowActive = true;
-        } else {
-            newDisabled.add(idStr);
-            nowActive = false;
-        }
-        prefs.edit().putStringSet(KEY_DISABLED_CHANNELS, newDisabled).apply();
-
+        Channel target = null;
         for (Channel c : channels) {
             if (c.getId() == channelId) {
-                c.setActive(nowActive);
+                target = c;
                 break;
             }
         }
-        return nowActive;
+        if (target == null) return false;
+
+        boolean newActive = !target.isActive();
+        target.setActive(newActive);
+
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_SETTINGS, Context.MODE_PRIVATE);
+        Set<String> cur = prefs.getStringSet(KEY_DISABLED_CHANNELS, new HashSet<String>());
+        Set<String> updated = new HashSet<>(cur);
+
+        String idStr = String.valueOf(channelId);
+        if (newActive) {
+            updated.remove(idStr);
+        } else {
+            updated.add(idStr);
+        }
+        prefs.edit().putStringSet(KEY_DISABLED_CHANNELS, updated).apply();
+        return newActive;
     }
 
     public void resetAllChannelsActive(Context context) {
-        if (context == null) return;
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_SETTINGS, Context.MODE_PRIVATE);
-        prefs.edit().remove(KEY_DISABLED_CHANNELS).apply();
         for (Channel c : channels) {
             c.setActive(true);
         }
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_SETTINGS, Context.MODE_PRIVATE);
+        prefs.edit().remove(KEY_DISABLED_CHANNELS).apply();
     }
 
     public void disableAllChannels(Context context) {
-        if (context == null) return;
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_SETTINGS, Context.MODE_PRIVATE);
         Set<String> allDisabled = new HashSet<>();
         for (Channel c : channels) {
-            allDisabled.add(String.valueOf(c.getId()));
             c.setActive(false);
+            allDisabled.add(String.valueOf(c.getId()));
         }
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_SETTINGS, Context.MODE_PRIVATE);
         prefs.edit().putStringSet(KEY_DISABLED_CHANNELS, allDisabled).apply();
     }
 
@@ -302,7 +337,6 @@ public class ChannelManager {
                 activeList.add(c);
             }
         }
-        // Eğer tüm kanallar pasif yapılmışsa güvenli fallback: ilk kanal aktif döner
         if (activeList.isEmpty() && !channels.isEmpty()) {
             activeList.add(channels.get(0));
         }
@@ -317,8 +351,9 @@ public class ChannelManager {
             return getFavoriteChannels(context);
         }
         List<Channel> filtered = new ArrayList<>();
+        String catLower = category.toLowerCase(new java.util.Locale("tr", "TR"));
         for (Channel c : getActiveChannels()) {
-            if (c.getCategory().equalsIgnoreCase(category)) {
+            if (c.getCategory().toLowerCase(new java.util.Locale("tr", "TR")).contains(catLower)) {
                 filtered.add(c);
             }
         }
@@ -347,7 +382,10 @@ public class ChannelManager {
         if (index >= 0 && index < active.size()) {
             return active.get(index);
         }
-        return active.get(0);
+        if (!active.isEmpty()) {
+            return active.get(0);
+        }
+        return null;
     }
 
     public int getChannelCount() {

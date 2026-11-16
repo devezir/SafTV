@@ -1395,7 +1395,7 @@
                     android:id="@+id/btn_settings_export"
                     android:layout_width="match_parent"
                     android:layout_height="42dp"
-                    android:text="💾 Ayarları Dışa Aktar (Yedekle)"
+                    android:text="💾 Ayarları &amp; Kanalları Dışa Aktar"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:textColor="@color/accent_green"
@@ -1406,17 +1406,39 @@
                     android:id="@+id/btn_settings_import"
                     android:layout_width="match_parent"
                     android:layout_height="42dp"
-                    android:text="📂 Dosyadan İçe Aktar (Geri Yükle)"
+                    android:text="📂 Dosyadan İçe Aktar (M3U / JSON)"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:textColor="@color/accent_blue"
+                    android:background="@drawable/selector_chip"
+                    android:layout_marginBottom="10dp" />
+
+                <Button
+                    android:id="@+id/btn_settings_import_url"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:text="🌐 Web Bağlantısından İndir (M3U / URL)"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#38BDF8"
+                    android:background="@drawable/selector_chip"
+                    android:layout_marginBottom="10dp" />
+
+                <Button
+                    android:id="@+id/btn_settings_clear_channels"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:text="🗑️ Çalma Listesini Temizle (Sıfırla)"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#EF4444"
                     android:background="@drawable/selector_chip"
                     android:layout_marginBottom="14dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="💡 İpucu: Dışa aktarılan dosya Download klasörüne 'saftv_backup.json' adıyla kaydedilir."
+                    android:text="💡 İpucu: M3U veya JSON formatındaki kanal listelerinizi doğrudan dosya veya web linki olarak ekleyebilirsiniz."
                     android:textColor="@color/text_gray"
                     android:textSize="10sp" />
             </LinearLayout>

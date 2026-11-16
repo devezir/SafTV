@@ -62,6 +62,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -238,6 +239,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                     int targetNum = Integer.parseInt(numKeyBuffer);
                     int targetIndex = -1;
                     List<Channel> all = channelManager.getActiveChannels();
+                    if (all.isEmpty()) {
+                        numKeyBuffer = "";
+                        return;
+                    }
                     for (int i = 0; i < all.size(); i++) {
                         if (all.get(i).getId() == targetNum) {
                             targetIndex = i;
@@ -279,6 +284,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         isTouchDevice = getPackageManager().hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN);
 
         channelManager = ChannelManager.getInstance();
+        channelManager.init(this);
         channelManager.syncChannelSettings(this); // İlk kuruluşta hepsi aktif
 
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -1024,7 +1030,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             });
         }
 
-        // Ayarları Dışa Aktar (Yedekle - Sekme 3)
+        // Ayarları & Kanalları Dışa Aktar (Yedekle - Sekme 3)
         View btnExport = findViewById(R.id.btn_settings_export);
         if (btnExport != null) {
             btnExport.setOnClickListener(new View.OnClickListener() {
@@ -1035,13 +1041,35 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             });
         }
 
-        // Ayarları İçe Aktar (Geri Yükle - Sekme 3)
+        // Dosyadan İçe Aktar (M3U / JSON - Sekme 3)
         View btnImport = findViewById(R.id.btn_settings_import);
         if (btnImport != null) {
             btnImport.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     importSettings();
+                }
+            });
+        }
+
+        // Web Bağlantısından İndir (M3U / URL - Sekme 3)
+        View btnImportUrl = findViewById(R.id.btn_settings_import_url);
+        if (btnImportUrl != null) {
+            btnImportUrl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showImportUrlDialog();
+                }
+            });
+        }
+
+        // Çalma Listesini Temizle (Sekme 3)
+        View btnClearChannels = findViewById(R.id.btn_settings_clear_channels);
+        if (btnClearChannels != null) {
+            btnClearChannels.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showClearChannelsDialog();
                 }
             });
         }
@@ -1532,11 +1560,26 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         if (!isRetry) {
             playbackRetryCount = 0;
         }
+        if (channelManager.getChannelCount() == 0) {
+            if (mediaPlayer != null) {
+                try {
+                    mediaPlayer.stop();
+                    mediaPlayer.reset();
+                } catch (Exception ignored) {}
+            }
+            if (loadingSpinner != null) loadingSpinner.setVisibility(View.GONE);
+            if (tvStatus != null) {
+                tvStatus.setText("📺 Henüz kanal eklenmedi.\nKendi çalma listenizi (M3U / JSON) yüklemek için Ayarlar menüsünü kullanabilirsiniz.");
+                tvStatus.setVisibility(View.VISIBLE);
+            }
+            return;
+        }
         if (index < 0 || index >= channelManager.getChannelCount()) {
             index = 0;
         }
         currentChannelIndex = index;
         final Channel channel = channelManager.getChannelByIndex(index);
+        if (channel == null) return;
 
         getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                 .edit()
@@ -1602,6 +1645,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     }
 
     private void showOsd(Channel channel) {
+        if (channel == null) return;
         tvOsdNum.setText(String.valueOf(channel.getId()));
         tvOsdName.setText(channel.getName());
         tvOsdCat.setText(channel.getCategory().toUpperCase());
@@ -1633,7 +1677,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         channelAdapter.notifyDataSetChanged();
         if (currentChannelIndex < channelManager.getChannelCount()) {
             Channel cur = channelManager.getChannelByIndex(currentChannelIndex);
-            if (cur.getId() == channel.getId()) {
+            if (cur != null && cur.getId() == channel.getId()) {
                 tvOsdFav.setVisibility(added ? View.VISIBLE : View.GONE);
                 if (btnTouchFav != null) {
                     btnTouchFav.setText(added ? "★ Favori" : "☆ Favori");
@@ -2360,6 +2404,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             }
             root.put("disabled_channels", disabledArray);
 
+            // Kanalları da JSON yedeğine ekle (böylece harici M3U/JSON listesi de tam yedeklenir)
+            root.put("channels", new JSONArray(channelManager.exportToJson()));
+
             SimpleDateFormat fileDateSdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
             String fileName = "saf_tv_yedek_" + fileDateSdf.format(new Date()) + ".json";
 
@@ -2372,7 +2419,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             fos.write(root.toString(2).getBytes("UTF-8"));
             fos.close();
 
-            Toast.makeText(this, "💾 Ayarlar yedeklendi:\n" + destFile.getName(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "💾 Ayarlar & Kanallar yedeklendi:\n" + destFile.getName(), Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Toast.makeText(this, "Yedekleme hatası: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -2380,109 +2427,365 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
     private void importSettings() {
         try {
-            File dir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-            if (dir == null) dir = getFilesDir();
-
-            File[] candidates = dir.listFiles(new java.io.FilenameFilter() {
-                @Override
-                public boolean accept(File d, String name) {
-                    return name.startsWith("saf_tv_yedek") && name.endsWith(".json");
-                }
-            });
-
-            if (candidates == null || candidates.length == 0) {
-                File intDir = getFilesDir();
-                candidates = intDir.listFiles(new java.io.FilenameFilter() {
-                    @Override
-                    public boolean accept(File d, String name) {
-                        return name.startsWith("saf_tv_yedek") && name.endsWith(".json");
+            List<File> fileList = new ArrayList<>();
+            File dlDir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+            if (dlDir != null && dlDir.exists()) {
+                File[] arr = dlDir.listFiles();
+                if (arr != null) {
+                    for (File f : arr) {
+                        String name = f.getName().toLowerCase();
+                        if (name.endsWith(".json") || name.endsWith(".m3u") || name.endsWith(".m3u8")) {
+                            fileList.add(f);
+                        }
                     }
-                });
+                }
             }
 
-            if (candidates == null || candidates.length == 0) {
-                Toast.makeText(this, "⚠️ Yedek dosyası bulunamadı!\nÖnce 'Dışa Aktar' yapmalısınız.", Toast.LENGTH_LONG).show();
+            File intDir = getFilesDir();
+            if (intDir != null && intDir.exists()) {
+                File[] arr = intDir.listFiles();
+                if (arr != null) {
+                    for (File f : arr) {
+                        String name = f.getName().toLowerCase();
+                        if (name.endsWith(".json") || name.endsWith(".m3u") || name.endsWith(".m3u8")) {
+                            if (!name.equals("channels.json")) {
+                                fileList.add(f);
+                            }
+                        }
+                    }
+                }
+            }
+
+            File publicDl = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            if (publicDl != null && publicDl.exists() && publicDl.canRead()) {
+                File[] arr = publicDl.listFiles();
+                if (arr != null) {
+                    for (File f : arr) {
+                        String name = f.getName().toLowerCase();
+                        if (name.endsWith(".json") || name.endsWith(".m3u") || name.endsWith(".m3u8")) {
+                            fileList.add(f);
+                        }
+                    }
+                }
+            }
+
+            if (fileList.isEmpty()) {
+                Toast.makeText(this, "⚠️ İçe aktarılacak .json veya .m3u dosyası bulunamadı!\nDosyayı Download klasörüne kopyalayınız.", Toast.LENGTH_LONG).show();
                 return;
             }
 
-            File newest = candidates[0];
-            for (int i = 1; i < candidates.length; i++) {
-                if (candidates[i].lastModified() > newest.lastModified()) {
-                    newest = candidates[i];
-                }
+            if (fileList.size() == 1) {
+                loadDataFromFile(fileList.get(0));
+                return;
             }
 
-            FileInputStream fis = new FileInputStream(newest);
+            // Birden fazla dosya varsa kullanıcıya seçtir
+            final File[] candidates = fileList.toArray(new File[0]);
+            String[] fileNames = new String[candidates.length];
+            for (int i = 0; i < candidates.length; i++) {
+                fileNames[i] = candidates[i].getName();
+            }
+
+            new AlertDialog.Builder(this)
+                    .setTitle("📂 Yüklenecek Dosyayı Seçin")
+                    .setItems(fileNames, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            loadDataFromFile(candidates[which]);
+                        }
+                    })
+                    .setNegativeButton("İptal", null)
+                    .show();
+
+        } catch (Exception e) {
+            Toast.makeText(this, "İçe aktarma listeleme hatası: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void loadDataFromFile(File file) {
+        try {
+            FileInputStream fis = new FileInputStream(file);
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                sb.append(line);
+                sb.append(line).append("\n");
             }
             reader.close();
             fis.close();
 
-            JSONObject root = new JSONObject(sb.toString());
+            String content = sb.toString().trim();
+            boolean isM3u = file.getName().toLowerCase().endsWith(".m3u")
+                    || file.getName().toLowerCase().endsWith(".m3u8")
+                    || content.startsWith("#EXTM3U")
+                    || content.startsWith("#EXTINF");
 
-            if (root.has("preferences")) {
-                JSONObject p = root.getJSONObject("preferences");
-                if (p.has(KEY_QUALITY)) {
-                    currentQualityPref = p.getString(KEY_QUALITY);
-                    getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putString(KEY_QUALITY, currentQualityPref).apply();
+            if (isM3u) {
+                boolean ok = channelManager.importFromM3u(content, this);
+                if (ok) {
+                    channelAdapter.updateList(channelManager.getActiveChannels());
+                    settingsChannelAdapter.notifyDataSetChanged();
+                    if (tvDrawerSubtitle != null) {
+                        tvDrawerSubtitle.setText("Aktif Kanallar (" + channelManager.getChannelCount() + ")");
+                    }
+                    Toast.makeText(this, "✅ M3U Çalma Listesi Yüklendi (" + channelManager.getChannelCount() + " kanal)\n" + file.getName(), Toast.LENGTH_LONG).show();
+                    if (channelManager.getChannelCount() > 0) {
+                        currentChannelIndex = 0;
+                        playChannel(0);
+                    }
+                } else {
+                    Toast.makeText(this, "⚠️ M3U dosyası okunamadı veya geçerli kanal bulunamadı.", Toast.LENGTH_LONG).show();
                 }
-                if (p.has(KEY_ASPECT_RATIO)) {
-                    aspectRatioMode = p.getInt(KEY_ASPECT_RATIO);
-                    getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putInt(KEY_ASPECT_RATIO, aspectRatioMode).apply();
-                    applyAspectRatio();
-                }
-                if (p.has(KEY_UI_SCALE)) {
-                    currentUiScale = p.getString(KEY_UI_SCALE);
-                    getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putString(KEY_UI_SCALE, currentUiScale).apply();
-                    updateUiScaleButtons();
-                    applyUiScale();
-                }
-                if (p.has(KEY_BG_AUDIO)) {
-                    isBackgroundAudioEnabled = p.getBoolean(KEY_BG_AUDIO);
-                    getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putBoolean(KEY_BG_AUDIO, isBackgroundAudioEnabled).apply();
-                    updateBgAudioButton();
-                }
+                return;
             }
 
-            if (root.has("favorites")) {
-                JSONArray fArr = root.getJSONArray("favorites");
-                Set<String> newFavs = new HashSet<>();
-                for (int i = 0; i < fArr.length(); i++) {
-                    newFavs.add(String.valueOf(fArr.getInt(i)));
+            if (content.startsWith("{")) {
+                JSONObject root = new JSONObject(content);
+
+                if (root.has("channels")) {
+                    channelManager.importFromJson(root.getJSONArray("channels").toString(), this);
                 }
-                channelManager.setFavoritesSet(newFavs, this);
-            }
 
-            if (root.has("disabled_channels")) {
-                JSONArray dArr = root.getJSONArray("disabled_channels");
-                Set<String> newDisabled = new HashSet<>();
-                for (int i = 0; i < dArr.length(); i++) {
-                    newDisabled.add(String.valueOf(dArr.getInt(i)));
+                if (root.has("preferences")) {
+                    JSONObject p = root.getJSONObject("preferences");
+                    if (p.has(KEY_QUALITY)) {
+                        currentQualityPref = p.getString(KEY_QUALITY);
+                        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putString(KEY_QUALITY, currentQualityPref).apply();
+                    }
+                    if (p.has(KEY_ASPECT_RATIO)) {
+                        aspectRatioMode = p.getInt(KEY_ASPECT_RATIO);
+                        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putInt(KEY_ASPECT_RATIO, aspectRatioMode).apply();
+                        applyAspectRatio();
+                    }
+                    if (p.has(KEY_UI_SCALE)) {
+                        currentUiScale = p.getString(KEY_UI_SCALE);
+                        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putString(KEY_UI_SCALE, currentUiScale).apply();
+                        updateUiScaleButtons();
+                        applyUiScale();
+                    }
+                    if (p.has(KEY_BG_AUDIO)) {
+                        isBackgroundAudioEnabled = p.getBoolean(KEY_BG_AUDIO);
+                        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putBoolean(KEY_BG_AUDIO, isBackgroundAudioEnabled).apply();
+                        updateBgAudioButton();
+                    }
                 }
-                channelManager.setDisabledChannelsSet(newDisabled, this);
-            }
 
-            channelManager.syncChannelSettings(this);
-            channelAdapter.updateList(channelManager.getActiveChannels());
-            settingsChannelAdapter.notifyDataSetChanged();
-            if (tvDrawerSubtitle != null) {
-                tvDrawerSubtitle.setText("Aktif Kanallar (" + channelManager.getChannelCount() + ")");
-            }
-            playChannel(currentChannelIndex);
+                if (root.has("favorites")) {
+                    JSONArray fArr = root.getJSONArray("favorites");
+                    Set<String> newFavs = new HashSet<>();
+                    for (int i = 0; i < fArr.length(); i++) {
+                        newFavs.add(String.valueOf(fArr.getInt(i)));
+                    }
+                    channelManager.setFavoritesSet(newFavs, this);
+                }
 
-            Channel cur = channelManager.getChannelByIndex(currentChannelIndex);
-            if (cur != null) {
-                showOsd(cur);
-            }
+                if (root.has("disabled_channels")) {
+                    JSONArray dArr = root.getJSONArray("disabled_channels");
+                    Set<String> newDisabled = new HashSet<>();
+                    for (int i = 0; i < dArr.length(); i++) {
+                        newDisabled.add(String.valueOf(dArr.getInt(i)));
+                    }
+                    channelManager.setDisabledChannelsSet(newDisabled, this);
+                }
 
-            Toast.makeText(this, "📂 Ayarlar geri yüklendi:\n" + newest.getName(), Toast.LENGTH_LONG).show();
+                channelManager.syncChannelSettings(this);
+                channelAdapter.updateList(channelManager.getActiveChannels());
+                settingsChannelAdapter.notifyDataSetChanged();
+                if (tvDrawerSubtitle != null) {
+                    tvDrawerSubtitle.setText("Aktif Kanallar (" + channelManager.getChannelCount() + ")");
+                }
+                playChannel(currentChannelIndex);
+
+                Channel cur = channelManager.getChannelByIndex(currentChannelIndex);
+                if (cur != null) {
+                    showOsd(cur);
+                }
+
+                Toast.makeText(this, "📂 Yedek/Kanal listesi geri yüklendi:\n" + file.getName(), Toast.LENGTH_LONG).show();
+            } else if (content.startsWith("[")) {
+                boolean ok = channelManager.importFromJson(content, this);
+                if (ok) {
+                    channelAdapter.updateList(channelManager.getActiveChannels());
+                    settingsChannelAdapter.notifyDataSetChanged();
+                    if (tvDrawerSubtitle != null) {
+                        tvDrawerSubtitle.setText("Aktif Kanallar (" + channelManager.getChannelCount() + ")");
+                    }
+                    Toast.makeText(this, "✅ JSON Kanal Listesi Yüklendi (" + channelManager.getChannelCount() + " kanal)\n" + file.getName(), Toast.LENGTH_LONG).show();
+                    if (channelManager.getChannelCount() > 0) {
+                        currentChannelIndex = 0;
+                        playChannel(0);
+                    }
+                } else {
+                    Toast.makeText(this, "⚠️ JSON listesi okunamadı.", Toast.LENGTH_SHORT).show();
+                }
+            }
         } catch (Exception e) {
-            Toast.makeText(this, "İçe aktarma hatası: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Dosya okuma hatası: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void showImportUrlDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("🌐 Web'den Kanal Listesi İndir");
+
+        final EditText input = new EditText(this);
+        input.setHint("https://ornek.com/liste.m3u veya JSON linki");
+        input.setSingleLine(true);
+        input.setTextColor(Color.WHITE);
+        input.setHintTextColor(0xFF888888);
+
+        FrameLayout container = new FrameLayout(this);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        int margin = (int) (18 * getResources().getDisplayMetrics().density);
+        params.leftMargin = margin;
+        params.rightMargin = margin;
+        params.topMargin = margin / 2;
+        params.bottomMargin = margin / 2;
+        input.setLayoutParams(params);
+        container.addView(input);
+        builder.setView(container);
+
+        builder.setPositiveButton("İndir & Yükle", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final String urlStr = input.getText().toString().trim();
+                if (urlStr.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Lütfen bir link girin", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                downloadPlaylistFromUrl(urlStr);
+            }
+        });
+
+        builder.setNegativeButton("İptal", null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void downloadPlaylistFromUrl(final String urlStr) {
+        Toast.makeText(this, "⏳ Çalma listesi indiriliyor...", Toast.LENGTH_SHORT).show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String fullUrl = urlStr;
+                    if (!fullUrl.startsWith("http://") && !fullUrl.startsWith("https://")) {
+                        fullUrl = "https://" + fullUrl;
+                    }
+                    URL url = new URL(fullUrl);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setConnectTimeout(10000);
+                    conn.setReadTimeout(15000);
+                    conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36");
+                    conn.setInstanceFollowRedirects(true);
+
+                    int status = conn.getResponseCode();
+                    int redirects = 0;
+                    while ((status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM || status == 307 || status == 308) && redirects < 5) {
+                        String newUrl = conn.getHeaderField("Location");
+                        conn.disconnect();
+                        url = new URL(url, newUrl);
+                        conn = (HttpURLConnection) url.openConnection();
+                        conn.setConnectTimeout(10000);
+                        conn.setReadTimeout(15000);
+                        conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36");
+                        status = conn.getResponseCode();
+                        redirects++;
+                    }
+
+                    if (status != HttpURLConnection.HTTP_OK) {
+                        final int errCode = status;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(MainActivity.this, "İndirme başarısız (HTTP " + errCode + ")", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                        return;
+                    }
+
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line).append("\n");
+                    }
+                    reader.close();
+                    conn.disconnect();
+
+                    final String content = sb.toString().trim();
+                    boolean parsed = false;
+
+                    if (content.toUpperCase().contains("#EXTM3U") || content.toUpperCase().contains("#EXTINF")) {
+                        parsed = channelManager.importFromM3u(content, MainActivity.this);
+                    } else if (content.startsWith("{") || content.startsWith("[")) {
+                        parsed = channelManager.importFromJson(content, MainActivity.this);
+                    }
+
+                    final boolean success = parsed;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (success) {
+                                channelAdapter.updateList(channelManager.getActiveChannels());
+                                settingsChannelAdapter.notifyDataSetChanged();
+                                if (tvDrawerSubtitle != null) {
+                                    tvDrawerSubtitle.setText("Aktif Kanallar (" + channelManager.getChannelCount() + ")");
+                                }
+                                Toast.makeText(MainActivity.this, "✅ " + channelManager.getChannelCount() + " kanal başarıyla yüklendi!", Toast.LENGTH_LONG).show();
+                                if (channelManager.getChannelCount() > 0) {
+                                    currentChannelIndex = 0;
+                                    playChannel(0);
+                                }
+                            } else {
+                                Toast.makeText(MainActivity.this, "⚠️ Geçerli M3U veya JSON formatında kanal bulunamadı!", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                } catch (final Exception e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.this, "Hata: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+    private void showClearChannelsDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("🗑️ Çalma Listesini Temizle")
+                .setMessage("Tüm kanallar cihazınızdan silinecek. Kendi listenizi daha sonra tekrar yükleyebilirsiniz.\n\nOnaylıyor musunuz?")
+                .setPositiveButton("Temizle", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        channelManager.clearChannels(MainActivity.this);
+                        if (mediaPlayer != null) {
+                            try {
+                                mediaPlayer.stop();
+                                mediaPlayer.reset();
+                            } catch (Exception ignored) {}
+                        }
+                        channelAdapter.updateList(channelManager.getActiveChannels());
+                        settingsChannelAdapter.notifyDataSetChanged();
+                        if (tvDrawerSubtitle != null) {
+                            tvDrawerSubtitle.setText("Aktif Kanallar (0)");
+                        }
+                        if (loadingSpinner != null) loadingSpinner.setVisibility(View.GONE);
+                        if (tvStatus != null) {
+                            tvStatus.setText("📺 Henüz kanal eklenmedi.\nKendi çalma listenizi (M3U / JSON) yüklemek için Ayarlar menüsünü kullanabilirsiniz.");
+                            tvStatus.setVisibility(View.VISIBLE);
+                        }
+                        Toast.makeText(MainActivity.this, "Kanal listesi temizlendi.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("İptal", null)
+                .show();
     }
 
     private void checkUpdatesOnline() {

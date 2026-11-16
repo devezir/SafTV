@@ -179,55 +179,111 @@ if res.returncode != 0:
 print("D8 OK. Generated DEX files:", os.listdir(bin_dir))
 
 dex_file = os.path.join(bin_dir, "classes.dex")
-with zipfile.ZipFile(base_apk, "a") as z:
-    z.write(dex_file, "classes.dex")
-print("Added classes.dex to base.apk")
 
-# 7. Sign APK
-print("[5/5] Aligning and signing APK with uber-apk-signer...")
-out_dir = os.path.join(base_dir, "out")
-shutil.rmtree(out_dir, ignore_errors=True)
-os.makedirs(out_dir, exist_ok=True)
+# 7. Package Flavors & Sign
+print("[5/5] Packaging flavors and signing with uber-apk-signer...")
 
-cmd_sign = [
-    java, "-jar", signer_jar,
-    "-a", base_apk,
-    "-o", out_dir,
-    "--allowResign"
-]
+flavors_to_build = []
+if "--flavor" in sys.argv:
+    f_idx = sys.argv.index("--flavor")
+    f_val = sys.argv[f_idx + 1].lower() if len(sys.argv) > f_idx + 1 else "both"
+    if f_val in ["legal", "full"]:
+        flavors_to_build = [f_val]
+    else:
+        flavors_to_build = ["legal", "full"]
+else:
+    flavors_to_build = ["legal", "full"]
 
 release_keystore = os.path.join(base_dir, "keystore", "saftv-release.jks")
-if os.path.exists(release_keystore):
-    cmd_sign += [
-        "--ks", release_keystore,
-        "--ksAlias", "saftv",
-        "--ksPass", "REDACTED_PASSWORD",
-        "--ksKeyPass", "REDACTED_PASSWORD"
-    ]
-    print("[*] Signing with official release keystore: saftv-release.jks")
-else:
-    print("[!] Warning: saftv-release.jks not found, using debug keystore")
-res = subprocess.run(cmd_sign, capture_output=True, text=True)
 
-final_apks = glob.glob(os.path.join(out_dir, "*.apk"))
-if final_apks:
-    # 1. Save to releases/SafTV_v{versionName}_vc{versionCode}.apk
-    release_apk_name = f"SafTV_v{cur_vn}_vc{cur_vc}.apk"
-    release_apk_path = os.path.join(releases_dir, release_apk_name)
-    shutil.copy2(final_apks[0], release_apk_path)
+def build_and_sign_flavor(flavor_name, seed_json_path, root_apk_name, release_apk_name):
+    flavor_unsigned = os.path.join(base_dir, f"base_{flavor_name}.apk")
+    shutil.copy2(base_apk, flavor_unsigned)
     
-    # 2. Update root SafTV.apk (latest)
-    latest_apk_path = os.path.join(base_dir, "SafTV.apk")
+    with zipfile.ZipFile(flavor_unsigned, "a") as z:
+        z.write(dex_file, "classes.dex")
+        if seed_json_path and os.path.exists(seed_json_path):
+            z.write(seed_json_path, "assets/seed_channels.json")
+            print(f"[*] [{flavor_name.upper()}] Added {seed_json_path} -> assets/seed_channels.json")
+        else:
+            print(f"[*] [{flavor_name.upper()}] Clean build (0 seed channels, unseeded player)")
+
+    out_dir = os.path.join(base_dir, f"out_{flavor_name}")
+    shutil.rmtree(out_dir, ignore_errors=True)
+    os.makedirs(out_dir, exist_ok=True)
+
+    cmd_sign = [
+        java, "-jar", signer_jar,
+        "-a", flavor_unsigned,
+        "-o", out_dir,
+        "--allowResign"
+    ]
+    if os.path.exists(release_keystore):
+        cmd_sign += [
+            "--ks", release_keystore,
+            "--ksAlias", "saftv",
+            "--ksPass", "REDACTED_PASSWORD",
+            "--ksKeyPass", "REDACTED_PASSWORD"
+        ]
+    res = subprocess.run(cmd_sign, capture_output=True, text=True)
+    if res.returncode != 0:
+        print(f"Signing error for {flavor_name}:", res.stderr)
+        return None
+
+    final_apks = glob.glob(os.path.join(out_dir, "*.apk"))
+    if not final_apks:
+        print(f"No APK generated for {flavor_name}")
+        return None
+
+    rel_apk_path = os.path.join(releases_dir, release_apk_name)
+    shutil.copy2(final_apks[0], rel_apk_path)
+
+    latest_apk_path = os.path.join(base_dir, root_apk_name)
     shutil.copy2(final_apks[0], latest_apk_path)
 
-    apk_size = os.path.getsize(release_apk_path)
-    print("\n" + "="*50)
-    print(f"BUILD SUCCESSFUL!")
-    print(f"Version:       v{cur_vn} (versionCode: {cur_vc})")
-    print(f"Archived APK:  {release_apk_path}")
-    print(f"Latest APK:    {latest_apk_path}")
-    print(f"File Size:     {apk_size} bytes (~{apk_size/1024:.1f} KB)")
-    print("="*50 + "\n")
-else:
-    print("Failed to find signed APK in output directory.")
-    sys.exit(1)
+    # Clean temporary unsigned & out dir
+    if os.path.exists(flavor_unsigned):
+        os.remove(flavor_unsigned)
+    shutil.rmtree(out_dir, ignore_errors=True)
+
+    size = os.path.getsize(rel_apk_path)
+    return rel_apk_path, latest_apk_path, size
+
+results = {}
+
+if "legal" in flavors_to_build:
+    res = build_and_sign_flavor(
+        flavor_name="legal",
+        seed_json_path=None,
+        root_apk_name="SafTV.apk",
+        release_apk_name=f"SafTV_v{cur_vn}_vc{cur_vc}.apk"
+    )
+    if res:
+        results["LEGAL (Tohumsuz / Yasal)"] = res
+
+if "full" in flavors_to_build:
+    master_seed = os.path.join(base_dir, "channels_master.json")
+    if not os.path.exists(master_seed):
+        print(f"[!] Warning: {master_seed} not found, full build will be unseeded.")
+        master_seed = None
+    res = build_and_sign_flavor(
+        flavor_name="full",
+        seed_json_path=master_seed,
+        root_apk_name="SafTV_Full.apk",
+        release_apk_name=f"SafTV_Full_v{cur_vn}_vc{cur_vc}.apk"
+    )
+    if res:
+        results["FULL (Tohumlu / 160 Kanal)"] = res
+
+# Clean base.apk
+if os.path.exists(base_apk):
+    os.remove(base_apk)
+
+print("\n" + "="*60)
+print(f"BUILD FINISHED! Version: v{cur_vn} (versionCode: {cur_vc})")
+for flavor, (rel_path, latest_path, size) in results.items():
+    print(f"\n--- {flavor} ---")
+    print(f"Archived APK: {rel_path}")
+    print(f"Latest APK:   {latest_path}")
+    print(f"File Size:    {size} bytes (~{size/1024:.1f} KB)")
+print("="*60 + "\n")
