@@ -294,3 +294,11 @@ for flavor, (rel_path, latest_path, size) in results.items():
     print(f"Latest APK:   {latest_path}")
     print(f"File Size:    {size} bytes (~{size/1024:.1f} KB)")
 print("="*60 + "\n")
+
+# Purge jsDelivr cache to make updates instantly discoverable
+try:
+    import urllib.request
+    urllib.request.urlopen("https://purge.jsdelivr.net/gh/devezir/SafTV@main/version.json", timeout=5)
+    print("[*] jsDelivr cache purged (updates available instantly worldwide)")
+except Exception:
+    pass

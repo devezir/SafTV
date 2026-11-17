@@ -3639,19 +3639,20 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             @Override
             public void run() {
                 String[] endpoints = new String[] {
-                    "https://cdn.jsdelivr.net/gh/devezir/SafTV@main/version.json?t=" + System.currentTimeMillis(),
-                    "https://raw.githubusercontent.com/devezir/SafTV/main/version.json?t=" + System.currentTimeMillis()
+                    "https://raw.githubusercontent.com/devezir/SafTV/main/version.json?t=" + System.currentTimeMillis(),
+                    "https://cdn.jsdelivr.net/gh/devezir/SafTV@main/version.json?t=" + System.currentTimeMillis()
                 };
 
                 JSONObject json = null;
+                int maxFoundVc = -1;
                 for (String endpointUrl : endpoints) {
                     try {
                         URL url = new URL(endpointUrl);
                         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                         conn.setUseCaches(false);
                         conn.setDefaultUseCaches(false);
-                        conn.setConnectTimeout(6000);
-                        conn.setReadTimeout(6000);
+                        conn.setConnectTimeout(5000);
+                        conn.setReadTimeout(5000);
                         conn.setRequestProperty("User-Agent", "SafTV-Updater");
                         conn.setRequestProperty("Cache-Control", "no-cache, no-store, must-revalidate");
                         conn.setRequestProperty("Pragma", "no-cache");
@@ -3665,10 +3666,18 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                             }
                             reader.close();
                             conn.disconnect();
-                            json = new JSONObject(sb.toString());
-                            break;
+                            JSONObject candidate = new JSONObject(sb.toString());
+                            int candidateVc = candidate.optInt("versionCode", 0);
+                            if (candidateVc > maxFoundVc) {
+                                maxFoundVc = candidateVc;
+                                json = candidate;
+                            }
+                            if (maxFoundVc > getAppVersionCode()) {
+                                break;
+                            }
+                        } else {
+                            conn.disconnect();
                         }
-                        conn.disconnect();
                     } catch (Exception ignored) {
                     }
                 }
