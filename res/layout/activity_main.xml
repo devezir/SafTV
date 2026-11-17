@@ -198,6 +198,17 @@
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:text="21:30" />
+
+                    <!-- Network & Data Usage in OSD -->
+                    <TextView
+                        android:id="@+id/tv_osd_network_meter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:textColor="#38BDF8"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:text="📶 0.0 Mbps • 0 MB" />
                 </LinearLayout>
 
                 <!-- Quick Touch Action Buttons Bar (Sits nicely beside OSD on Landscape/TV; Wraps on narrow screen) -->
@@ -836,6 +847,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="34dp"
                         android:text="🎧 Ses Modu"
+                        android:textSize="11sp"
+                        android:textColor="@color/text_gray"
+                        android:background="@drawable/selector_chip"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:layout_marginRight="6dp" />
+
+                    <Button
+                        android:id="@+id/btn_tab_network"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:text="📶 Ağ &amp; Veri"
                         android:textSize="11sp"
                         android:textColor="@color/text_gray"
                         android:background="@drawable/selector_chip"
@@ -1594,6 +1617,367 @@
                         android:textSize="10sp"
                         android:layout_marginTop="4dp" />
                 </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Tab 8: AĞ & VERİ YÖNETİMİ -->
+        <ScrollView
+            android:id="@+id/tab_content_network"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="4dp"
+                android:paddingBottom="8dp">
+
+                <!-- 1. KART: AĞ DURUMU VE KOTALI AĞ POLİTİKASI -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_badge"
+                    android:padding="10dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/accent_blue"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:text="🌐 MEVCUT BAĞLANTI DURUMU" />
+
+                    <TextView
+                        android:id="@+id/tv_net_current_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_white"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp"
+                        android:text="📶 Wi-Fi (Sınırsız Ağ)" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_gray"
+                        android:textSize="11sp"
+                        android:layout_marginTop="8dp"
+                        android:text="Kotalı Ağa (Mobil Veri / Hotspot) Bağlanıldığında:" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="6dp">
+
+                        <Button
+                            android:id="@+id/btn_net_policy_allow"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:text="✓ Serbest Oynat"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_white"
+                            android:background="@drawable/selector_chip"
+                            android:layout_marginRight="4dp" />
+
+                        <Button
+                            android:id="@+id/btn_net_policy_warn"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:text="⚠️ Uyar &amp; Onay İste"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_gray"
+                            android:background="@drawable/selector_chip"
+                            android:layout_marginRight="4dp" />
+
+                        <Button
+                            android:id="@+id/btn_net_policy_block"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:text="⛔ Engelle"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_gray"
+                            android:background="@drawable/selector_chip" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 2. KART: VERİ TÜKETİM İSTATİSTİKLERİ -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_badge"
+                    android:padding="10dp"
+                    android:layout_marginBottom="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="@color/accent_green"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:text="📊 VERİ KULLANIM İSTATİSTİKLERİ" />
+
+                        <Button
+                            android:id="@+id/btn_reset_data_stats"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:text="🔄 Sıfırla"
+                            android:textSize="11sp"
+                            android:textColor="@color/accent_yellow"
+                            android:background="@drawable/selector_chip"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/text_gray"
+                                android:textSize="10sp"
+                                android:text="ANLIK HIZ" />
+
+                            <TextView
+                                android:id="@+id/tv_stat_speed"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/text_white"
+                                android:textSize="13sp"
+                                android:textStyle="bold"
+                                android:text="0.0 Mbps" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/text_gray"
+                                android:textSize="10sp"
+                                android:text="OTURUMDA" />
+
+                            <TextView
+                                android:id="@+id/tv_stat_session"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/text_white"
+                                android:textSize="13sp"
+                                android:textStyle="bold"
+                                android:text="0 MB" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/text_gray"
+                                android:textSize="10sp"
+                                android:text="BUGÜN" />
+
+                            <TextView
+                                android:id="@+id/tv_stat_today"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/text_white"
+                                android:textSize="13sp"
+                                android:textStyle="bold"
+                                android:text="0 MB" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/accent_blue"
+                                android:textSize="10sp"
+                                android:textStyle="bold"
+                                android:text="SON 30 GÜN" />
+
+                            <TextView
+                                android:id="@+id/tv_stat_monthly"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/accent_blue"
+                                android:textSize="13sp"
+                                android:textStyle="bold"
+                                android:text="0 MB" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 3. KART: BAĞIMSIZ KOTA LİMİTLERİ (OTURUM / GÜNLÜK / SON 30 GÜN) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_badge"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/accent_yellow"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:text="🛡️ KOTA LİMİTLERİ (AŞIMDA DURDUR &amp; UYAR)" />
+
+                    <!-- Oturum Kotası Satırı -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp"
+                            android:text="Oturum Başına Limit:" />
+
+                        <TextView
+                            android:id="@+id/tv_quota_session_val"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/accent_yellow"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_marginRight="8dp"
+                            android:text="Kapalı" />
+
+                        <Button
+                            android:id="@+id/btn_set_quota_session"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:text="⚙️ Ayarla"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_white"
+                            android:background="@drawable/selector_chip"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp" />
+                    </LinearLayout>
+
+                    <!-- Günlük Kota Satırı -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="6dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp"
+                            android:text="Günlük Toplam Limit:" />
+
+                        <TextView
+                            android:id="@+id/tv_quota_daily_val"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/accent_yellow"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_marginRight="8dp"
+                            android:text="Kapalı" />
+
+                        <Button
+                            android:id="@+id/btn_set_quota_daily"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:text="⚙️ Ayarla"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_white"
+                            android:background="@drawable/selector_chip"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp" />
+                    </LinearLayout>
+
+                    <!-- Son 30 Günlük Kota Satırı -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="6dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp"
+                            android:text="Son 30 Gün Toplam Limit:" />
+
+                        <TextView
+                            android:id="@+id/tv_quota_monthly_val"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/accent_yellow"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_marginRight="8dp"
+                            android:text="Kapalı" />
+
+                        <Button
+                            android:id="@+id/btn_set_quota_monthly"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:text="⚙️ Ayarla"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_white"
+                            android:background="@drawable/selector_chip"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
             </LinearLayout>
         </ScrollView>
 

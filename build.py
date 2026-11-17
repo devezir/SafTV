@@ -273,7 +273,14 @@ if "full" in flavors_to_build:
         release_apk_name=f"SafTV_Full_v{cur_vn}_vc{cur_vc}.apk"
     )
     if res:
-        results["FULL (Tohumlu / 160 Kanal)"] = res
+        ch_count = 0
+        if master_seed and os.path.exists(master_seed):
+            try:
+                with open(master_seed, 'r', encoding='utf-8') as f:
+                    ch_count = len(json.load(f))
+            except Exception:
+                pass
+        results[f"FULL (Tohumlu / {ch_count} Kanal)"] = res
 
 # Clean base.apk
 if os.path.exists(base_apk):

@@ -24,5 +24,7 @@ güncelleme sorunu.mp4
 *.mp4
 *.log
 *.tmp
+health_check_results.json
+test_channels_health.py
 .idea/
 .vscode/
