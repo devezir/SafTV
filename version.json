@@ -1,8 +1,8 @@
 {
-  "versionCode": 19,
-  "versionName": "2.6.0",
-  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.6.0/SafTV_v2.6.0_vc19.apk",
-  "apkName": "SafTV_v2.6.0_vc19.apk",
+  "versionCode": 20,
+  "versionName": "2.7.0",
+  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.7.0/SafTV_v2.7.0_vc20.apk",
+  "apkName": "SafTV_v2.7.0_vc20.apk",
   "history": [
     {
       "versionCode": 1,
@@ -136,6 +136,13 @@
       "apkName": "SafTV_v2.6.0_vc19.apk",
       "date": "2026-11-17",
       "description": "Kotalı Ağ Tespiti (Hotspot/Hücresel Koruma), Canlı OSD Veri Sayacı, Ayarlar Ağ & Veri Yönetimi ve 3 Bağımsız Kota Limiti (Oturum / Günlük / Son 30 Gün)"
+    },
+    {
+      "versionCode": 20,
+      "versionName": "2.7.0",
+      "apkName": "SafTV_v2.7.0_vc20.apk",
+      "date": "2026-11-17",
+      "description": "Sadece Ses (Radyo Modu) & %95+ Veri Tasarrufu, Video Kapatma ve OLED Yanma Koruması"
     }
   ]
 }

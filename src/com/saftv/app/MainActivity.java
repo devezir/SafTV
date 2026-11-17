@@ -103,6 +103,14 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private TextView tvOsdHint;
     private TextView tvOsdNetworkMeter;
 
+    // Audio-Only / Radio Mode Views
+    private FrameLayout layoutAudioOnlyOverlay;
+    private View cardAudioOnly;
+    private TextView tvAudioOnlyChannelName;
+    private TextView tvAudioOnlySavings;
+    private Button btnAudioOnlyRestore;
+    private boolean isAudioOnlyMode = false;
+
     // Touch Controls
     private View viewScrim;
     private View layoutTouchActions;
@@ -257,6 +265,21 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         }
     };
 
+    private final Runnable burnInProtectRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (layoutAudioOnlyOverlay != null && layoutAudioOnlyOverlay.getVisibility() == View.VISIBLE && cardAudioOnly != null) {
+                float density = getResources().getDisplayMetrics().density;
+                int maxOffset = (int) (20 * density);
+                int offsetX = (int) ((Math.random() * (maxOffset * 2)) - maxOffset);
+                int offsetY = (int) ((Math.random() * (maxOffset * 2)) - maxOffset);
+                cardAudioOnly.setTranslationX(offsetX);
+                cardAudioOnly.setTranslationY(offsetY);
+                handler.postDelayed(this, 60000);
+            }
+        }
+    };
+
     private final Runnable dataUsageRunnable = new Runnable() {
         @Override
         public void run() {
@@ -391,6 +414,30 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         tvOsdTime = findViewById(R.id.tv_osd_time);
         tvOsdHint = findViewById(R.id.tv_osd_hint);
         tvOsdNetworkMeter = findViewById(R.id.tv_osd_network_meter);
+
+        layoutAudioOnlyOverlay = findViewById(R.id.layout_audio_only_overlay);
+        cardAudioOnly = findViewById(R.id.card_audio_only);
+        tvAudioOnlyChannelName = findViewById(R.id.tv_audio_only_channel_name);
+        tvAudioOnlySavings = findViewById(R.id.tv_audio_only_savings);
+        btnAudioOnlyRestore = findViewById(R.id.btn_audio_only_restore);
+        if (btnAudioOnlyRestore != null) {
+            btnAudioOnlyRestore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setStreamQuality("auto");
+                    Toast.makeText(MainActivity.this, "Görüntü açıldı ✓", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        if (layoutAudioOnlyOverlay != null) {
+            layoutAudioOnlyOverlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setStreamQuality("auto");
+                    Toast.makeText(MainActivity.this, "Görüntü açıldı ✓", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         viewScrim = findViewById(R.id.view_scrim);
         layoutTouchActions = findViewById(R.id.layout_touch_actions);
@@ -1253,9 +1300,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 R.id.btn_set_q_1080,
                 R.id.btn_set_q_720,
                 R.id.btn_set_q_480,
-                R.id.btn_set_q_360
+                R.id.btn_set_q_360,
+                R.id.btn_set_q_audio_only
         };
-        final String[] qPrefs = { "auto", "1080p", "720p", "480p", "360p" };
+        final String[] qPrefs = { "auto", "1080p", "720p", "480p", "360p", "audio_only" };
 
         for (int i = 0; i < qBtnIds.length; i++) {
             Button b = findViewById(qBtnIds[i]);
@@ -1511,6 +1559,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         if (tvOsdTime != null) tvOsdTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(13 * scale));
         if (tvOsdHint != null) tvOsdHint.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scale));
         if (tvOsdNetworkMeter != null) tvOsdNetworkMeter.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(12 * scale));
+        if (tvAudioOnlyChannelName != null) tvAudioOnlyChannelName.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(20 * scale));
+        if (tvAudioOnlySavings != null) tvAudioOnlySavings.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scale));
 
         // Sol Çekmece Genişliği (Drawer Width)
         if (layoutDrawer != null) {
@@ -1768,9 +1818,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 R.id.btn_quick_q_1080,
                 R.id.btn_quick_q_720,
                 R.id.btn_quick_q_480,
-                R.id.btn_quick_q_360
+                R.id.btn_quick_q_360,
+                R.id.btn_quick_q_audio_only
         };
-        final String[] qPrefs = { "auto", "1080p", "720p", "480p", "360p" };
+        final String[] qPrefs = { "auto", "1080p", "720p", "480p", "360p", "audio_only" };
 
         for (int i = 0; i < qqIds.length; i++) {
             Button b = findViewById(qqIds[i]);
@@ -1793,7 +1844,14 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 .putString(KEY_QUALITY, quality)
                 .apply();
 
-        String label = quality.equals("auto") ? "Otomatik" : quality;
+        String label;
+        if (quality.equals("auto")) {
+            label = "Otomatik";
+        } else if (quality.equals("audio_only")) {
+            label = "📻 Sadece Ses (Radyo Modu)";
+        } else {
+            label = quality.toUpperCase(java.util.Locale.ROOT);
+        }
         Toast.makeText(this, "Yayın Kalitesi: " + label, Toast.LENGTH_SHORT).show();
         playChannel(currentChannelIndex);
     }
@@ -1900,7 +1958,13 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 mediaPlayer.setOnInfoListener(this);
             }
 
-            mediaPlayer.setDisplay(surfaceHolder);
+            if ("audio_only".equalsIgnoreCase(currentQualityPref)) {
+                mediaPlayer.setDisplay(null);
+                showAudioOnlyOverlay();
+            } else {
+                mediaPlayer.setDisplay(surfaceHolder);
+                hideAudioOnlyOverlay();
+            }
             mediaPlayer.setDataSource(this, Uri.parse(streamUrl), headers);
             mediaPlayer.prepareAsync();
 
@@ -1915,7 +1979,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         tvOsdNum.setText(String.valueOf(channel.getId()));
         tvOsdName.setText(channel.getName());
         tvOsdCat.setText(channel.getCategory().toUpperCase());
-        tvOsdQuality.setText("● CANLI [" + activeStreamQualityLabel + "]");
+        String qLabel = "audio_only".equalsIgnoreCase(currentQualityPref) ? "📻 Sadece Ses" : activeStreamQualityLabel;
+        tvOsdQuality.setText("● CANLI [" + qLabel + "]");
 
         boolean isFav = channelManager.isFavorite(channel.getId(), this);
         tvOsdFav.setVisibility(isFav ? View.VISIBLE : View.GONE);
@@ -1937,6 +2002,35 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
         handler.removeCallbacks(hideOsdRunnable);
         handler.postDelayed(hideOsdRunnable, OSD_TIMEOUT_MS);
+    }
+
+    private void showAudioOnlyOverlay() {
+        isAudioOnlyMode = true;
+        if (layoutAudioOnlyOverlay != null) {
+            layoutAudioOnlyOverlay.setVisibility(View.VISIBLE);
+            Channel ch = (channelManager != null && currentChannelIndex >= 0 && currentChannelIndex < channelManager.getChannelCount())
+                    ? channelManager.getChannelByIndex(currentChannelIndex) : null;
+            if (ch != null && tvAudioOnlyChannelName != null) {
+                tvAudioOnlyChannelName.setText(ch.getName());
+            }
+            if (btnAudioOnlyRestore != null) {
+                btnAudioOnlyRestore.requestFocus();
+            }
+        }
+        handler.removeCallbacks(burnInProtectRunnable);
+        handler.postDelayed(burnInProtectRunnable, 60000);
+    }
+
+    private void hideAudioOnlyOverlay() {
+        isAudioOnlyMode = false;
+        if (layoutAudioOnlyOverlay != null) {
+            layoutAudioOnlyOverlay.setVisibility(View.GONE);
+        }
+        handler.removeCallbacks(burnInProtectRunnable);
+        if (cardAudioOnly != null) {
+            cardAudioOnly.setTranslationX(0);
+            cardAudioOnly.setTranslationY(0);
+        }
     }
 
     private void toggleFavoriteChannel(Channel channel) {
@@ -2288,6 +2382,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
         // 4. Canlı yayın izlenirken kumanda kontrolleri:
         if (isEnterKey) {
+            if (layoutAudioOnlyOverlay != null && layoutAudioOnlyOverlay.getVisibility() == View.VISIBLE) {
+                setStreamQuality("auto");
+                Toast.makeText(MainActivity.this, "Görüntü açıldı ✓", Toast.LENGTH_SHORT).show();
+                return true;
+            }
             openDrawer();
             return true;
         }
@@ -2345,6 +2444,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 return true;
 
             case KeyEvent.KEYCODE_BACK:
+                if (layoutAudioOnlyOverlay != null && layoutAudioOnlyOverlay.getVisibility() == View.VISIBLE) {
+                    setStreamQuality("auto");
+                    Toast.makeText(MainActivity.this, "Görüntü açıldı ✓", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
                 showExitDialog();
                 return true;
 
@@ -2381,6 +2485,19 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         }
         loadingSpinner.setVisibility(View.GONE);
         tvStatus.setVisibility(View.GONE);
+        if ("audio_only".equalsIgnoreCase(currentQualityPref)) {
+            try {
+                mp.setDisplay(null);
+            } catch (Exception ignored) {}
+            showAudioOnlyOverlay();
+        } else {
+            hideAudioOnlyOverlay();
+            if (isSurfaceCreated) {
+                try {
+                    mp.setDisplay(surfaceHolder);
+                } catch (Exception ignored) {}
+            }
+        }
         mp.start();
         applyAspectRatio();
     }
@@ -2436,8 +2553,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         isSurfaceCreated = true;
         if (mediaPlayer != null) {
             try {
-                mediaPlayer.setDisplay(holder);
-                applyAspectRatio();
+                if (!"audio_only".equalsIgnoreCase(currentQualityPref)) {
+                    mediaPlayer.setDisplay(holder);
+                    applyAspectRatio();
+                }
                 return;
             } catch (Exception ignored) {}
         }
@@ -2594,7 +2713,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         String speedStr = DataUsageManager.formatSpeed(speed);
         String sessionStr = DataUsageManager.formatBytes(sessionBytes);
 
-        if (isMetered) {
+        if ("audio_only".equalsIgnoreCase(currentQualityPref)) {
+            if (isMetered) {
+                tvOsdNetworkMeter.setText("📻 Ses (Kotalı) • " + speedStr + " • " + sessionStr);
+                tvOsdNetworkMeter.setTextColor(Color.parseColor("#f59e0b"));
+            } else {
+                tvOsdNetworkMeter.setText("📻 Sadece Ses • " + speedStr + " • " + sessionStr);
+                tvOsdNetworkMeter.setTextColor(Color.parseColor("#a371f7"));
+            }
+        } else if (isMetered) {
             tvOsdNetworkMeter.setText("⚠️ Kotalı • " + speedStr + " • " + sessionStr);
             tvOsdNetworkMeter.setTextColor(Color.parseColor("#f59e0b"));
         } else {
@@ -3592,6 +3719,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (burnInProtectRunnable != null) {
+            handler.removeCallbacks(burnInProtectRunnable);
+        }
         unregisterNetworkCallback();
         if (quotaExceededDialog != null && quotaExceededDialog.isShowing()) {
             try { quotaExceededDialog.dismiss(); } catch (Exception ignored) {}
