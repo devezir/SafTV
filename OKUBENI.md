@@ -5,11 +5,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/devezir/SafTV/releases/latest"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v2.7.0_(vc_20)-blue?style=for-the-badge&logo=android" alt="Sürüm v2.7.0"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Boyut-Sadece_173_KB-brightgreen?style=for-the-badge" alt="Boyut 173 KB"></a>
+  <a href="https://github.com/devezir/SafTV/releases/latest"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v2.8.0_(vc_21)-blue?style=for-the-badge&logo=android" alt="Sürüm v2.8.0"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Boyut-Sadece_185_KB-brightgreen?style=for-the-badge" alt="Boyut 185 KB"></a>
   <a href="#"><img src="https://img.shields.io/badge/A%C3%A7%C4%B1l%C4%B1%C5%9F-0.1_Saniye-orange?style=for-the-badge" alt="0.1s Açılış Hızı"></a>
   <a href="#"><img src="https://img.shields.io/badge/Reklam-SIFIR_(%250)-red?style=for-the-badge" alt="Sıfır Reklam"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Radyo_Modu-%2595%2B_Tasarruf-purple?style=for-the-badge" alt="Sadece Ses ve Radyo Modu"></a>
+  <a href="#"><img src="https://img.shields.io/badge/OTA_G%C3%BCncelleme-Do%C4%9Frudan_Uygulama_%C4%B0%C3%A7i-blueviolet?style=for-the-badge" alt="Dahili OTA Güncelleme"></a>
   <a href="#"><img src="https://img.shields.io/badge/Android-5.0%2B_(API_21%2B)-success?style=for-the-badge&logo=android" alt="Android 5.0+"></a>
 </p>
 
@@ -19,9 +19,9 @@
 
 | Dosya | Boyut | Açıklama | Doğrudan İndir |
 |---|---|---|:---:|
-| 🚀 **Saf TV v2.7.0 (En Son Kararlı - Yasal)** | **~173 KB** | Güncel, resmi imzalı en son APK (Sadece Ses / Radyo Modu, %95+ Veri Tasarrufu) | [⬇️ **SafTV_v2.7.0_vc20.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.7.0/SafTV_v2.7.0_vc20.apk) |
-| 📱 **SafTV.apk (Sabit Bağlantı)** | **~173 KB** | Daima en son stabil sürümü işaret eder | [⬇️ **SafTV.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.7.0/SafTV.apk) |
-| 📦 **Tüm 20 Sürümün Arşivi (ZIP)** | **~1.21 MB** | v1.0.0'dan v2.7.0'a tüm APK'lar tek pakette | [📦 **SafTV_All_Releases_Archive.zip**](https://github.com/devezir/SafTV/releases/download/v2.7.0/SafTV_All_Releases_Archive.zip) |
+| 🚀 **Saf TV v2.8.0 (En Son Kararlı - Yasal)** | **~185 KB** | Güncel, resmi imzalı en son APK (Uygulama İçi Doğrudan OTA İndirme & Kurulum) | [⬇️ **SafTV_v2.8.0_vc21.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.8.0/SafTV_v2.8.0_vc21.apk) |
+| 📱 **SafTV.apk (Sabit Bağlantı)** | **~185 KB** | Daima en son stabil sürümü işaret eder | [⬇️ **SafTV.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.8.0/SafTV.apk) |
+| 📦 **Tüm 21 Sürümün Arşivi (ZIP)** | **~1.39 MB** | v1.0.0'dan v2.8.0'a tüm APK'lar tek pakette | [📦 **SafTV_All_Releases_Archive.zip**](https://github.com/devezir/SafTV/releases/download/v2.8.0/SafTV_All_Releases_Archive.zip) |
 | 📜 **Değişim Günlüğü** | — | Tüm sürümlerin kronolojik teknik detayları | [📜 **DEGISIM_GUNLUGU.md İncele**](DEGISIM_GUNLUGU.md) |
 
 ---
