@@ -10,6 +10,7 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 
 | Sürüm | Sürüm Kodu (versionCode) | Yayın Tarihi | APK Boyutu | Doğrudan APK İndir | Başlıca Yenilikler ve Odak Noktası |
 |:---:|:---:|:---:|:---:|:---:|---|
+| **v2.8.0** | 21 | 17.11.2026 | ~185.4 KB | [⬇️ **SafTV_v2.8.0_vc21.apk**](https://github.com/devezir/SafTV/releases/download/v2.8.0/SafTV_v2.8.0_vc21.apk) | 📲 **Uygulama İçi Doğrudan OTA Güncelleme & Canlı İndirme Çubuğu:** Harici web tarayıcısına gerek kalmadan TV kumandasıyla tek tıkla doğrudan indirme, canlı yüzde ve KB sayacı, sıfır harici kütüphaneli yerel `ApkProvider` ile Android Paket Yükleyicisini otomatik başlatma, kesintisiz TV deneyimi ve ayar/kanal koruma güvencesi. |
 | **v2.7.0** | 20 | 17.11.2026 | ~173.4 KB | [⬇️ **SafTV_v2.7.0_vc20.apk**](https://github.com/devezir/SafTV/releases/download/v2.7.0/SafTV_v2.7.0_vc20.apk) | 📻 **Sadece Ses (Radyo Modu) & %95+ Veri Tasarrufu:** Video rendering'i tamamen kapatıp sadece sesi dinleme modu (Haber/tartışma programları için ideal), HLS bağımsız ses veya minimum bant genişlikli akış seçimi, OLED dostu siyah radyo bilgi paneli, TV yanma koruması (Burn-in Protection), tek tuşla (OK/Dokun/BACK) anında videoya dönüş ve Hızlı Kalite (Yeşil Tuş) entegrasyonu. |
 | **v2.6.0** | 19 | 17.11.2026 | ~169.4 KB | [⬇️ **SafTV_v2.6.0_vc19.apk**](https://github.com/devezir/SafTV/releases/download/v2.6.0/SafTV_v2.6.0_vc19.apk) | 📶 **Kotalı Ağ Farkındalığı, Canlı OSD Veri Sayacı, 8. Sekme & 3 Bağımsız Kota:** Otomatik kotalı Wi-Fi (hotspot) ve mobil veri tespiti, Kotalı ağ davranışı (Serbest / Uyar / Engelle), OSD bilgi çubuğunda anlık hız & oturum sayacı rozeti, Ayarlar menüsünde 8. sekme (📶 Ağ & Veri: Anlık hız, Oturum, Bugün, Rolling Son 30 Gün), Oturum / Günlük / Son 30 Gün için bağımsız kota limitleri ve elle GB/MB girişi. |
 | **v2.5.0** | 18 | 16.11.2026 | ~149.4 KB | [⬇️ **SafTV_v2.5.0_vc18.apk**](https://github.com/devezir/SafTV/releases/download/v2.5.0/SafTV_v2.5.0_vc18.apk) | 🎛️ **Kanal Sıralama (A+B Hibrit), Otomatik Sıralama Şablonları & Alt Bilgi Ölçeklemesi:** Ayarlar menüsünden D-Pad ile canlı kanal taşıma, hedef sıra numarasıyla anında ışınlama, A-Z / Kategori / Varsayılan sıralama şablonları, Liste Sırası = Kanal No eşlemesi ve çekmece alt ipucu yazısının arayüz ölçeğiyle birebir büyümesi. |
@@ -34,6 +35,23 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 ---
 
 ## 🔍 Detaylı Sürüm Notları
+
+### 📲 v2.8.0 (versionCode: 21) — 17 Kasım 2026
+* **Uygulama İçi Doğrudan OTA Güncelleme (In-App Direct Updater):**
+  * Yeni sürüm çıktığında kullanıcıyı televizyon keyfinden koparan ve harici tarayıcıya yönlendiren hantal akış tamamen kaldırıldı.
+  * Artık "Güncelle" dendiğinde APK doğrudan Saf TV içerisinden, arka planda güvenle indirilir.
+* **Canlı İlerleme Çubuğu ve Boyut Sayacı (Progress Dialog):**
+  * İndirme sırasında ekranda TV kumandasıyla uyumlu şık bir diyalog açılır: Yüzde göstergesi, ilerleme çubuğu ve anlık indirilen/toplam boyut sayacı (Örn: `110 KB / 185 KB`).
+  * İstenirse "İptal" butonuyla indirme anında güvenle iptal edilebilir.
+* **Sıfır Kütüphaneli Yerel `ApkProvider` (Zero-Dependency ContentProvider):**
+  * Saf TV'nin 0 kütüphane ilkesine sadık kalarak, AndroidX'e ihtiyaç duymadan saf Android `ContentProvider` mimarisiyle `ApkProvider` sınıfı geliştirildi.
+  * Android 7.0+ `FileUriExposedException` kuralı ve Android 8.0+ `REQUEST_INSTALL_PACKAGES` izin kontrolü kusursuz şekilde yönetildi.
+* **Otomatik Sistem Paket Yükleyici Başlatma:**
+  * İndirme tamamlandığı anda Android'in yerel sistem kurulum ekranı (`Bu uygulamanın bir güncellemesini yüklemek istiyor musunuz? [Yükle]`) ekrana gelir.
+  * Kumandadan "Yükle"ye basıldığında uygulama anında güncellenir; mevcut kanal listesi, favoriler ve ayarlar **%100 korunur**.
+* **Çift Katmanlı Hata ve İzin Güvencesi:**
+  * Bilinmeyen kaynaklar izni kapalıysa kullanıcı tek tıkla ayar ekranına yönlendirilir; geri döndüğünde kurulum kaldığı yerden devam eder.
+  * Olası ağ kopmalarında "Tekrar Dene" ve "Tarayıcıda Aç" yedek seçenekleri hazır tutulur.
 
 ### 📻 v2.7.0 (versionCode: 20) — 17 Kasım 2026
 * **Sadece Ses (Radyo Modu) & Devasa Veri Tasarrufu (%95+):**

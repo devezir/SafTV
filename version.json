@@ -1,8 +1,8 @@
 {
-  "versionCode": 20,
-  "versionName": "2.7.0",
-  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.7.0/SafTV_v2.7.0_vc20.apk",
-  "apkName": "SafTV_v2.7.0_vc20.apk",
+  "versionCode": 21,
+  "versionName": "2.8.0",
+  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.8.0/SafTV_v2.8.0_vc21.apk",
+  "apkName": "SafTV_v2.8.0_vc21.apk",
   "history": [
     {
       "versionCode": 1,
@@ -143,6 +143,13 @@
       "apkName": "SafTV_v2.7.0_vc20.apk",
       "date": "2026-11-17",
       "description": "Sadece Ses (Radyo Modu) & %95+ Veri Tasarrufu, Video Kapatma ve OLED Yanma Koruması"
+    },
+    {
+      "versionCode": 21,
+      "versionName": "2.8.0",
+      "apkName": "SafTV_v2.8.0_vc21.apk",
+      "date": "2026-11-17",
+      "description": "Uygulama İçi Doğrudan OTA Güncelleme: TV kumandasıyla tek tıkla indirme, ilerleme çubuğu, sıfır bağımlılıklı yerel ApkProvider ile otomatik sistem paket kurulumu."
     }
   ]
 }

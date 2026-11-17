@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Rational;
@@ -61,6 +62,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -247,6 +249,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private int playbackRetryCount = 0;
 
     private GestureDetector gestureDetector;
+    private File pendingInstallFile = null;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable hideOsdRunnable = new Runnable() {
@@ -2591,6 +2594,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     protected void onResume() {
         super.onResume();
         hideSystemUI();
+
+        if (pendingInstallFile != null && pendingInstallFile.exists()) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || getPackageManager().canRequestPackageInstalls()) {
+                File fileToInstall = pendingInstallFile;
+                pendingInstallFile = null;
+                installApk(fileToInstall);
+            }
+        }
+
         if (dataUsageRunnable != null) {
             handler.removeCallbacks(dataUsageRunnable);
             handler.post(dataUsageRunnable);
@@ -3694,16 +3706,17 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                             if (remoteVc > getAppVersionCode()) {
                                 new AlertDialog.Builder(MainActivity.this)
                                         .setTitle("🚀 Yeni Sürüm Mevcut!")
-                                        .setMessage("Saf TV v" + remoteVn + " yayında.\nYeni sürümü indirmek ister misiniz?")
-                                        .setPositiveButton("İndir", new DialogInterface.OnClickListener() {
+                                        .setMessage("Saf TV v" + remoteVn + " yayında.\nYeni sürümü şimdi indirip kurmak ister misiniz?")
+                                        .setPositiveButton("Güncelle", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                try {
-                                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadUrl));
-                                                    startActivity(intent);
-                                                } catch (Exception e) {
-                                                    Toast.makeText(MainActivity.this, "Tarayıcı açılamadı: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                }
+                                                startApkDownload(downloadUrl, remoteVn);
+                                            }
+                                        })
+                                        .setNeutralButton("Tarayıcıda Aç", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                openInBrowser(downloadUrl);
                                             }
                                         })
                                         .setNegativeButton("Daha Sonra", null)
@@ -3723,6 +3736,251 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 }
             }
         }).start();
+    }
+
+    private void startApkDownload(final String apkUrl, final String versionName) {
+        float density = getResources().getDisplayMetrics().density;
+        int padH = (int) (24 * density);
+        int padV = (int) (16 * density);
+
+        LinearLayout container = new LinearLayout(this);
+        container.setOrientation(LinearLayout.VERTICAL);
+        container.setPadding(padH, padV, padH, padV);
+
+        final TextView tvStatus = new TextView(this);
+        tvStatus.setText("İndiriliyor: %0");
+        tvStatus.setTextSize(14);
+        tvStatus.setTextColor(Color.WHITE);
+        container.addView(tvStatus);
+
+        final ProgressBar pb = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+        pb.setIndeterminate(false);
+        pb.setMax(100);
+        pb.setProgress(0);
+        LinearLayout.LayoutParams lpPb = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                (int) (18 * density));
+        lpPb.topMargin = (int) (8 * density);
+        lpPb.bottomMargin = (int) (6 * density);
+        container.addView(pb, lpPb);
+
+        final TextView tvBytes = new TextView(this);
+        tvBytes.setText("0 KB / 0 KB");
+        tvBytes.setTextSize(12);
+        tvBytes.setTextColor(Color.LTGRAY);
+        container.addView(tvBytes);
+
+        final boolean[] isCancelled = new boolean[]{false};
+
+        final AlertDialog downloadDialog = new AlertDialog.Builder(this)
+                .setTitle("🚀 Saf TV v" + versionName + " İndiriliyor")
+                .setView(container)
+                .setNegativeButton("İptal", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        isCancelled[0] = true;
+                    }
+                })
+                .setCancelable(false)
+                .create();
+
+        downloadDialog.show();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File updateDir = new File(getCacheDir(), "updates");
+                if (!updateDir.exists()) {
+                    updateDir.mkdirs();
+                }
+                final File targetApk = new File(updateDir, "SafTV_v" + versionName + ".apk");
+                if (targetApk.exists()) {
+                    targetApk.delete();
+                }
+
+                HttpURLConnection conn = null;
+                InputStream in = null;
+                FileOutputStream out = null;
+                boolean success = false;
+                String errorMsg = "";
+
+                try {
+                    String currentUrl = apkUrl;
+                    int redirects = 0;
+                    while (redirects < 5) {
+                        URL u = new URL(currentUrl);
+                        conn = (HttpURLConnection) u.openConnection();
+                        conn.setInstanceFollowRedirects(true);
+                        conn.setConnectTimeout(10000);
+                        conn.setReadTimeout(20000);
+                        conn.setRequestProperty("User-Agent", "SafTV-Updater");
+                        int code = conn.getResponseCode();
+                        if (code == HttpURLConnection.HTTP_MOVED_TEMP || code == HttpURLConnection.HTTP_MOVED_PERM
+                                || code == 307 || code == 308) {
+                            String loc = conn.getHeaderField("Location");
+                            if (loc != null) {
+                                currentUrl = loc;
+                                conn.disconnect();
+                                redirects++;
+                                continue;
+                            }
+                        }
+                        break;
+                    }
+
+                    if (conn.getResponseCode() == 200) {
+                        final int totalBytes = conn.getContentLength();
+                        in = conn.getInputStream();
+                        out = new FileOutputStream(targetApk);
+
+                        byte[] buffer = new byte[8192];
+                        int read;
+                        int downloaded = 0;
+                        long lastUpdate = 0;
+
+                        while ((read = in.read(buffer)) != -1) {
+                            if (isCancelled[0]) {
+                                break;
+                            }
+                            out.write(buffer, 0, read);
+                            downloaded += read;
+
+                            final int curDown = downloaded;
+                            long now = System.currentTimeMillis();
+                            if (now - lastUpdate > 100 || curDown == totalBytes) {
+                                lastUpdate = now;
+                                final int progress = (totalBytes > 0) ? (int) ((curDown * 100L) / totalBytes) : 0;
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (downloadDialog.isShowing()) {
+                                            pb.setProgress(progress);
+                                            tvStatus.setText("İndiriliyor: %" + progress);
+                                            if (totalBytes > 0) {
+                                                tvBytes.setText((curDown / 1024) + " KB / " + (totalBytes / 1024) + " KB");
+                                            } else {
+                                                tvBytes.setText((curDown / 1024) + " KB");
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        }
+
+                        if (!isCancelled[0]) {
+                            out.flush();
+                            success = true;
+                        }
+                    } else {
+                        errorMsg = "Sunucu yanıt kodu: " + conn.getResponseCode();
+                    }
+                } catch (Exception e) {
+                    errorMsg = e.getMessage() != null ? e.getMessage() : "Bağlantı hatası";
+                } finally {
+                    try { if (in != null) in.close(); } catch (Exception ignored) {}
+                    try { if (out != null) out.close(); } catch (Exception ignored) {}
+                    if (conn != null) conn.disconnect();
+                }
+
+                final boolean finalSuccess = success;
+                final String finalError = errorMsg;
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (downloadDialog.isShowing()) {
+                            try { downloadDialog.dismiss(); } catch (Exception ignored) {}
+                        }
+
+                        if (isCancelled[0]) {
+                            if (targetApk.exists()) targetApk.delete();
+                            Toast.makeText(MainActivity.this, "Güncelleme iptal edildi", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        if (finalSuccess && targetApk.exists() && targetApk.length() > 0) {
+                            installApk(targetApk);
+                        } else {
+                            new AlertDialog.Builder(MainActivity.this)
+                                    .setTitle("⚠️ İndirme Başarısız")
+                                    .setMessage("Güncelleme indirilemedi: " + finalError + "\nTarayıcı ile indirmek ister misiniz?")
+                                    .setPositiveButton("Tarayıcıda Aç", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            openInBrowser(apkUrl);
+                                        }
+                                    })
+                                    .setNegativeButton("Kapat", null)
+                                    .show();
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void installApk(final File targetApk) {
+        if (targetApk == null || !targetApk.exists()) {
+            Toast.makeText(this, "Hata: APK dosyası bulunamadı", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Android 8.0+ (API 26+) Unknown Sources Permission Check
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (!getPackageManager().canRequestPackageInstalls()) {
+                pendingInstallFile = targetApk;
+                new AlertDialog.Builder(this)
+                        .setTitle("⚙️ Kurulum İzni Gerekli")
+                        .setMessage("Saf TV'nin güncellemeyi kurabilmesi için 'Bilinmeyen uygulamaları yükle' iznini açmanız gerekmektedir.")
+                        .setPositiveButton("Ayarlara Git", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
+                                    intent.setData(Uri.parse("package:" + getPackageName()));
+                                    startActivity(intent);
+                                } catch (Exception e) {
+                                    try {
+                                        startActivity(new Intent(Settings.ACTION_SECURITY_SETTINGS));
+                                    } catch (Exception ignored) {}
+                                }
+                            }
+                        })
+                        .setNegativeButton("İptal", null)
+                        .show();
+                return;
+            }
+        }
+
+        try {
+            Uri apkUri = Uri.parse("content://com.saftv.app.apkprovider/" + targetApk.getName());
+            Intent installIntent = new Intent(Intent.ACTION_VIEW);
+            installIntent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+            installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            installIntent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
+            startActivity(installIntent);
+        } catch (Exception e) {
+            new AlertDialog.Builder(this)
+                    .setTitle("⚠️ Kurulum Başlatılamadı")
+                    .setMessage("Paket yükleyici açılamadı: " + e.getMessage() + "\nTarayıcı üzerinden indirmek ister misiniz?")
+                    .setPositiveButton("Tarayıcıda Aç", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            openInBrowser("https://github.com/devezir/SafTV/releases");
+                        }
+                    })
+                    .setNegativeButton("Kapat", null)
+                    .show();
+        }
+    }
+
+    private void openInBrowser(String url) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(this, "Tarayıcı açılamadı: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
