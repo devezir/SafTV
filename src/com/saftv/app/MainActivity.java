@@ -43,6 +43,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.text.InputType;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -98,6 +101,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private TextView tvOsdQuality;
     private TextView tvOsdTime;
     private TextView tvOsdHint;
+    private TextView tvOsdNetworkMeter;
 
     // Touch Controls
     private View viewScrim;
@@ -207,6 +211,26 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private Button[] settingsTabBtns;
     private View[] settingsTabContents;
 
+    // Network & Data Usage Views
+    private DataUsageManager dataUsageManager;
+    private TextView tvNetCurrentStatus;
+    private Button btnNetPolicyAllow;
+    private Button btnNetPolicyWarn;
+    private Button btnNetPolicyBlock;
+    private TextView tvStatSpeed;
+    private TextView tvStatSession;
+    private TextView tvStatToday;
+    private TextView tvStatMonthly;
+    private Button btnResetDataStats;
+    private TextView tvQuotaSessionVal;
+    private TextView tvQuotaDailyVal;
+    private TextView tvQuotaMonthlyVal;
+    private Button btnSetQuotaSession;
+    private Button btnSetQuotaDaily;
+    private Button btnSetQuotaMonthly;
+    private AlertDialog quotaExceededDialog;
+    private AlertDialog meteredWarningDialog;
+
     private int aspectRatioMode = 0; // 0: Stretch, 1: Fit 16:9
     private int videoWidth = 0;
     private int videoHeight = 0;
@@ -230,6 +254,19 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         @Override
         public void run() {
             closeQuickQuality();
+        }
+    };
+
+    private final Runnable dataUsageRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (dataUsageManager != null) {
+                dataUsageManager.updateUsage();
+                updateOsdNetworkMeter();
+                updateSettingsNetworkTabIfVisible();
+                checkQuotaLimits();
+            }
+            handler.postDelayed(this, 1000);
         }
     };
 
@@ -301,6 +338,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         }
 
         initViews();
+        dataUsageManager = DataUsageManager.getInstance(this);
+        handler.post(dataUsageRunnable);
         updateHeaderLayoutOrientation();
         setupGestureDetector();
         setupCategories();
@@ -351,6 +390,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         tvOsdQuality = findViewById(R.id.tv_osd_quality);
         tvOsdTime = findViewById(R.id.tv_osd_time);
         tvOsdHint = findViewById(R.id.tv_osd_hint);
+        tvOsdNetworkMeter = findViewById(R.id.tv_osd_network_meter);
 
         viewScrim = findViewById(R.id.view_scrim);
         layoutTouchActions = findViewById(R.id.layout_touch_actions);
@@ -1091,13 +1131,14 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             }
         });
 
-        // 7 Sekmeli Yatay Kayan Ayarlar Paneli
+        // 8 Sekmeli Yatay Kayan Ayarlar Paneli
         hsvSettingsTabs = findViewById(R.id.hsv_settings_tabs);
         final Button btnTabChannels = findViewById(R.id.btn_tab_channels);
         final Button btnTabQuality = findViewById(R.id.btn_tab_quality);
         final Button btnTabScale = findViewById(R.id.btn_tab_scale);
         final Button btnTabSleep = findViewById(R.id.btn_tab_sleep);
         final Button btnTabAudio = findViewById(R.id.btn_tab_audio);
+        final Button btnTabNetwork = findViewById(R.id.btn_tab_network);
         final Button btnTabBackup = findViewById(R.id.btn_tab_backup);
         final Button btnTabAbout = findViewById(R.id.btn_tab_about);
 
@@ -1106,11 +1147,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         final View contentScale = findViewById(R.id.tab_content_scale);
         final View contentSleep = findViewById(R.id.tab_content_sleep);
         final View contentAudio = findViewById(R.id.tab_content_audio);
+        final View contentNetwork = findViewById(R.id.tab_content_network);
         final View contentBackup = findViewById(R.id.tab_content_backup);
         final View contentAbout = findViewById(R.id.tab_content_about);
 
-        settingsTabBtns = new Button[] { btnTabChannels, btnTabQuality, btnTabScale, btnTabSleep, btnTabAudio, btnTabBackup, btnTabAbout };
-        settingsTabContents = new View[] { contentChannels, contentQuality, contentScale, contentSleep, contentAudio, contentBackup, contentAbout };
+        settingsTabBtns = new Button[] { btnTabChannels, btnTabQuality, btnTabScale, btnTabSleep, btnTabAudio, btnTabNetwork, btnTabBackup, btnTabAbout };
+        settingsTabContents = new View[] { contentChannels, contentQuality, contentScale, contentSleep, contentAudio, contentNetwork, contentBackup, contentAbout };
 
         for (int i = 0; i < settingsTabBtns.length; i++) {
             final int tabIndex = i;
@@ -1396,6 +1438,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
         updateUiScaleButtons();
         applyUiScale();
+        setupNetworkSettingsControls();
     }
 
     private void setUiScale(String scale) {
@@ -1467,6 +1510,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         if (tvOsdQuality != null) tvOsdQuality.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scale));
         if (tvOsdTime != null) tvOsdTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(13 * scale));
         if (tvOsdHint != null) tvOsdHint.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scale));
+        if (tvOsdNetworkMeter != null) tvOsdNetworkMeter.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(12 * scale));
 
         // Sol Çekmece Genişliği (Drawer Width)
         if (layoutDrawer != null) {
@@ -1796,6 +1840,22 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
         showOsd(channel);
 
+        if (dataUsageManager != null && dataUsageManager.isNetworkMetered()) {
+            int policy = dataUsageManager.getMeteredPolicy();
+            if (policy == DataUsageManager.POLICY_BLOCK) {
+                if (loadingSpinner != null) loadingSpinner.setVisibility(View.GONE);
+                if (tvStatus != null) {
+                    tvStatus.setText("⛔ Kotalı ağdasınız.\nAyarlarınız gereği hücresel/kotalı ağda oynatma engellendi.\nAyarlar > Ağ & Veri menüsünden serbest bırakabilirsiniz.");
+                    tvStatus.setVisibility(View.VISIBLE);
+                }
+                return;
+            } else if (policy == DataUsageManager.POLICY_WARN && !dataUsageManager.isMeteredWarningDismissed()) {
+                if (loadingSpinner != null) loadingSpinner.setVisibility(View.GONE);
+                showMeteredNetworkWarningDialog(index, isRetry);
+                return;
+            }
+        }
+
         loadingSpinner.setVisibility(View.VISIBLE);
         tvStatus.setVisibility(View.GONE);
 
@@ -1868,6 +1928,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
             tvOsdTime.setText(sdf.format(new Date()));
         } catch (Exception ignored) {}
+
+        updateOsdNetworkMeter();
 
         updateTouchUiVisibility();
 
@@ -2004,6 +2066,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 b.setTextColor(Color.parseColor("#8b949e"));
                 b.setTypeface(null, Typeface.NORMAL);
             }
+        }
+        if (index == 5) {
+            updateSettingsNetworkTab();
         }
         final View activeTab = settingsTabBtns[index];
         if (hsvSettingsTabs != null && activeTab != null) {
@@ -2407,6 +2472,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     protected void onResume() {
         super.onResume();
         hideSystemUI();
+        if (dataUsageRunnable != null) {
+            handler.removeCallbacks(dataUsageRunnable);
+            handler.post(dataUsageRunnable);
+        }
         if (isSurfaceCreated) {
             if (mediaPlayer == null) {
                 playbackRetryCount = 0;
@@ -2430,6 +2499,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         super.onPause();
         handler.removeCallbacks(hideOsdRunnable);
         handler.removeCallbacks(hideQuickQualityRunnable);
+        if (dataUsageRunnable != null) {
+            handler.removeCallbacks(dataUsageRunnable);
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && isInPictureInPictureMode()) {
             return;
@@ -2507,6 +2579,446 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 connectivityManager.unregisterNetworkCallback(networkCallback);
             } catch (Exception ignored) {}
         }
+    }
+
+    // --- AĞ VE VERİ SAYACI YARDIMCI METOTLARI ---
+
+    private void updateOsdNetworkMeter() {
+        if (tvOsdNetworkMeter == null || dataUsageManager == null) return;
+        if (layoutOverlay == null || layoutOverlay.getVisibility() != View.VISIBLE) return;
+
+        boolean isMetered = dataUsageManager.isNetworkMetered();
+        double speed = dataUsageManager.getCurrentSpeedMbps();
+        long sessionBytes = dataUsageManager.getSessionBytes();
+
+        String speedStr = DataUsageManager.formatSpeed(speed);
+        String sessionStr = DataUsageManager.formatBytes(sessionBytes);
+
+        if (isMetered) {
+            tvOsdNetworkMeter.setText("⚠️ Kotalı • " + speedStr + " • " + sessionStr);
+            tvOsdNetworkMeter.setTextColor(Color.parseColor("#f59e0b"));
+        } else {
+            tvOsdNetworkMeter.setText("📶 " + speedStr + " • " + sessionStr);
+            tvOsdNetworkMeter.setTextColor(Color.parseColor("#58a6ff"));
+        }
+        tvOsdNetworkMeter.setVisibility(View.VISIBLE);
+    }
+
+    private void updateSettingsNetworkTabIfVisible() {
+        if (!isSettingsOpen || layoutSettings == null || layoutSettings.getVisibility() != View.VISIBLE) return;
+        if (settingsTabContents != null && settingsTabContents.length > 5 && settingsTabContents[5] != null) {
+            if (settingsTabContents[5].getVisibility() == View.VISIBLE) {
+                updateSettingsNetworkTab();
+            }
+        }
+    }
+
+    private void updateSettingsNetworkTab() {
+        if (dataUsageManager == null) return;
+
+        if (tvNetCurrentStatus != null) {
+            String typeName = dataUsageManager.getNetworkTypeName();
+            boolean isMetered = dataUsageManager.isNetworkMetered();
+            String icon = dataUsageManager.getNetworkIcon();
+            String status = icon + " " + typeName + (isMetered ? " (Kotalı Ağ - Hotspot/Hücresel)" : " (Sınırsız Ağ)");
+            tvNetCurrentStatus.setText(status);
+            tvNetCurrentStatus.setTextColor(isMetered ? Color.parseColor("#f59e0b") : Color.WHITE);
+        }
+
+        updateNetPolicyButtons(dataUsageManager.getMeteredPolicy());
+
+        if (tvStatSpeed != null) {
+            tvStatSpeed.setText(DataUsageManager.formatSpeed(dataUsageManager.getCurrentSpeedMbps()));
+        }
+        if (tvStatSession != null) {
+            tvStatSession.setText(DataUsageManager.formatBytes(dataUsageManager.getSessionBytes()));
+        }
+        if (tvStatToday != null) {
+            tvStatToday.setText(DataUsageManager.formatBytes(dataUsageManager.getTodayBytes()));
+        }
+        if (tvStatMonthly != null) {
+            tvStatMonthly.setText(DataUsageManager.formatBytes(dataUsageManager.getRolling30DaysBytes()));
+        }
+
+        if (tvQuotaSessionVal != null) {
+            long qSession = dataUsageManager.getSessionQuotaBytes();
+            tvQuotaSessionVal.setText(qSession > 0 ? DataUsageManager.formatBytes(qSession) : "Kapalı");
+            tvQuotaSessionVal.setTextColor(qSession > 0 ? Color.parseColor("#58a6ff") : Color.parseColor("#8b949e"));
+        }
+        if (tvQuotaDailyVal != null) {
+            long qDaily = dataUsageManager.getDailyQuotaBytes();
+            tvQuotaDailyVal.setText(qDaily > 0 ? DataUsageManager.formatBytes(qDaily) : "Kapalı");
+            tvQuotaDailyVal.setTextColor(qDaily > 0 ? Color.parseColor("#58a6ff") : Color.parseColor("#8b949e"));
+        }
+        if (tvQuotaMonthlyVal != null) {
+            long qMonthly = dataUsageManager.getMonthlyQuotaBytes();
+            tvQuotaMonthlyVal.setText(qMonthly > 0 ? DataUsageManager.formatBytes(qMonthly) : "Kapalı");
+            tvQuotaMonthlyVal.setTextColor(qMonthly > 0 ? Color.parseColor("#58a6ff") : Color.parseColor("#8b949e"));
+        }
+    }
+
+    private void updateNetPolicyButtons(int policy) {
+        if (btnNetPolicyAllow != null) {
+            boolean sel = (policy == DataUsageManager.POLICY_ALLOW);
+            btnNetPolicyAllow.setTextColor(sel ? Color.WHITE : Color.parseColor("#8b949e"));
+            btnNetPolicyAllow.setTypeface(null, sel ? Typeface.BOLD : Typeface.NORMAL);
+            btnNetPolicyAllow.setSelected(sel);
+        }
+        if (btnNetPolicyWarn != null) {
+            boolean sel = (policy == DataUsageManager.POLICY_WARN);
+            btnNetPolicyWarn.setTextColor(sel ? Color.parseColor("#f59e0b") : Color.parseColor("#8b949e"));
+            btnNetPolicyWarn.setTypeface(null, sel ? Typeface.BOLD : Typeface.NORMAL);
+            btnNetPolicyWarn.setSelected(sel);
+        }
+        if (btnNetPolicyBlock != null) {
+            boolean sel = (policy == DataUsageManager.POLICY_BLOCK);
+            btnNetPolicyBlock.setTextColor(sel ? Color.parseColor("#f85149") : Color.parseColor("#8b949e"));
+            btnNetPolicyBlock.setTypeface(null, sel ? Typeface.BOLD : Typeface.NORMAL);
+            btnNetPolicyBlock.setSelected(sel);
+        }
+    }
+
+    private void setupNetworkSettingsControls() {
+        tvNetCurrentStatus = findViewById(R.id.tv_net_current_status);
+        btnNetPolicyAllow = findViewById(R.id.btn_net_policy_allow);
+        btnNetPolicyWarn = findViewById(R.id.btn_net_policy_warn);
+        btnNetPolicyBlock = findViewById(R.id.btn_net_policy_block);
+
+        btnResetDataStats = findViewById(R.id.btn_reset_data_stats);
+        tvStatSpeed = findViewById(R.id.tv_stat_speed);
+        tvStatSession = findViewById(R.id.tv_stat_session);
+        tvStatToday = findViewById(R.id.tv_stat_today);
+        tvStatMonthly = findViewById(R.id.tv_stat_monthly);
+
+        tvQuotaSessionVal = findViewById(R.id.tv_quota_session_val);
+        tvQuotaDailyVal = findViewById(R.id.tv_quota_daily_val);
+        tvQuotaMonthlyVal = findViewById(R.id.tv_quota_monthly_val);
+        btnSetQuotaSession = findViewById(R.id.btn_set_quota_session);
+        btnSetQuotaDaily = findViewById(R.id.btn_set_quota_daily);
+        btnSetQuotaMonthly = findViewById(R.id.btn_set_quota_monthly);
+
+        if (btnNetPolicyAllow != null) {
+            btnNetPolicyAllow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (dataUsageManager != null) {
+                        dataUsageManager.setMeteredPolicy(DataUsageManager.POLICY_ALLOW);
+                        updateNetPolicyButtons(DataUsageManager.POLICY_ALLOW);
+                        Toast.makeText(MainActivity.this, "Kotalı ağda serbest oynatılacak ✓", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+        if (btnNetPolicyWarn != null) {
+            btnNetPolicyWarn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (dataUsageManager != null) {
+                        dataUsageManager.setMeteredPolicy(DataUsageManager.POLICY_WARN);
+                        updateNetPolicyButtons(DataUsageManager.POLICY_WARN);
+                        Toast.makeText(MainActivity.this, "Kotalı ağda oynatmadan önce onay istenecek ⚠️", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+        if (btnNetPolicyBlock != null) {
+            btnNetPolicyBlock.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (dataUsageManager != null) {
+                        dataUsageManager.setMeteredPolicy(DataUsageManager.POLICY_BLOCK);
+                        updateNetPolicyButtons(DataUsageManager.POLICY_BLOCK);
+                        Toast.makeText(MainActivity.this, "Kotalı ağda yayınlar engellenecek ⛔", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+
+        if (btnResetDataStats != null) {
+            btnResetDataStats.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("🔄 Veri Sayaçlarını Sıfırla")
+                            .setMessage("Bu oturum, bugün ve son 30 günün kayıtlı veri tüketim istatistikleri sıfırlansın mı?")
+                            .setPositiveButton("Evet, Sıfırla", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (dataUsageManager != null) {
+                                        dataUsageManager.resetAllStats();
+                                        updateSettingsNetworkTab();
+                                        Toast.makeText(MainActivity.this, "Tüm veri istatistikleri sıfırlandı ✓", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("İptal", null)
+                            .show();
+                }
+            });
+        }
+
+        if (btnSetQuotaSession != null) {
+            btnSetQuotaSession.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showQuotaPickerDialog(1);
+                }
+            });
+        }
+        if (btnSetQuotaDaily != null) {
+            btnSetQuotaDaily.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showQuotaPickerDialog(2);
+                }
+            });
+        }
+        if (btnSetQuotaMonthly != null) {
+            btnSetQuotaMonthly.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showQuotaPickerDialog(3);
+                }
+            });
+        }
+
+        updateSettingsNetworkTab();
+    }
+
+    private void showQuotaPickerDialog(final int quotaType) {
+        if (isFinishing() || isDestroyed()) return;
+
+        String title = (quotaType == 1) ? "Oturum Başına Limit" : ((quotaType == 2) ? "Günlük Veri Limiti" : "Son 30 Gün Veri Limiti");
+
+        final String[] labels = new String[] {
+                "Sınırsız (Kota Kapalı)",
+                "500 MB",
+                "1 GB",
+                "2 GB",
+                "5 GB",
+                "10 GB",
+                "25 GB",
+                "50 GB",
+                "✏️ Özel Limit Gir..."
+        };
+        final long[] values = new long[] {
+                0L,
+                500L * 1024L * 1024L,
+                1L * 1024L * 1024L * 1024L,
+                2L * 1024L * 1024L * 1024L,
+                5L * 1024L * 1024L * 1024L,
+                10L * 1024L * 1024L * 1024L,
+                25L * 1024L * 1024L * 1024L,
+                50L * 1024L * 1024L * 1024L,
+                -1L
+        };
+
+        new AlertDialog.Builder(this)
+                .setTitle("⚙️ " + title)
+                .setItems(labels, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (values[which] == -1L) {
+                            showCustomQuotaInputDialog(quotaType);
+                        } else {
+                            applyQuotaValue(quotaType, values[which]);
+                        }
+                    }
+                })
+                .setNegativeButton("İptal", null)
+                .show();
+    }
+
+    private void showCustomQuotaInputDialog(final int quotaType) {
+        if (isFinishing() || isDestroyed()) return;
+
+        String typeName = (quotaType == 1) ? "Oturum Kotası" : ((quotaType == 2) ? "Günlük Kota" : "Son 30 Gün Kotası");
+
+        LinearLayout container = new LinearLayout(this);
+        container.setOrientation(LinearLayout.VERTICAL);
+        int pad = (int) (16 * getResources().getDisplayMetrics().density);
+        container.setPadding(pad, pad, pad, pad);
+
+        final EditText etValue = new EditText(this);
+        etValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        etValue.setHint("Miktar girin (Örn: 2.5 veya 750)");
+        etValue.setTextColor(Color.WHITE);
+        etValue.setHintTextColor(Color.parseColor("#8b949e"));
+        container.addView(etValue);
+
+        final RadioGroup rgUnit = new RadioGroup(this);
+        rgUnit.setOrientation(RadioGroup.HORIZONTAL);
+        rgUnit.setPadding(0, pad / 2, 0, 0);
+
+        final RadioButton rbGb = new RadioButton(this);
+        rbGb.setText("GB");
+        rbGb.setTextColor(Color.WHITE);
+        rbGb.setChecked(true);
+        rgUnit.addView(rbGb);
+
+        final RadioButton rbMb = new RadioButton(this);
+        rbMb.setText("MB");
+        rbMb.setTextColor(Color.WHITE);
+        rgUnit.addView(rbMb);
+
+        container.addView(rgUnit);
+
+        new AlertDialog.Builder(this)
+                .setTitle("✏️ " + typeName + " - Özel Limit")
+                .setView(container)
+                .setPositiveButton("Kaydet", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String str = etValue.getText().toString().trim().replace(',', '.');
+                        if (str.isEmpty()) return;
+                        try {
+                            double val = Double.parseDouble(str);
+                            if (val <= 0) {
+                                applyQuotaValue(quotaType, 0L);
+                                return;
+                            }
+                            boolean isGb = rbGb.isChecked();
+                            long multiplier = isGb ? (1024L * 1024L * 1024L) : (1024L * 1024L);
+                            long bytes = (long) (val * multiplier);
+                            applyQuotaValue(quotaType, bytes);
+                        } catch (Exception e) {
+                            Toast.makeText(MainActivity.this, "Geçersiz limit değeri!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("İptal", null)
+                .show();
+    }
+
+    private void applyQuotaValue(int quotaType, long bytes) {
+        if (dataUsageManager == null) return;
+        if (quotaType == 1) {
+            dataUsageManager.setSessionQuotaBytes(bytes);
+        } else if (quotaType == 2) {
+            dataUsageManager.setDailyQuotaBytes(bytes);
+        } else if (quotaType == 3) {
+            dataUsageManager.setMonthlyQuotaBytes(bytes);
+        }
+        updateSettingsNetworkTab();
+        String valStr = bytes > 0 ? DataUsageManager.formatBytes(bytes) : "Kapatıldı";
+        Toast.makeText(this, "Kota güncellendi: " + valStr, Toast.LENGTH_SHORT).show();
+    }
+
+    private void checkQuotaLimits() {
+        if (dataUsageManager == null || isFinishing() || isDestroyed()) return;
+        if (mediaPlayer == null || !mediaPlayer.isPlaying()) return;
+
+        int status = dataUsageManager.checkQuotaExceeded();
+        if (status != DataUsageManager.QUOTA_OK) {
+            showQuotaExceededDialog(status);
+        }
+    }
+
+    private void showQuotaExceededDialog(final int quotaType) {
+        if (isFinishing() || isDestroyed()) return;
+        if (quotaExceededDialog != null && quotaExceededDialog.isShowing()) return;
+
+        if (mediaPlayer != null) {
+            try {
+                mediaPlayer.pause();
+                isPaused = true;
+                if (tvPlayPauseIcon != null) tvPlayPauseIcon.setText("▶");
+            } catch (Exception ignored) {}
+        }
+
+        String msg = "";
+        if (quotaType == DataUsageManager.QUOTA_SESSION_EXCEEDED) {
+            long limit = dataUsageManager.getSessionQuotaBytes();
+            msg = "Belirlediğiniz oturum kotası (" + DataUsageManager.formatBytes(limit) + ") doldu.\n\n"
+                    + "Bu oturumda harcanan: " + DataUsageManager.formatBytes(dataUsageManager.getSessionBytes()) + "\n\n"
+                    + "Yayına devam etmek istiyor musunuz?";
+        } else if (quotaType == DataUsageManager.QUOTA_DAILY_EXCEEDED) {
+            long limit = dataUsageManager.getDailyQuotaBytes();
+            msg = "Belirlediğiniz günlük kota (" + DataUsageManager.formatBytes(limit) + ") doldu.\n\n"
+                    + "Bugün harcanan: " + DataUsageManager.formatBytes(dataUsageManager.getTodayBytes()) + "\n\n"
+                    + "Yayına devam etmek istiyor musunuz?";
+        } else if (quotaType == DataUsageManager.QUOTA_MONTHLY_EXCEEDED) {
+            long limit = dataUsageManager.getMonthlyQuotaBytes();
+            msg = "Belirlediğiniz son 30 günlük kota (" + DataUsageManager.formatBytes(limit) + ") doldu.\n\n"
+                    + "Son 30 günde harcanan: " + DataUsageManager.formatBytes(dataUsageManager.getRolling30DaysBytes()) + "\n\n"
+                    + "Yayına devam etmek istiyor musunuz?";
+        }
+
+        quotaExceededDialog = new AlertDialog.Builder(this)
+                .setTitle("⚠️ KOTA LİMİTİ DOLDU")
+                .setMessage(msg)
+                .setCancelable(false)
+                .setPositiveButton("Yayına Devam Et", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        quotaExceededDialog = null;
+                        if (dataUsageManager != null) {
+                            if (quotaType == DataUsageManager.QUOTA_SESSION_EXCEEDED) {
+                                dataUsageManager.setSessionQuotaDismissed(true);
+                            } else if (quotaType == DataUsageManager.QUOTA_DAILY_EXCEEDED) {
+                                dataUsageManager.setDailyQuotaDismissed(true);
+                            } else if (quotaType == DataUsageManager.QUOTA_MONTHLY_EXCEEDED) {
+                                dataUsageManager.setMonthlyQuotaDismissed(true);
+                            }
+                        }
+                        if (mediaPlayer != null) {
+                            try {
+                                mediaPlayer.start();
+                                isPaused = false;
+                                if (tvPlayPauseIcon != null) tvPlayPauseIcon.setText("⏸");
+                            } catch (Exception ignored) {}
+                        }
+                    }
+                })
+                .setNegativeButton("Durdur", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        quotaExceededDialog = null;
+                        if (tvStatus != null) {
+                            tvStatus.setText("Kota dolduğu için yayın durduruldu.");
+                            tvStatus.setVisibility(View.VISIBLE);
+                        }
+                    }
+                })
+                .create();
+        quotaExceededDialog.show();
+    }
+
+    private void showMeteredNetworkWarningDialog(final int channelIndex, final boolean isRetry) {
+        if (isFinishing() || isDestroyed()) return;
+        if (meteredWarningDialog != null && meteredWarningDialog.isShowing()) return;
+
+        meteredWarningDialog = new AlertDialog.Builder(this)
+                .setTitle("⚠️ Kotalı Ağ Bağlantısı")
+                .setMessage("Şu anda kotalı bir ağa (Mobil Veri veya Kotalı Wi-Fi) bağlısınız.\n\n"
+                        + "Canlı video yayını yüksek miktarda veri tüketebilir.\n\n"
+                        + "Yayına devam etmek istiyor musunuz?")
+                .setCancelable(false)
+                .setPositiveButton("Yayına Başla", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        meteredWarningDialog = null;
+                        if (dataUsageManager != null) {
+                            dataUsageManager.setMeteredWarningDismissed(true);
+                        }
+                        playChannel(channelIndex, isRetry);
+                    }
+                })
+                .setNegativeButton("İptal", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        meteredWarningDialog = null;
+                        if (tvStatus != null) {
+                            tvStatus.setText("Kullanıcı tarafından iptal edildi.");
+                            tvStatus.setVisibility(View.VISIBLE);
+                        }
+                        if (loadingSpinner != null) {
+                            loadingSpinner.setVisibility(View.GONE);
+                        }
+                    }
+                })
+                .create();
+        meteredWarningDialog.show();
     }
 
     private void setupChannelSearch() {
@@ -3081,6 +3593,14 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     protected void onDestroy() {
         super.onDestroy();
         unregisterNetworkCallback();
+        if (quotaExceededDialog != null && quotaExceededDialog.isShowing()) {
+            try { quotaExceededDialog.dismiss(); } catch (Exception ignored) {}
+            quotaExceededDialog = null;
+        }
+        if (meteredWarningDialog != null && meteredWarningDialog.isShowing()) {
+            try { meteredWarningDialog.dismiss(); } catch (Exception ignored) {}
+            meteredWarningDialog = null;
+        }
         if (screenReceiver != null) {
             try {
                 unregisterReceiver(screenReceiver);

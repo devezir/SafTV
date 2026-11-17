@@ -10,6 +10,7 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 
 | Sürüm | Sürüm Kodu (versionCode) | Yayın Tarihi | APK Boyutu | Doğrudan APK İndir | Başlıca Yenilikler ve Odak Noktası |
 |:---:|:---:|:---:|:---:|:---:|---|
+| **v2.6.0** | 19 | 17.11.2026 | ~169.4 KB | [⬇️ **SafTV_v2.6.0_vc19.apk**](https://github.com/devezir/SafTV/releases/download/v2.6.0/SafTV_v2.6.0_vc19.apk) | 📶 **Kotalı Ağ Farkındalığı, Canlı OSD Veri Sayacı, 8. Sekme & 3 Bağımsız Kota:** Otomatik kotalı Wi-Fi (hotspot) ve mobil veri tespiti, Kotalı ağ davranışı (Serbest / Uyar / Engelle), OSD bilgi çubuğunda anlık hız & oturum sayacı rozeti, Ayarlar menüsünde 8. sekme (📶 Ağ & Veri: Anlık hız, Oturum, Bugün, Rolling Son 30 Gün), Oturum / Günlük / Son 30 Gün için bağımsız kota limitleri ve elle GB/MB girişi. |
 | **v2.5.0** | 18 | 16.11.2026 | ~149.4 KB | [⬇️ **SafTV_v2.5.0_vc18.apk**](https://github.com/devezir/SafTV/releases/download/v2.5.0/SafTV_v2.5.0_vc18.apk) | 🎛️ **Kanal Sıralama (A+B Hibrit), Otomatik Sıralama Şablonları & Alt Bilgi Ölçeklemesi:** Ayarlar menüsünden D-Pad ile canlı kanal taşıma, hedef sıra numarasıyla anında ışınlama, A-Z / Kategori / Varsayılan sıralama şablonları, Liste Sırası = Kanal No eşlemesi ve çekmece alt ipucu yazısının arayüz ölçeğiyle birebir büyümesi. |
 | **v2.4.0** | 17 | 16.11.2026 | ~137.4 KB | [⬇️ **SafTV_v2.4.0_vc17.apk**](https://github.com/devezir/SafTV/releases/download/v2.4.0/SafTV_v2.4.0_vc17.apk) | 🛡️ **%100 Yasal Çekirdek & Çift APK Mimarisi:** Açık kaynak koddan tüm yayınlar çıkarıldı (tamamen yasal IPTV oynatıcı). M3U/M3U8 ve JSON dosya/URL yükleme desteği, Ayarlar menüsünden tek tıkla liste sıfırlama, tohumlu özel APK desteği. |
 | **v2.3.0** | 16 | 16.11.2026 | ~137.4 KB | [⬇️ **SafTV_v2.3.0_vc16.apk**](https://github.com/devezir/SafTV/releases/download/v2.3.0/SafTV_v2.3.0_vc16.apk) | 📐 **Genişletilmiş Arayüz Ölçeği (%60 — %200):** Ultra mikro %60'tan dev ekran %200'e 8 kademeli skala, dinamik yüzde koruması, internet yeniden bağlantısında uyarıların anında silinmesi güvencesi. |
@@ -32,6 +33,24 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 ---
 
 ## 🔍 Detaylı Sürüm Notları
+
+### 📶 v2.6.0 (versionCode: 19) — 17 Kasım 2026
+* **Tam Otomatik Kotalı Ağ Tespiti:**
+  * Android yerleşik `ConnectivityManager.isActiveNetworkMetered()` API'si ile taşınabilir 4G/5G Wi-Fi modemler, telefon hotspot paylaşımları ve hücresel mobil veri hatasız tespit edilir.
+  * Normal Wi-Fi (Sınırsız) ve Ethernet bağlantıları akıllıca ayrıştırılır.
+* **Kotalı Ağ Davranış Politikası (3 Mod):**
+  * `[✓ Serbest Oynat]`: Ağ kotalı olsa bile yayınlar sınırsız oynatılır.
+  * `[⚠️ Uyar & Onay İste]`: Kotalı ağdayken kanal açılmak istendiğinde uyarı diyalogu gösterilir, kullanıcı onayıyla yayına başlanır ve oturum boyunca tekrar rahatsız etmez.
+  * `[⛔ Engelle]`: Kotalı ağda canlı yayın oynatımı engellenir ve ekranda bilgilendirme mesajı verilir.
+* **Canlı Veri Sayacı & OSD Entegrasyonu:**
+  * **OSD Bilgi Çubuğu Rozeti:** Saatin hemen yanında canlı akış hızı ve bu oturumda tüketilen veriyi gösteren dinamik rozet (`📶 2.4 Mbps • 140 MB` / Kotalı ağda kehribar rengi `⚠️ Kotalı • 1.8 Mbps • 45 MB`). Arayüz ölçeğiyle orantılı büyür/küçülür.
+  * **Ayarlar 8. Sekme ("📶 Ağ & Veri"):** Anlık Hız (Mbps), Bu Oturumda (MB), Bugün (MB) ve geriye dönük dinamik **Son 30 Gün (Rolling 30 Days)** toplam tüketimi gösterilir.
+  * **Sayaç Sıfırlama:** `[🔄 Sıfırla]` butonuyla tüm veri sayaçlarını tek tıkla sıfırlama imkanı.
+* **3 Bağımsız Kota Limiti & Özel Giriş:**
+  * **Oturum Kotası**, **Günlük Kota** ve **Son 30 Günlük Kota** için birbirinden bağımsız limit belirleme.
+  * Hazır şablonlar (500 MB, 1 GB, 2 GB, 5 GB, 10 GB, 25 GB, 50 GB) + `[✏️ Özel Limit Gir...]` ile kumanda/dokunmatik uyumlu serbest GB/MB girişi.
+  * **Yumuşak Durdurma:** Kota aşıldığında yayın nazikçe duraklatılır ve kullanıcıya devam etme ya da durdurma seçeneği sunulur.
+* **Sıfır Ek Yük:** Harici kütüphane eklenmeden doğrudan Linux kernel `TrafficStats` soket sayacıyla geliştirildi (%0 CPU / RAM yükü).
 
 ### 🎛️ v2.5.0 (versionCode: 18) — 16 Kasım 2026
 * **Kanal Sıralama & Yeniden Düzenleme (A+B Hibrit Mimarisi):**
