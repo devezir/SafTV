@@ -34,7 +34,7 @@ public class HlsParser {
     }
 
     public static void resolveQualityUrl(final String masterUrl,
-                                         final String qualityPref, // "auto", "1080p", "720p", "480p", "360p"
+                                         final String qualityPref, // "auto", "1080p", "720p", "480p", "360p", "audio_only"
                                          final Map<String, String> headers,
                                          final QualityCallback callback) {
 
@@ -45,8 +45,14 @@ public class HlsParser {
             return;
         }
 
+        final boolean isAudioOnly = "audio_only".equalsIgnoreCase(qualityPref)
+                || "audio".equalsIgnoreCase(qualityPref)
+                || "ses".equalsIgnoreCase(qualityPref);
+
         final int targetHeight;
-        if (qualityPref.contains("1080")) {
+        if (isAudioOnly) {
+            targetHeight = 0;
+        } else if (qualityPref.contains("1080")) {
             targetHeight = 1080;
         } else if (qualityPref.contains("720")) {
             targetHeight = 720;
@@ -79,15 +85,27 @@ public class HlsParser {
                     reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                     String line;
                     List<StreamTrack> tracks = new ArrayList<>();
+                    List<String> audioTrackUris = new ArrayList<>();
                     int curBandwidth = 0;
                     int curHeight = 0;
 
                     Pattern resPattern = Pattern.compile("RESOLUTION=\\d+x(\\d+)");
                     Pattern bwPattern = Pattern.compile("BANDWIDTH=(\\d+)");
+                    Pattern audioUriPattern = Pattern.compile("TYPE=AUDIO.*?URI=[\"']([^\"']+)[\"']");
 
                     while ((line = reader.readLine()) != null) {
                         line = line.trim();
-                        if (line.startsWith("#EXT-X-STREAM-INF")) {
+                        if (line.startsWith("#EXT-X-MEDIA") && line.contains("TYPE=AUDIO")) {
+                            Matcher mAudio = audioUriPattern.matcher(line);
+                            if (mAudio.find()) {
+                                String aUri = mAudio.group(1);
+                                if (!aUri.startsWith("http://") && !aUri.startsWith("https://")) {
+                                    String baseUrl = masterUrl.substring(0, masterUrl.lastIndexOf('/') + 1);
+                                    aUri = baseUrl + aUri;
+                                }
+                                audioTrackUris.add(aUri);
+                            }
+                        } else if (line.startsWith("#EXT-X-STREAM-INF")) {
                             Matcher mRes = resPattern.matcher(line);
                             if (mRes.find()) {
                                 curHeight = Integer.parseInt(mRes.group(1));
@@ -112,6 +130,28 @@ public class HlsParser {
                             curHeight = 0;
                             curBandwidth = 0;
                         }
+                    }
+
+                    if (isAudioOnly) {
+                        if (!audioTrackUris.isEmpty()) {
+                            postResult(mainHandler, callback, audioTrackUris.get(0), "Sadece Ses");
+                            return;
+                        }
+                        if (!tracks.isEmpty()) {
+                            // En düşük bant genişliğine / çözünürlüğe sahip akışı seç
+                            StreamTrack minTrack = tracks.get(0);
+                            for (StreamTrack t : tracks) {
+                                int currentScore = t.bandwidth > 0 ? t.bandwidth : (t.height > 0 ? t.height * 1000 : Integer.MAX_VALUE);
+                                int minScore = minTrack.bandwidth > 0 ? minTrack.bandwidth : (minTrack.height > 0 ? minTrack.height * 1000 : Integer.MAX_VALUE);
+                                if (currentScore < minScore) {
+                                    minTrack = t;
+                                }
+                            }
+                            postResult(mainHandler, callback, minTrack.url, "Sadece Ses");
+                            return;
+                        }
+                        postResult(mainHandler, callback, masterUrl, "Sadece Ses");
+                        return;
                     }
 
                     if (tracks.isEmpty()) {
@@ -139,7 +179,7 @@ public class HlsParser {
 
                 } catch (Exception e) {
                     // Ayrıştırma başarısız olursa master URL ile devam et
-                    postResult(mainHandler, callback, masterUrl, "Otomatik");
+                    postResult(mainHandler, callback, masterUrl, isAudioOnly ? "Sadece Ses" : "Otomatik");
                 } finally {
                     if (reader != null) {
                         try { reader.close(); } catch (Exception ignored) {}

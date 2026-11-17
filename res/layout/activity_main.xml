@@ -13,6 +13,74 @@
         android:layout_height="match_parent"
         android:layout_gravity="center" />
 
+    <!-- Audio-Only / Radio Mode Overlay (Screen Saver & Data Saver) -->
+    <FrameLayout
+        android:id="@+id/layout_audio_only_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#0d1117"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true">
+
+        <LinearLayout
+            android:id="@+id/card_audio_only"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:background="@drawable/bg_osd">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📻"
+                android:textSize="52sp"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/tv_audio_only_channel_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="TRT 1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/accent_green"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginTop="4dp"
+                android:text="● SADECE SES / RADYO MODU AKTİF" />
+
+            <TextView
+                android:id="@+id/tv_audio_only_savings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/accent_blue"
+                android:textSize="11sp"
+                android:layout_marginTop="6dp"
+                android:text="🚀 %95+ Veri Tasarrufu • Video Akışı Kapalı" />
+
+            <Button
+                android:id="@+id/btn_audio_only_restore"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_marginTop="16dp"
+                android:text="👁️ Görüntüyü Geri Aç (OK / Dokun)"
+                android:textSize="12sp"
+                android:textColor="@color/text_white"
+                android:background="@drawable/selector_chip"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp" />
+        </LinearLayout>
+    </FrameLayout>
+
     <!-- Center Loading Spinner -->
     <ProgressBar
         android:id="@+id/loading_spinner"
@@ -746,6 +814,16 @@
             android:text="360p Tasarruf"
             android:textSize="11sp"
             android:textColor="@color/text_white"
+            android:background="@drawable/selector_chip"
+            android:layout_marginBottom="4dp" />
+
+        <Button
+            android:id="@+id/btn_quick_q_audio_only"
+            android:layout_width="160dp"
+            android:layout_height="34dp"
+            android:text="📻 Sadece Ses (Tasarruf)"
+            android:textSize="11sp"
+            android:textColor="@color/accent_yellow"
             android:background="@drawable/selector_chip" />
     </LinearLayout>
 
@@ -1099,6 +1177,16 @@
                     android:text="360p Tasarruf (Mobil Veri Dostu)"
                     android:textSize="12sp"
                     android:textColor="@color/text_white"
+                    android:background="@drawable/selector_chip"
+                    android:layout_marginBottom="6dp" />
+
+                <Button
+                    android:id="@+id/btn_set_q_audio_only"
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:text="📻 Sadece Ses (Radyo / %95+ Veri Tasarrufu)"
+                    android:textSize="12sp"
+                    android:textColor="@color/accent_yellow"
                     android:background="@drawable/selector_chip" />
             </LinearLayout>
         </ScrollView>

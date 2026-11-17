@@ -10,6 +10,7 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 
 | Sürüm | Sürüm Kodu (versionCode) | Yayın Tarihi | APK Boyutu | Doğrudan APK İndir | Başlıca Yenilikler ve Odak Noktası |
 |:---:|:---:|:---:|:---:|:---:|---|
+| **v2.7.0** | 20 | 17.11.2026 | ~173.4 KB | [⬇️ **SafTV_v2.7.0_vc20.apk**](https://github.com/devezir/SafTV/releases/download/v2.7.0/SafTV_v2.7.0_vc20.apk) | 📻 **Sadece Ses (Radyo Modu) & %95+ Veri Tasarrufu:** Video rendering'i tamamen kapatıp sadece sesi dinleme modu (Haber/tartışma programları için ideal), HLS bağımsız ses veya minimum bant genişlikli akış seçimi, OLED dostu siyah radyo bilgi paneli, TV yanma koruması (Burn-in Protection), tek tuşla (OK/Dokun/BACK) anında videoya dönüş ve Hızlı Kalite (Yeşil Tuş) entegrasyonu. |
 | **v2.6.0** | 19 | 17.11.2026 | ~169.4 KB | [⬇️ **SafTV_v2.6.0_vc19.apk**](https://github.com/devezir/SafTV/releases/download/v2.6.0/SafTV_v2.6.0_vc19.apk) | 📶 **Kotalı Ağ Farkındalığı, Canlı OSD Veri Sayacı, 8. Sekme & 3 Bağımsız Kota:** Otomatik kotalı Wi-Fi (hotspot) ve mobil veri tespiti, Kotalı ağ davranışı (Serbest / Uyar / Engelle), OSD bilgi çubuğunda anlık hız & oturum sayacı rozeti, Ayarlar menüsünde 8. sekme (📶 Ağ & Veri: Anlık hız, Oturum, Bugün, Rolling Son 30 Gün), Oturum / Günlük / Son 30 Gün için bağımsız kota limitleri ve elle GB/MB girişi. |
 | **v2.5.0** | 18 | 16.11.2026 | ~149.4 KB | [⬇️ **SafTV_v2.5.0_vc18.apk**](https://github.com/devezir/SafTV/releases/download/v2.5.0/SafTV_v2.5.0_vc18.apk) | 🎛️ **Kanal Sıralama (A+B Hibrit), Otomatik Sıralama Şablonları & Alt Bilgi Ölçeklemesi:** Ayarlar menüsünden D-Pad ile canlı kanal taşıma, hedef sıra numarasıyla anında ışınlama, A-Z / Kategori / Varsayılan sıralama şablonları, Liste Sırası = Kanal No eşlemesi ve çekmece alt ipucu yazısının arayüz ölçeğiyle birebir büyümesi. |
 | **v2.4.0** | 17 | 16.11.2026 | ~137.4 KB | [⬇️ **SafTV_v2.4.0_vc17.apk**](https://github.com/devezir/SafTV/releases/download/v2.4.0/SafTV_v2.4.0_vc17.apk) | 🛡️ **%100 Yasal Çekirdek & Çift APK Mimarisi:** Açık kaynak koddan tüm yayınlar çıkarıldı (tamamen yasal IPTV oynatıcı). M3U/M3U8 ve JSON dosya/URL yükleme desteği, Ayarlar menüsünden tek tıkla liste sıfırlama, tohumlu özel APK desteği. |
@@ -33,6 +34,22 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 ---
 
 ## 🔍 Detaylı Sürüm Notları
+
+### 📻 v2.7.0 (versionCode: 20) — 17 Kasım 2026
+* **Sadece Ses (Radyo Modu) & Devasa Veri Tasarrufu (%95+):**
+  * Ekranı izlemeyen, sadece haber veya tartışma programlarını dinlemek isteyen kullanıcılar için görüntüyü kapatıp yalnızca sesi aktarma özelliği eklendi.
+  * **Veri Tasarrufu:** 1080p videoda saatte ~2 GB harcanırken, Sadece Ses modunda saatte yalnızca **~30 - 60 MB** veri tüketilir (16 kat daha az veri kullanımı).
+* **Akıllı HLS Akış Çözücü (`HlsParser`):**
+  * Akışta bağımsız ses parçası varsa (`EXT-X-MEDIA:TYPE=AUDIO`, 64-128 Kbps AAC) video hiç indirilmez.
+  * Bağımsız ses parçası olmayan kanallarda en düşük varyant (min bandwidth / 240p-360p) seçilir ve video dekoderi (`setDisplay(null)`) tamamen durdurulur.
+* **OLED Dostu Ekran & TV Yanma Koruması (Burn-in Protection):**
+  * Ekran piksellerinin %95'i kapatılarak panel enerji tüketimi sıfıra yaklaştırılır.
+  * Ortada şık bir radyo kartı (Kanal adı, radyo dalga ikonu ve tasarruf rozeti) gösterilir.
+  * OLED TV'lerde statik piksel yanmasını önlemek için kart her 60 saniyede bir hafifçe yer değiştirir (Pixel Shift).
+* **Zahmetsiz Kontrol ve Hızlı Dönüş:**
+  * **Yeşil Tuş (Hızlı Kalite Menüsü):** Kalite listesine `📻 Sadece Ses (Tasarruf)` seçeneği eklendi.
+  * **Anında Geri Açma:** Kumandadan **OK**, **BACK** tuşlarına basıldığında veya ekrana tek tıklandığında anında normal video moduna geri dönülür.
+  * Kanal değiştirildiğinde (D-Pad YUKARI/AŞAĞI) radyo modu bozulmadan bir sonraki kanalın sesine kesintisiz geçilir.
 
 ### 📶 v2.6.0 (versionCode: 19) — 17 Kasım 2026
 * **Tam Otomatik Kotalı Ağ Tespiti:**
