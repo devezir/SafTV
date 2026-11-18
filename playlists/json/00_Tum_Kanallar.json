@@ -1,0 +1,962 @@
+[
+  {
+    "name": "TRT 1",
+    "category": "Ulusal",
+    "url": "https://tv-trt1.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 1
+  },
+  {
+    "name": "Kanal D",
+    "category": "Ulusal",
+    "url": "https://demiroren.daioncdn.net/kanald/kanald.m3u8?app=kanald_web&ce=3",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 2
+  },
+  {
+    "name": "ATV",
+    "category": "Ulusal",
+    "url": "https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/atv/atv_720p.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 3
+  },
+  {
+    "name": "Show TV",
+    "category": "Ulusal",
+    "url": "https://ciner.daioncdn.net/showtv/showtv.m3u8?app=showtv_web",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 4
+  },
+  {
+    "name": "Star TV",
+    "category": "Ulusal",
+    "url": "https://dogus.daioncdn.net/startv/startv_720p.m3u8?app=a20ac41e-bdc3-4aa1-934d-26b484480ac9&ce=3&sid=8l4w3lst4co5",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 5
+  },
+  {
+    "name": "NOW TV",
+    "category": "Ulusal",
+    "url": "https://uycyyuuzyh.turknet.ercdn.net/nphindgytw/nowtv/nowtv.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 6
+  },
+  {
+    "name": "TV8",
+    "category": "Ulusal",
+    "url": "https://tv8.daioncdn.net/tv8/tv8.m3u8?app=7ddc255a-ef47-4e81-ab14-c0e5f2949788&ce=3",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 7
+  },
+  {
+    "name": "Kanal 7",
+    "category": "Ulusal",
+    "url": "https://kanal7-live.daioncdn.net/kanal7/kanal7.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 8
+  },
+  {
+    "name": "A2 TV",
+    "category": "Ulusal",
+    "url": "https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/a2tv/a2tv.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 9
+  },
+  {
+    "name": "Teve2",
+    "category": "Ulusal",
+    "url": "https://demiroren.daioncdn.net/teve2/teve2.m3u8?ce=3&app=6aab838a-437e-4a1b-bbd0-e30f79cdbbbd",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 10
+  },
+  {
+    "name": "Beyaz TV",
+    "category": "Ulusal",
+    "url": "https://beyaztv-live.daioncdn.net/beyaztv/beyaztv.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 11
+  },
+  {
+    "name": "360 TV",
+    "category": "Ulusal",
+    "url": "https://turkmedya-live.ercdn.net/tv360/tv360.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 12
+  },
+  {
+    "name": "TV4",
+    "category": "Ulusal",
+    "url": "https://turkmedya-live.ercdn.net/tv4/tv4.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 13
+  },
+  {
+    "name": "TRT Türk",
+    "category": "Ulusal",
+    "url": "https://tv-trtturk.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 14
+  },
+  {
+    "name": "TRT Haber",
+    "category": "Haber",
+    "url": "https://tv-trthaber.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 15
+  },
+  {
+    "name": "NTV",
+    "category": "Haber",
+    "url": "https://dogus.daioncdn.net/ntv/ntv.m3u8?app=ntv_web",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 16
+  },
+  {
+    "name": "HaberTürk",
+    "category": "Haber",
+    "url": "https://tv.ensonhaber.com/haberturk/haberturk.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 17
+  },
+  {
+    "name": "A Haber",
+    "category": "Haber",
+    "url": "https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/ahaber/ahaber_720p.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 18
+  },
+  {
+    "name": "Sözcü TV",
+    "category": "Haber",
+    "url": "https://raw.githubusercontent.com/yaskar661-lgtm/stream/refs/heads/main/filbox/szchd.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 19
+  },
+  {
+    "name": "Haber Global",
+    "category": "Haber",
+    "url": "https://tv.ensonhaber.com/haberglobal/haberglobal.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 20
+  },
+  {
+    "name": "Halk TV",
+    "category": "Haber",
+    "url": "https://halktv-live.daioncdn.net/halktv/halktv.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 21
+  },
+  {
+    "name": "24 TV",
+    "category": "Haber",
+    "url": "https://turkmedya-live.ercdn.net/tv24/tv24.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 22
+  },
+  {
+    "name": "TGRT Haber",
+    "category": "Haber",
+    "url": "https://b01c02nl.mediatriple.net/videoonlylive/mtsxxkzwwuqtglive/broadcast_5fe4598be8e5d.smil/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 23
+  },
+  {
+    "name": "Bloomberg HT",
+    "category": "Haber",
+    "url": "https://tv.ensonhaber.com/bloomberght/bloomberght.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 24
+  },
+  {
+    "name": "TVNET",
+    "category": "Haber",
+    "url": "https://tvnet-live.lg.mncdn.com/tvnet-live/tvnet/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 25
+  },
+  {
+    "name": "Flash Haber",
+    "category": "Haber",
+    "url": "https://b01c02nl.mediatriple.net/videoonlylive/mtyycglqauzjhlive/broadcast_67c053c48829f.smil/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 26
+  },
+  {
+    "name": "TRT 3 / TBMM TV",
+    "category": "Haber",
+    "url": "https://tv-trt3.live.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 27
+  },
+  {
+    "name": "TRT Spor",
+    "category": "Spor",
+    "url": "https://trt.daioncdn.net/trtspor/master.m3u8?app=web&platform=trtspor",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 28
+  },
+  {
+    "name": "TRT Spor Yıldız",
+    "category": "Spor",
+    "url": "https://trt.daioncdn.net/trtspor-yildiz/master.m3u8?app=web&platform=trtspor",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 29
+  },
+  {
+    "name": "TV8.5",
+    "category": "Spor",
+    "url": "https://tv8.daioncdn.net/tv8bucuk/tv8bucuk.m3u8?app=tv8bucuk_web",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 30
+  },
+  {
+    "name": "HT Spor",
+    "category": "Spor",
+    "url": "https://ciner.daioncdn.net/ht-spor/ht-spor.m3u8?app=web",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 31
+  },
+  {
+    "name": "TRT Belgesel",
+    "category": "Belgesel",
+    "url": "https://tv-trtbelgesel.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 32
+  },
+  {
+    "name": "DMAX",
+    "category": "Belgesel",
+    "url": "https://dogus.daioncdn.net/dmax/dmax.m3u8?app=dmax_web",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 33
+  },
+  {
+    "name": "TLC",
+    "category": "Belgesel",
+    "url": "https://dogus.daioncdn.net/tlc/tlc.m3u8?app=tlc_web",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 34
+  },
+  {
+    "name": "TRT Çocuk",
+    "category": "Çocuk",
+    "url": "https://tv-trtcocuk.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 35
+  },
+  {
+    "name": "Minika Çocuk",
+    "category": "Çocuk",
+    "url": "https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/minikago_cocuk/minikago_cocuk.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 36
+  },
+  {
+    "name": "Minika GO",
+    "category": "Çocuk",
+    "url": "https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/minikago/minikago.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 37
+  },
+  {
+    "name": "TRT Diyanet Çocuk",
+    "category": "Çocuk",
+    "url": "https://tv-trtdiyanetcocuk.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 38
+  },
+  {
+    "name": "TRT Müzik",
+    "category": "Müzik",
+    "url": "https://tv-trtmuzik.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 39
+  },
+  {
+    "name": "Power TV",
+    "category": "Müzik",
+    "url": "https://livetv.powerapp.com.tr/powerTV/powerhd.smil/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 40
+  },
+  {
+    "name": "Dream Türk",
+    "category": "Müzik",
+    "url": "https://live.duhnet.tv/S2/HLS_LIVE/dreamturknp/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 41
+  },
+  {
+    "name": "Kral Pop TV",
+    "category": "Müzik",
+    "url": "https://dogus-live.daioncdn.net/kralpoptv/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 42
+  },
+  {
+    "name": "TRT 2",
+    "category": "Kültür",
+    "url": "https://tv-trt2.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 43
+  },
+  {
+    "name": "Diyanet TV",
+    "category": "Kültür",
+    "url": "https://eustr73.mediatriple.net/videoonlylive/mtikoimxnztxlive/broadcast_5e3bf95a47e07.smil/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 44
+  },
+  {
+    "name": "TRT World",
+    "category": "Kültür",
+    "url": "https://tv-trtworld.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 45
+  },
+  {
+    "name": "TRT Avaz",
+    "category": "Kültür",
+    "url": "https://tv-trtavaz.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 46
+  },
+  {
+    "name": "TRT Arabi",
+    "category": "Kültür",
+    "url": "https://tv-trtarabi.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 47
+  },
+  {
+    "name": "TRT Kurdî",
+    "category": "Kültür",
+    "url": "https://tv-trtkurdi.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 48
+  },
+  {
+    "name": "Lalegül TV",
+    "category": "Kültür",
+    "url": "https://lbl.netmedya.net/hls/lalegultv.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 49
+  },
+  {
+    "name": "Semerkand TV",
+    "category": "Kültür",
+    "url": "https://b01c02nl.mediatriple.net/videoonlylive/mtisvwurbfcyslive/broadcast_58d915bd40efc.smil/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 50
+  },
+  {
+    "name": "CNN Türk",
+    "category": "Haber",
+    "url": "http://85.117.61.84/cnnturk/index.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 51
+  },
+  {
+    "name": "DHA Canlı",
+    "category": "Haber",
+    "url": "https://603c568fccdf5.streamlock.net/live/dhaweb1_C5efC/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 52
+  },
+  {
+    "name": "TGRT Belgesel",
+    "category": "Belgesel",
+    "url": "https://b01c02nl.mediatriple.net/videoonlylive/mtsxxkzwwuqtglive/broadcast_5fe462afc6a0e.smil/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 53
+  },
+  {
+    "name": "National Geographic Wild",
+    "category": "Belgesel",
+    "url": "https://saran-live.ercdn.net/natgeowild/index.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 54
+  },
+  {
+    "name": "Çiftçi TV",
+    "category": "Belgesel",
+    "url": "https://live.artidijitalmedya.com/artidijital_ciftcitv/ciftcitv/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 55
+  },
+  {
+    "name": "TRT EBA İlkokul",
+    "category": "Çocuk",
+    "url": "https://tv-e-okul00.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 56
+  },
+  {
+    "name": "TRT EBA Ortaokul",
+    "category": "Çocuk",
+    "url": "https://tv-e-okul01.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 57
+  },
+  {
+    "name": "TRT EBA Lise",
+    "category": "Çocuk",
+    "url": "https://tv-e-okul02.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 58
+  },
+  {
+    "name": "CNBC-e",
+    "category": "Haber / Finans",
+    "url": "https://hnpsechtsc.turknet.ercdn.net/xpnvudnlsv/cnbc-e/cnbc-e_1080p.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 59
+  },
+  {
+    "name": "A Para",
+    "category": "Haber / Finans",
+    "url": "https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/apara/apara_1080p.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 60
+  },
+  {
+    "name": "Ekotürk TV",
+    "category": "Haber / Finans",
+    "url": "https://cdn.ekoturk.net/hls/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 61
+  },
+  {
+    "name": "KRT TV",
+    "category": "Haber",
+    "url": "https://raw.githubusercontent.com/yaskar661-lgtm/stream/refs/heads/main/filbox/krthd.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 62
+  },
+  {
+    "name": "TJK TV (Türkiye Jokey Kulübü)",
+    "category": "Spor",
+    "url": "https://tjktv-live.tjk.org/tjktv.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 63
+  },
+  {
+    "name": "Tay TV",
+    "category": "Spor",
+    "url": "https://live.duhnet.tv/S2/HLS_LIVE/taytvnp/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 64
+  },
+  {
+    "name": "Briç ve Satranç TV",
+    "category": "Spor / Zeka",
+    "url": "http://139.162.182.79/live/test/index.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 65
+  },
+  {
+    "name": "Number1 Türk TV",
+    "category": "Müzik",
+    "url": "https://b01c02nl.mediatriple.net/videoonlylive/mtkgeuihrlfwlive/broadcast_5c9e187770143.smil/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 66
+  },
+  {
+    "name": "Number1 TV",
+    "category": "Müzik",
+    "url": "https://b01c02nl.mediatriple.net/videoonlylive/mtkgeuihrlfwlive/broadcast_5c9e17cd59e8b.smil/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 67
+  },
+  {
+    "name": "PowerTürk TV",
+    "category": "Müzik",
+    "url": "https://live.artidijitalmedya.com/artidijital_powerturktv/powerturktv/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 68
+  },
+  {
+    "name": "Power Dance",
+    "category": "Müzik",
+    "url": "https://livetv.powerapp.com.tr/dance/dance.smil/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 69
+  },
+  {
+    "name": "Power Love",
+    "category": "Müzik",
+    "url": "https://livetv.powerapp.com.tr/plove/love.smil/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 70
+  },
+  {
+    "name": "PowerTürk Akustik",
+    "category": "Müzik",
+    "url": "https://livetv.powerapp.com.tr/pturkakustik/akustik.smil/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 71
+  },
+  {
+    "name": "PowerTürk Slow",
+    "category": "Müzik",
+    "url": "https://livetv.powerapp.com.tr/pturkslow/slow.smil/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 72
+  },
+  {
+    "name": "PowerTürk Taptaze",
+    "category": "Müzik",
+    "url": "https://livetv.powerapp.com.tr/pturktaptaze/taptaze.smil/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 73
+  },
+  {
+    "name": "Euro D",
+    "category": "Ulusal / Gurbetçi",
+    "url": "https://live.duhnet.tv/S2/HLS_LIVE/eurodnp/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 74
+  },
+  {
+    "name": "4U TV",
+    "category": "Ulusal / Sinema",
+    "url": "https://hls.4utv.live/hls/stream.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 75
+  },
+  {
+    "name": "Tempo TV",
+    "category": "Ulusal / Müzik",
+    "url": "https://live.artidijitalmedya.com/artidijital_tempotv/tempotv/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 76
+  },
+  {
+    "name": "Tivi 6",
+    "category": "Ulusal / Genel",
+    "url": "https://live.artidijitalmedya.com/artidijital_tivi6/tivi6/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 77
+  },
+  {
+    "name": "Dost TV",
+    "category": "Kültür / Dini",
+    "url": "https://dost.stream.emsal.im/tv/live.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 78
+  },
+  {
+    "name": "Zarok TV",
+    "category": "Çocuk / Kültür",
+    "url": "https://zindikurmanci.zaroktv.com.tr/hls/stream.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 79
+  },
+  {
+    "name": "Sat 7 Türk",
+    "category": "Kültür / Dinler",
+    "url": "https://live.artidijitalmedya.com/artidijital_sat7turk/sat7turk/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 80
+  },
+  {
+    "name": "AS TV (Bursa)",
+    "category": "Bölgesel (Marmara)",
+    "url": "https://live.artidijitalmedya.com/artidijital_astv/astv/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 81
+  },
+  {
+    "name": "Line TV (Bursa)",
+    "category": "Bölgesel (Marmara)",
+    "url": "https://edge1.taksimbilisim.com/linetv/bant1/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 82
+  },
+  {
+    "name": "Ton TV (Çanakkale)",
+    "category": "Bölgesel (Marmara)",
+    "url": "https://live.artidijitalmedya.com/artidijital_tontv/tontv/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 83
+  },
+  {
+    "name": "TV 41 (Kocaeli)",
+    "category": "Bölgesel (Marmara)",
+    "url": "https://live.artidijitalmedya.com/artidijital_tv41/tv41/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 84
+  },
+  {
+    "name": "Bir TV (İzmir/Ege)",
+    "category": "Bölgesel (Ege)",
+    "url": "https://edge.taksimbilisim.com/birtv/bant1/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 85
+  },
+  {
+    "name": "Kanal 3 (Afyon/Ege)",
+    "category": "Bölgesel (Ege)",
+    "url": "https://live.artidijitalmedya.com/artidijital_kanal3/kanal3/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 86
+  },
+  {
+    "name": "TV Den (Aydın)",
+    "category": "Bölgesel (Ege)",
+    "url": "http://canli.tvden.com.tr/hls/live.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 87
+  },
+  {
+    "name": "Muğla Türk TV",
+    "category": "Bölgesel (Ege)",
+    "url": "https://edge1.taksimbilisim.com/muglaturk/bant1/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 88
+  },
+  {
+    "name": "Kanal 26 (Eskişehir)",
+    "category": "Bölgesel (İç Anadolu)",
+    "url": "https://live.artidijitalmedya.com/artidijital_kanal26/kanal26/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 89
+  },
+  {
+    "name": "ES TV (Eskişehir)",
+    "category": "Bölgesel (İç Anadolu)",
+    "url": "https://live.artidijitalmedya.com/artidijital_estv/estv/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 90
+  },
+  {
+    "name": "TV 1 (Kayseri)",
+    "category": "Bölgesel (İç Anadolu)",
+    "url": "https://edge1.taksimbilisim.com/tv1/bant1/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 91
+  },
+  {
+    "name": "ETV Kayseri",
+    "category": "Bölgesel (İç Anadolu)",
+    "url": "https://live.artidijitalmedya.com/artidijital_etv/etv/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 92
+  },
+  {
+    "name": "Kanal 58 (Sivas)",
+    "category": "Bölgesel (İç Anadolu)",
+    "url": "https://live.artidijitalmedya.com/artidijital_kanal58/kanal58/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 93
+  },
+  {
+    "name": "Çay TV (Rize/Karadeniz)",
+    "category": "Bölgesel (Karadeniz)",
+    "url": "https://edge1.taksimbilisim.com/caytv/bant1/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 94
+  },
+  {
+    "name": "Altaş TV (Ordu)",
+    "category": "Bölgesel (Karadeniz)",
+    "url": "https://edge1.taksimbilisim.com/altastv/bant1/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 95
+  },
+  {
+    "name": "TV 52 (Ordu)",
+    "category": "Bölgesel (Karadeniz)",
+    "url": "https://edge1.taksimbilisim.com/tv52/bant1/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 96
+  },
+  {
+    "name": "Mavi Karadeniz TV",
+    "category": "Bölgesel (Karadeniz)",
+    "url": "https://live.artidijitalmedya.com/artidijital_mavikaradeniz/mavikaradeniz/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 97
+  },
+  {
+    "name": "BRTV (Karabük/Batı Karadeniz)",
+    "category": "Bölgesel (Karadeniz)",
+    "url": "https://live.artidijitalmedya.com/artidijital_brtv/brtv/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 98
+  },
+  {
+    "name": "Kanal V (Antalya)",
+    "category": "Bölgesel (Akdeniz)",
+    "url": "https://live.artidijitalmedya.com/artidijital_kanalv/kanalv/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 99
+  },
+  {
+    "name": "Alanya Posta TV",
+    "category": "Bölgesel (Akdeniz)",
+    "url": "https://api-tv3.yayin.com.tr/postatv/postatv/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 100
+  },
+  {
+    "name": "Koza TV (Adana)",
+    "category": "Bölgesel (Akdeniz)",
+    "url": "https://live.artidijitalmedya.com/artidijital_kozatv/kozatv/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 101
+  },
+  {
+    "name": "Kanal 33 (Mersin)",
+    "category": "Bölgesel (Akdeniz)",
+    "url": "https://edge1.taksimbilisim.com/kanal33/bant1/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 102
+  },
+  {
+    "name": "Aksu TV (Kahramanmaraş)",
+    "category": "Bölgesel (Akdeniz)",
+    "url": "https://live.artidijitalmedya.com/artidijital_aksutv/aksutv/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 103
+  },
+  {
+    "name": "Güneydoğu TV (Şanlıurfa)",
+    "category": "Bölgesel (Güneydoğu)",
+    "url": "https://edge1.taksimbilisim.com/gtv/bant1/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 104
+  },
+  {
+    "name": "Edessa TV (Şanlıurfa)",
+    "category": "Bölgesel (Güneydoğu)",
+    "url": "https://canli.edessatv.com/hls/stream.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 105
+  },
+  {
+    "name": "Kanal Fırat (Elazığ)",
+    "category": "Bölgesel (Doğu Anadolu)",
+    "url": "https://live.artidijitalmedya.com/artidijital_kanalfirat/kanalfirat/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 106
+  },
+  {
+    "name": "ERTV (Malatya)",
+    "category": "Bölgesel (Doğu Anadolu)",
+    "url": "https://live.artidijitalmedya.com/artidijital_ertv_new/ertv/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 107
+  },
+  {
+    "name": "Van 65 TV",
+    "category": "Bölgesel (Doğu Anadolu)",
+    "url": "https://live.artidijitalmedya.com/artidijital_van65/van65/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 108
+  },
+  {
+    "name": "Erzurum Web TV",
+    "category": "Bölgesel (Doğu Anadolu)",
+    "url": "https://win29.yayin.com.tr/erzurumwebtv/erzurumwebtv/iptvdelisi.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 109
+  },
+  {
+    "name": "Kanal 23 (Elazığ)",
+    "category": "Bölgesel (Doğu Anadolu)",
+    "url": "https://live.artidijitalmedya.com/artidijital_kanal23/kanal23/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 110
+  },
+  {
+    "name": "Kabe TV (Mekke Canlı)",
+    "category": "Kültür / Dini",
+    "url": "http://m.live.net.sa:1935/live/quran/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 111
+  },
+  {
+    "name": "Medine TV (Medine Canlı)",
+    "category": "Kültür / Dini",
+    "url": "http://m.live.net.sa:1935/live/sunnah/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 112
+  },
+  {
+    "name": "Al Jazeera English",
+    "category": "Haber / Uluslararası",
+    "url": "https://live-hls-web-aje-gcp.thehlive.com/AJE/index.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 113
+  },
+  {
+    "name": "Al Jazeera Arabic",
+    "category": "Haber / Uluslararası",
+    "url": "https://live-hls-web-aja.getaj.net/AJA/01.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 114
+  },
+  {
+    "name": "NASA TV (Uzay & ISS)",
+    "category": "Bilim / Uzay",
+    "url": "https://ntv1.akamaized.net/hls/live/2014075/NASA-NTV1-HLS/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 115
+  },
+  {
+    "name": "Space Live (Yörüngeden Canlı Dünya)",
+    "category": "Bilim / Ambiyans",
+    "url": "https://linear-1224.frequency.stream/dist/lg-uk/1224/hls/master/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 116
+  },
+  {
+    "name": "Şömine TV (Canlı Şömine Ateşi)",
+    "category": "Ambiyans / Relax",
+    "url": "https://d3vdjya9w9bgb3.cloudfront.net/Fireplace_4K_SONO20.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 117
+  },
+  {
+    "name": "Akvaryum & Okyanus TV",
+    "category": "Ambiyans / Doğa",
+    "url": "https://5dcabf026b188.streamlock.net/OceansTV/livestream/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 118
+  },
+  {
+    "name": "Stingray Naturescape (Huzurlu Doğa)",
+    "category": "Ambiyans / Doğa",
+    "url": "https://lotus.stingray.com/manifest/naturescape-a003-montreal/samsungtvplus/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 119
+  },
+  {
+    "name": "ZenLIFE by Stingray (Meditasyon & Relax)",
+    "category": "Ambiyans / Relax",
+    "url": "https://lotus.stingray.com/manifest/zenlife-zen001-montreal/samsungtvplus/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 120
+  }
+]

@@ -1,0 +1,13 @@
+#EXTM3U x-tvg-url=""
+#EXTINF:-1 tvg-id="117" tvg-name="Şömine TV (Canlı Şömine Ateşi)" group-title="Ambiyans / Relax",Şömine TV (Canlı Şömine Ateşi)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://d3vdjya9w9bgb3.cloudfront.net/Fireplace_4K_SONO20.m3u8
+#EXTINF:-1 tvg-id="118" tvg-name="Akvaryum & Okyanus TV" group-title="Ambiyans / Doğa",Akvaryum & Okyanus TV
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://5dcabf026b188.streamlock.net/OceansTV/livestream/playlist.m3u8
+#EXTINF:-1 tvg-id="119" tvg-name="Stingray Naturescape (Huzurlu Doğa)" group-title="Ambiyans / Doğa",Stingray Naturescape (Huzurlu Doğa)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://lotus.stingray.com/manifest/naturescape-a003-montreal/samsungtvplus/master.m3u8
+#EXTINF:-1 tvg-id="120" tvg-name="ZenLIFE by Stingray (Meditasyon & Relax)" group-title="Ambiyans / Relax",ZenLIFE by Stingray (Meditasyon & Relax)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://lotus.stingray.com/manifest/zenlife-zen001-montreal/samsungtvplus/master.m3u8

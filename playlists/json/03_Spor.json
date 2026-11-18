@@ -1,0 +1,58 @@
+[
+  {
+    "name": "TRT Spor",
+    "category": "Spor",
+    "url": "https://trt.daioncdn.net/trtspor/master.m3u8?app=web&platform=trtspor",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 28
+  },
+  {
+    "name": "TRT Spor Yıldız",
+    "category": "Spor",
+    "url": "https://trt.daioncdn.net/trtspor-yildiz/master.m3u8?app=web&platform=trtspor",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 29
+  },
+  {
+    "name": "TV8.5",
+    "category": "Spor",
+    "url": "https://tv8.daioncdn.net/tv8bucuk/tv8bucuk.m3u8?app=tv8bucuk_web",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 30
+  },
+  {
+    "name": "HT Spor",
+    "category": "Spor",
+    "url": "https://ciner.daioncdn.net/ht-spor/ht-spor.m3u8?app=web",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 31
+  },
+  {
+    "name": "TJK TV (Türkiye Jokey Kulübü)",
+    "category": "Spor",
+    "url": "https://tjktv-live.tjk.org/tjktv.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 63
+  },
+  {
+    "name": "Tay TV",
+    "category": "Spor",
+    "url": "https://live.duhnet.tv/S2/HLS_LIVE/taytvnp/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 64
+  },
+  {
+    "name": "Briç ve Satranç TV",
+    "category": "Spor / Zeka",
+    "url": "http://139.162.182.79/live/test/index.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 65
+  }
+]
