@@ -1,0 +1,91 @@
+#EXTM3U x-tvg-url=""
+#EXTINF:-1 tvg-id="81" tvg-name="AS TV (Bursa)" group-title="Bölgesel (Marmara)",AS TV (Bursa)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://live.artidijitalmedya.com/artidijital_astv/astv/playlist.m3u8
+#EXTINF:-1 tvg-id="82" tvg-name="Line TV (Bursa)" group-title="Bölgesel (Marmara)",Line TV (Bursa)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://edge1.taksimbilisim.com/linetv/bant1/playlist.m3u8
+#EXTINF:-1 tvg-id="83" tvg-name="Ton TV (Çanakkale)" group-title="Bölgesel (Marmara)",Ton TV (Çanakkale)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://live.artidijitalmedya.com/artidijital_tontv/tontv/playlist.m3u8
+#EXTINF:-1 tvg-id="84" tvg-name="TV 41 (Kocaeli)" group-title="Bölgesel (Marmara)",TV 41 (Kocaeli)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://live.artidijitalmedya.com/artidijital_tv41/tv41/playlist.m3u8
+#EXTINF:-1 tvg-id="85" tvg-name="Bir TV (İzmir/Ege)" group-title="Bölgesel (Ege)",Bir TV (İzmir/Ege)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://edge.taksimbilisim.com/birtv/bant1/playlist.m3u8
+#EXTINF:-1 tvg-id="86" tvg-name="Kanal 3 (Afyon/Ege)" group-title="Bölgesel (Ege)",Kanal 3 (Afyon/Ege)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://live.artidijitalmedya.com/artidijital_kanal3/kanal3/playlist.m3u8
+#EXTINF:-1 tvg-id="87" tvg-name="TV Den (Aydın)" group-title="Bölgesel (Ege)",TV Den (Aydın)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+http://canli.tvden.com.tr/hls/live.m3u8
+#EXTINF:-1 tvg-id="88" tvg-name="Muğla Türk TV" group-title="Bölgesel (Ege)",Muğla Türk TV
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://edge1.taksimbilisim.com/muglaturk/bant1/playlist.m3u8
+#EXTINF:-1 tvg-id="89" tvg-name="Kanal 26 (Eskişehir)" group-title="Bölgesel (İç Anadolu)",Kanal 26 (Eskişehir)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://live.artidijitalmedya.com/artidijital_kanal26/kanal26/playlist.m3u8
+#EXTINF:-1 tvg-id="90" tvg-name="ES TV (Eskişehir)" group-title="Bölgesel (İç Anadolu)",ES TV (Eskişehir)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://live.artidijitalmedya.com/artidijital_estv/estv/playlist.m3u8
+#EXTINF:-1 tvg-id="91" tvg-name="TV 1 (Kayseri)" group-title="Bölgesel (İç Anadolu)",TV 1 (Kayseri)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://edge1.taksimbilisim.com/tv1/bant1/playlist.m3u8
+#EXTINF:-1 tvg-id="92" tvg-name="ETV Kayseri" group-title="Bölgesel (İç Anadolu)",ETV Kayseri
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://live.artidijitalmedya.com/artidijital_etv/etv/playlist.m3u8
+#EXTINF:-1 tvg-id="93" tvg-name="Kanal 58 (Sivas)" group-title="Bölgesel (İç Anadolu)",Kanal 58 (Sivas)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://live.artidijitalmedya.com/artidijital_kanal58/kanal58/playlist.m3u8
+#EXTINF:-1 tvg-id="94" tvg-name="Çay TV (Rize/Karadeniz)" group-title="Bölgesel (Karadeniz)",Çay TV (Rize/Karadeniz)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://edge1.taksimbilisim.com/caytv/bant1/playlist.m3u8
+#EXTINF:-1 tvg-id="95" tvg-name="Altaş TV (Ordu)" group-title="Bölgesel (Karadeniz)",Altaş TV (Ordu)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://edge1.taksimbilisim.com/altastv/bant1/playlist.m3u8
+#EXTINF:-1 tvg-id="96" tvg-name="TV 52 (Ordu)" group-title="Bölgesel (Karadeniz)",TV 52 (Ordu)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://edge1.taksimbilisim.com/tv52/bant1/playlist.m3u8
+#EXTINF:-1 tvg-id="97" tvg-name="Mavi Karadeniz TV" group-title="Bölgesel (Karadeniz)",Mavi Karadeniz TV
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://live.artidijitalmedya.com/artidijital_mavikaradeniz/mavikaradeniz/playlist.m3u8
+#EXTINF:-1 tvg-id="98" tvg-name="BRTV (Karabük/Batı Karadeniz)" group-title="Bölgesel (Karadeniz)",BRTV (Karabük/Batı Karadeniz)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://live.artidijitalmedya.com/artidijital_brtv/brtv/playlist.m3u8
+#EXTINF:-1 tvg-id="99" tvg-name="Kanal V (Antalya)" group-title="Bölgesel (Akdeniz)",Kanal V (Antalya)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://live.artidijitalmedya.com/artidijital_kanalv/kanalv/playlist.m3u8
+#EXTINF:-1 tvg-id="100" tvg-name="Alanya Posta TV" group-title="Bölgesel (Akdeniz)",Alanya Posta TV
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://api-tv3.yayin.com.tr/postatv/postatv/playlist.m3u8
+#EXTINF:-1 tvg-id="101" tvg-name="Koza TV (Adana)" group-title="Bölgesel (Akdeniz)",Koza TV (Adana)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://live.artidijitalmedya.com/artidijital_kozatv/kozatv/playlist.m3u8
+#EXTINF:-1 tvg-id="102" tvg-name="Kanal 33 (Mersin)" group-title="Bölgesel (Akdeniz)",Kanal 33 (Mersin)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://edge1.taksimbilisim.com/kanal33/bant1/playlist.m3u8
+#EXTINF:-1 tvg-id="103" tvg-name="Aksu TV (Kahramanmaraş)" group-title="Bölgesel (Akdeniz)",Aksu TV (Kahramanmaraş)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://live.artidijitalmedya.com/artidijital_aksutv/aksutv/playlist.m3u8
+#EXTINF:-1 tvg-id="104" tvg-name="Güneydoğu TV (Şanlıurfa)" group-title="Bölgesel (Güneydoğu)",Güneydoğu TV (Şanlıurfa)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://edge1.taksimbilisim.com/gtv/bant1/playlist.m3u8
+#EXTINF:-1 tvg-id="105" tvg-name="Edessa TV (Şanlıurfa)" group-title="Bölgesel (Güneydoğu)",Edessa TV (Şanlıurfa)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://canli.edessatv.com/hls/stream.m3u8
+#EXTINF:-1 tvg-id="106" tvg-name="Kanal Fırat (Elazığ)" group-title="Bölgesel (Doğu Anadolu)",Kanal Fırat (Elazığ)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://live.artidijitalmedya.com/artidijital_kanalfirat/kanalfirat/playlist.m3u8
+#EXTINF:-1 tvg-id="107" tvg-name="ERTV (Malatya)" group-title="Bölgesel (Doğu Anadolu)",ERTV (Malatya)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://live.artidijitalmedya.com/artidijital_ertv_new/ertv/playlist.m3u8
+#EXTINF:-1 tvg-id="108" tvg-name="Van 65 TV" group-title="Bölgesel (Doğu Anadolu)",Van 65 TV
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://live.artidijitalmedya.com/artidijital_van65/van65/playlist.m3u8
+#EXTINF:-1 tvg-id="109" tvg-name="Erzurum Web TV" group-title="Bölgesel (Doğu Anadolu)",Erzurum Web TV
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://win29.yayin.com.tr/erzurumwebtv/erzurumwebtv/iptvdelisi.m3u8
+#EXTINF:-1 tvg-id="110" tvg-name="Kanal 23 (Elazığ)" group-title="Bölgesel (Doğu Anadolu)",Kanal 23 (Elazığ)
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+https://live.artidijitalmedya.com/artidijital_kanal23/kanal23/playlist.m3u8

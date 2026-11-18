@@ -1,0 +1,98 @@
+[
+  {
+    "name": "TRT 2",
+    "category": "Kültür",
+    "url": "https://tv-trt2.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 43
+  },
+  {
+    "name": "Diyanet TV",
+    "category": "Kültür",
+    "url": "https://eustr73.mediatriple.net/videoonlylive/mtikoimxnztxlive/broadcast_5e3bf95a47e07.smil/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 44
+  },
+  {
+    "name": "TRT World",
+    "category": "Kültür",
+    "url": "https://tv-trtworld.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 45
+  },
+  {
+    "name": "TRT Avaz",
+    "category": "Kültür",
+    "url": "https://tv-trtavaz.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 46
+  },
+  {
+    "name": "TRT Arabi",
+    "category": "Kültür",
+    "url": "https://tv-trtarabi.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 47
+  },
+  {
+    "name": "TRT Kurdî",
+    "category": "Kültür",
+    "url": "https://tv-trtkurdi.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 48
+  },
+  {
+    "name": "Lalegül TV",
+    "category": "Kültür",
+    "url": "https://lbl.netmedya.net/hls/lalegultv.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 49
+  },
+  {
+    "name": "Semerkand TV",
+    "category": "Kültür",
+    "url": "https://b01c02nl.mediatriple.net/videoonlylive/mtisvwurbfcyslive/broadcast_58d915bd40efc.smil/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 50
+  },
+  {
+    "name": "Dost TV",
+    "category": "Kültür / Dini",
+    "url": "https://dost.stream.emsal.im/tv/live.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 78
+  },
+  {
+    "name": "Sat 7 Türk",
+    "category": "Kültür / Dinler",
+    "url": "https://live.artidijitalmedya.com/artidijital_sat7turk/sat7turk/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 80
+  },
+  {
+    "name": "Kabe TV (Mekke Canlı)",
+    "category": "Kültür / Dini",
+    "url": "http://m.live.net.sa:1935/live/quran/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 111
+  },
+  {
+    "name": "Medine TV (Medine Canlı)",
+    "category": "Kültür / Dini",
+    "url": "http://m.live.net.sa:1935/live/sunnah/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 112
+  }
+]

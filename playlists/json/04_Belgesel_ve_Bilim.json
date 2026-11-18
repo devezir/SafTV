@@ -1,0 +1,66 @@
+[
+  {
+    "name": "TRT Belgesel",
+    "category": "Belgesel",
+    "url": "https://tv-trtbelgesel.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 32
+  },
+  {
+    "name": "DMAX",
+    "category": "Belgesel",
+    "url": "https://dogus.daioncdn.net/dmax/dmax.m3u8?app=dmax_web",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 33
+  },
+  {
+    "name": "TLC",
+    "category": "Belgesel",
+    "url": "https://dogus.daioncdn.net/tlc/tlc.m3u8?app=tlc_web",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 34
+  },
+  {
+    "name": "TGRT Belgesel",
+    "category": "Belgesel",
+    "url": "https://b01c02nl.mediatriple.net/videoonlylive/mtsxxkzwwuqtglive/broadcast_5fe462afc6a0e.smil/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 53
+  },
+  {
+    "name": "National Geographic Wild",
+    "category": "Belgesel",
+    "url": "https://saran-live.ercdn.net/natgeowild/index.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 54
+  },
+  {
+    "name": "Çiftçi TV",
+    "category": "Belgesel",
+    "url": "https://live.artidijitalmedya.com/artidijital_ciftcitv/ciftcitv/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 55
+  },
+  {
+    "name": "NASA TV (Uzay & ISS)",
+    "category": "Bilim / Uzay",
+    "url": "https://ntv1.akamaized.net/hls/live/2014075/NASA-NTV1-HLS/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 115
+  },
+  {
+    "name": "Space Live (Yörüngeden Canlı Dünya)",
+    "category": "Bilim / Ambiyans",
+    "url": "https://linear-1224.frequency.stream/dist/lg-uk/1224/hls/master/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 116
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Şömine TV (Canlı Şömine Ateşi)",
+    "category": "Ambiyans / Relax",
+    "url": "https://d3vdjya9w9bgb3.cloudfront.net/Fireplace_4K_SONO20.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 117
+  },
+  {
+    "name": "Akvaryum & Okyanus TV",
+    "category": "Ambiyans / Doğa",
+    "url": "https://5dcabf026b188.streamlock.net/OceansTV/livestream/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 118
+  },
+  {
+    "name": "Stingray Naturescape (Huzurlu Doğa)",
+    "category": "Ambiyans / Doğa",
+    "url": "https://lotus.stingray.com/manifest/naturescape-a003-montreal/samsungtvplus/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 119
+  },
+  {
+    "name": "ZenLIFE by Stingray (Meditasyon & Relax)",
+    "category": "Ambiyans / Relax",
+    "url": "https://lotus.stingray.com/manifest/zenlife-zen001-montreal/samsungtvplus/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 120
+  }
+]

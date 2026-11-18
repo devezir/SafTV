@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.app.PictureInPictureParams;
 import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +14,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.AudioAttributes;
@@ -26,6 +29,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -64,6 +68,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -3266,17 +3271,60 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
             SimpleDateFormat fileDateSdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
             String fileName = "saf_tv_yedek_" + fileDateSdf.format(new Date()) + ".json";
+            byte[] fileBytes = root.toString(2).getBytes("UTF-8");
 
-            File dir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-            if (dir == null) dir = getFilesDir();
-            if (!dir.exists()) dir.mkdirs();
+            boolean writtenToPublic = false;
 
-            File destFile = new File(dir, fileName);
-            FileOutputStream fos = new FileOutputStream(destFile);
-            fos.write(root.toString(2).getBytes("UTF-8"));
-            fos.close();
+            // 1. Android 10+ (API 29+) MediaStore.Downloads API ile doğrudan genel Download klasörüne yaz
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                try {
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
+                    values.put(MediaStore.MediaColumns.MIME_TYPE, "application/json");
+                    values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+                    Uri uri = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+                    if (uri != null) {
+                        OutputStream os = getContentResolver().openOutputStream(uri);
+                        if (os != null) {
+                            os.write(fileBytes);
+                            os.close();
+                            writtenToPublic = true;
+                        }
+                    }
+                } catch (Exception ignored) {}
+            }
 
-            Toast.makeText(this, "💾 Ayarlar & Kanallar yedeklendi:\n" + destFile.getName(), Toast.LENGTH_LONG).show();
+            // 2. Android 9 ve altı için veya MediaStore başarısız olursa genel Download klasörüne doğrudan yaz
+            if (!writtenToPublic) {
+                try {
+                    File publicDl = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                    if (publicDl != null) {
+                        if (!publicDl.exists()) publicDl.mkdirs();
+                        File pubFile = new File(publicDl, fileName);
+                        FileOutputStream fosPub = new FileOutputStream(pubFile);
+                        fosPub.write(fileBytes);
+                        fosPub.close();
+                        writtenToPublic = true;
+                    }
+                } catch (Exception ignored) {}
+            }
+
+            // 3. Uygulama içi klasörüne de her halükarda bir kopya bırak (içe aktarma güvencesi)
+            try {
+                File appDir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+                if (appDir == null) appDir = getFilesDir();
+                if (!appDir.exists()) appDir.mkdirs();
+                File destFile = new File(appDir, fileName);
+                FileOutputStream fos = new FileOutputStream(destFile);
+                fos.write(fileBytes);
+                fos.close();
+            } catch (Exception ignored) {}
+
+            String toastMsg = writtenToPublic
+                    ? "💾 İndirilenler (Download) klasörüne kaydedildi:\n" + fileName
+                    : "💾 Yedekleme tamamlandı:\n" + fileName;
+
+            Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Toast.makeText(this, "Yedekleme hatası: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -3285,34 +3333,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private void importSettings() {
         try {
             List<File> fileList = new ArrayList<>();
-            File dlDir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-            if (dlDir != null && dlDir.exists()) {
-                File[] arr = dlDir.listFiles();
-                if (arr != null) {
-                    for (File f : arr) {
-                        String name = f.getName().toLowerCase();
-                        if (name.endsWith(".json") || name.endsWith(".m3u") || name.endsWith(".m3u8")) {
-                            fileList.add(f);
-                        }
-                    }
-                }
-            }
+            Set<String> seenNames = new HashSet<>();
 
-            File intDir = getFilesDir();
-            if (intDir != null && intDir.exists()) {
-                File[] arr = intDir.listFiles();
-                if (arr != null) {
-                    for (File f : arr) {
-                        String name = f.getName().toLowerCase();
-                        if (name.endsWith(".json") || name.endsWith(".m3u") || name.endsWith(".m3u8")) {
-                            if (!name.equals("channels.json")) {
-                                fileList.add(f);
-                            }
-                        }
-                    }
-                }
-            }
-
+            // 1. Genel Download Klasörü (Öncelikli)
             File publicDl = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
             if (publicDl != null && publicDl.exists() && publicDl.canRead()) {
                 File[] arr = publicDl.listFiles();
@@ -3320,7 +3343,84 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                     for (File f : arr) {
                         String name = f.getName().toLowerCase();
                         if (name.endsWith(".json") || name.endsWith(".m3u") || name.endsWith(".m3u8")) {
-                            fileList.add(f);
+                            if (!seenNames.contains(name)) {
+                                seenNames.add(name);
+                                fileList.add(f);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 2. Android 10+ MediaStore.Downloads API ile genel Download klasörünü tara (Scoped Storage korumalı cihazlar için)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                try {
+                    Uri queryUri = MediaStore.Downloads.EXTERNAL_CONTENT_URI;
+                    String[] proj = new String[]{MediaStore.MediaColumns._ID, MediaStore.MediaColumns.DISPLAY_NAME};
+                    Cursor c = getContentResolver().query(queryUri, proj, null, null, MediaStore.MediaColumns.DATE_ADDED + " DESC");
+                    if (c != null) {
+                        int idCol = c.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
+                        int nameCol = c.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
+                        while (c.moveToNext()) {
+                            long id = c.getLong(idCol);
+                            String displayName = c.getString(nameCol);
+                            if (displayName != null) {
+                                String dLower = displayName.toLowerCase();
+                                if (dLower.endsWith(".json") || dLower.endsWith(".m3u") || dLower.endsWith(".m3u8")) {
+                                    if (!seenNames.contains(dLower)) {
+                                        seenNames.add(dLower);
+                                        Uri itemUri = ContentUris.withAppendedId(MediaStore.Downloads.EXTERNAL_CONTENT_URI, id);
+                                        File cachedFile = new File(getCacheDir(), displayName);
+                                        InputStream in = getContentResolver().openInputStream(itemUri);
+                                        if (in != null) {
+                                            FileOutputStream fos = new FileOutputStream(cachedFile);
+                                            byte[] buf = new byte[8192];
+                                            int len;
+                                            while ((len = in.read(buf)) != -1) {
+                                                fos.write(buf, 0, len);
+                                            }
+                                            fos.close();
+                                            in.close();
+                                            fileList.add(cachedFile);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        c.close();
+                    }
+                } catch (Exception ignored) {}
+            }
+
+            // 3. Uygulamaya Özel Download Klasörü
+            File dlDir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+            if (dlDir != null && dlDir.exists()) {
+                File[] arr = dlDir.listFiles();
+                if (arr != null) {
+                    for (File f : arr) {
+                        String name = f.getName().toLowerCase();
+                        if (name.endsWith(".json") || name.endsWith(".m3u") || name.endsWith(".m3u8")) {
+                            if (!seenNames.contains(name)) {
+                                seenNames.add(name);
+                                fileList.add(f);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 4. Dahili Uygulama Klasörü
+            File intDir = getFilesDir();
+            if (intDir != null && intDir.exists()) {
+                File[] arr = intDir.listFiles();
+                if (arr != null) {
+                    for (File f : arr) {
+                        String name = f.getName().toLowerCase();
+                        if (name.endsWith(".json") || name.endsWith(".m3u") || name.endsWith(".m3u8")) {
+                            if (!name.equals("channels.json") && !seenNames.contains(name)) {
+                                seenNames.add(name);
+                                fileList.add(f);
+                            }
                         }
                     }
                 }

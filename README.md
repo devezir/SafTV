@@ -22,6 +22,7 @@
 | 🚀 **Saf TV v2.8.0 (En Son Kararlı - Yasal)** | **~185 KB** | Güncel, resmi imzalı en son APK (Uygulama İçi Doğrudan OTA İndirme & Kurulum) | [⬇️ **SafTV_v2.8.0_vc21.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.8.0/SafTV_v2.8.0_vc21.apk) |
 | 📱 **SafTV.apk (Sabit Bağlantı)** | **~185 KB** | Daima en son stabil sürümü işaret eder | [⬇️ **SafTV.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.8.0/SafTV.apk) |
 | 📦 **Tüm 21 Sürümün Arşivi (ZIP)** | **~1.39 MB** | v1.0.0'dan v2.8.0'a tüm APK'lar tek pakette | [📦 **SafTV_All_Releases_Archive.zip**](https://github.com/devezir/SafTV/releases/download/v2.8.0/SafTV_All_Releases_Archive.zip) |
+| 📺 **Kanal Listeleri Kataloğu** | — | M3U8 ve JSON formatında kategori bazlı 120 kanal | [📺 **KANAL_LISTESI.md İncele**](KANAL_LISTESI.md) |
 | 📜 **Değişim Günlüğü** | — | Tüm sürümlerin kronolojik teknik detayları | [📜 **DEGISIM_GUNLUGU.md İncele**](DEGISIM_GUNLUGU.md) |
 
 ---

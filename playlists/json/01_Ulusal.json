@@ -1,0 +1,146 @@
+[
+  {
+    "name": "TRT 1",
+    "category": "Ulusal",
+    "url": "https://tv-trt1.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 1
+  },
+  {
+    "name": "Kanal D",
+    "category": "Ulusal",
+    "url": "https://demiroren.daioncdn.net/kanald/kanald.m3u8?app=kanald_web&ce=3",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 2
+  },
+  {
+    "name": "ATV",
+    "category": "Ulusal",
+    "url": "https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/atv/atv_720p.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 3
+  },
+  {
+    "name": "Show TV",
+    "category": "Ulusal",
+    "url": "https://ciner.daioncdn.net/showtv/showtv.m3u8?app=showtv_web",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 4
+  },
+  {
+    "name": "Star TV",
+    "category": "Ulusal",
+    "url": "https://dogus.daioncdn.net/startv/startv_720p.m3u8?app=a20ac41e-bdc3-4aa1-934d-26b484480ac9&ce=3&sid=8l4w3lst4co5",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 5
+  },
+  {
+    "name": "NOW TV",
+    "category": "Ulusal",
+    "url": "https://uycyyuuzyh.turknet.ercdn.net/nphindgytw/nowtv/nowtv.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 6
+  },
+  {
+    "name": "TV8",
+    "category": "Ulusal",
+    "url": "https://tv8.daioncdn.net/tv8/tv8.m3u8?app=7ddc255a-ef47-4e81-ab14-c0e5f2949788&ce=3",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 7
+  },
+  {
+    "name": "Kanal 7",
+    "category": "Ulusal",
+    "url": "https://kanal7-live.daioncdn.net/kanal7/kanal7.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 8
+  },
+  {
+    "name": "A2 TV",
+    "category": "Ulusal",
+    "url": "https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/a2tv/a2tv.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 9
+  },
+  {
+    "name": "Teve2",
+    "category": "Ulusal",
+    "url": "https://demiroren.daioncdn.net/teve2/teve2.m3u8?ce=3&app=6aab838a-437e-4a1b-bbd0-e30f79cdbbbd",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 10
+  },
+  {
+    "name": "Beyaz TV",
+    "category": "Ulusal",
+    "url": "https://beyaztv-live.daioncdn.net/beyaztv/beyaztv.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 11
+  },
+  {
+    "name": "360 TV",
+    "category": "Ulusal",
+    "url": "https://turkmedya-live.ercdn.net/tv360/tv360.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 12
+  },
+  {
+    "name": "TV4",
+    "category": "Ulusal",
+    "url": "https://turkmedya-live.ercdn.net/tv4/tv4.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 13
+  },
+  {
+    "name": "TRT Türk",
+    "category": "Ulusal",
+    "url": "https://tv-trtturk.medya.trt.com.tr/master.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 14
+  },
+  {
+    "name": "Euro D",
+    "category": "Ulusal / Gurbetçi",
+    "url": "https://live.duhnet.tv/S2/HLS_LIVE/eurodnp/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 74
+  },
+  {
+    "name": "4U TV",
+    "category": "Ulusal / Sinema",
+    "url": "https://hls.4utv.live/hls/stream.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 75
+  },
+  {
+    "name": "Tempo TV",
+    "category": "Ulusal / Müzik",
+    "url": "https://live.artidijitalmedya.com/artidijital_tempotv/tempotv/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 76
+  },
+  {
+    "name": "Tivi 6",
+    "category": "Ulusal / Genel",
+    "url": "https://live.artidijitalmedya.com/artidijital_tivi6/tivi6/playlist.m3u8",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "referer": null,
+    "id": 77
+  }
+]
