@@ -10,6 +10,7 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 
 | Sürüm | Sürüm Kodu (versionCode) | Yayın Tarihi | APK Boyutu | Doğrudan APK İndir | Başlıca Yenilikler ve Odak Noktası |
 |:---:|:---:|:---:|:---:|:---:|---|
+| **v2.9.0** | 22 | 18.11.2026 | ~185.4 KB | [⬇️ **SafTV_v2.9.0_vc22.apk**](https://github.com/devezir/SafTV/releases/download/v2.9.0/SafTV_v2.9.0_vc22.apk) | 📁 **Gerçek Download Klasörüne Dışa Aktarma (MediaStore API), Scoped Storage İçe Aktarma & 10 Bağımsız Kategori Listesi:** Android 11+ kısıtlı `/Android/data/` klasörü yerine doğrudan kullanıcı tarafından erişilebilir `/storage/emulated/0/Download/` klasörüne yazma, sıfır depolama izni, mükerrer önleme ve 120 kanalın 10 ayrı M3U8 ve JSON listeleri. |
 | **v2.8.0** | 21 | 17.11.2026 | ~185.4 KB | [⬇️ **SafTV_v2.8.0_vc21.apk**](https://github.com/devezir/SafTV/releases/download/v2.8.0/SafTV_v2.8.0_vc21.apk) | 📲 **Uygulama İçi Doğrudan OTA Güncelleme & Canlı İndirme Çubuğu:** Harici web tarayıcısına gerek kalmadan TV kumandasıyla tek tıkla doğrudan indirme, canlı yüzde ve KB sayacı, sıfır harici kütüphaneli yerel `ApkProvider` ile Android Paket Yükleyicisini otomatik başlatma, kesintisiz TV deneyimi ve ayar/kanal koruma güvencesi. |
 | **v2.7.0** | 20 | 17.11.2026 | ~173.4 KB | [⬇️ **SafTV_v2.7.0_vc20.apk**](https://github.com/devezir/SafTV/releases/download/v2.7.0/SafTV_v2.7.0_vc20.apk) | 📻 **Sadece Ses (Radyo Modu) & %95+ Veri Tasarrufu:** Video rendering'i tamamen kapatıp sadece sesi dinleme modu (Haber/tartışma programları için ideal), HLS bağımsız ses veya minimum bant genişlikli akış seçimi, OLED dostu siyah radyo bilgi paneli, TV yanma koruması (Burn-in Protection), tek tuşla (OK/Dokun/BACK) anında videoya dönüş ve Hızlı Kalite (Yeşil Tuş) entegrasyonu. |
 | **v2.6.0** | 19 | 17.11.2026 | ~169.4 KB | [⬇️ **SafTV_v2.6.0_vc19.apk**](https://github.com/devezir/SafTV/releases/download/v2.6.0/SafTV_v2.6.0_vc19.apk) | 📶 **Kotalı Ağ Farkındalığı, Canlı OSD Veri Sayacı, 8. Sekme & 3 Bağımsız Kota:** Otomatik kotalı Wi-Fi (hotspot) ve mobil veri tespiti, Kotalı ağ davranışı (Serbest / Uyar / Engelle), OSD bilgi çubuğunda anlık hız & oturum sayacı rozeti, Ayarlar menüsünde 8. sekme (📶 Ağ & Veri: Anlık hız, Oturum, Bugün, Rolling Son 30 Gün), Oturum / Günlük / Son 30 Gün için bağımsız kota limitleri ve elle GB/MB girişi. |
@@ -35,6 +36,19 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 ---
 
 ## 🔍 Detaylı Sürüm Notları
+
+### 📁 v2.9.0 (versionCode: 22) — 18 Kasım 2026
+* **Gerçek İndirilenler (Download) Klasörüne Dışa Aktarma:**
+  * Önceden uygulamanın özel gizli klasörüne (`/Android/data/...`) yazıldığı için TV dosya yöneticilerinde bulunamayan yedek dosyası sorunu tamamen giderildi.
+  * Android'in resmi `MediaStore.Downloads` API'si entegre edildi. Artık `saf_tv_yedek_...json` doğrudan ana `Download` klasörüne yazılır.
+  * Kullanıcıdan tehlikeli hiçbir depolama izni istenmez (Android 10+ yerel API).
+* **Akıllı & Korumalı İçe Aktarma (`importSettings`):**
+  * Hem genel `Download` klasörü, hem `MediaStore` ortamı, hem de dahili depolama eş zamanlı taranır.
+  * Aynı isimli yedek dosyalarının listeyi kirletmesi (mükerrer kayıt) engellendi.
+  * Kullanıcı ister tarayıcıdan indirsin, ister USB bellekten atsın; tüm `.json`, `.m3u`, `.m3u8` dosyaları anında algılanır.
+* **10 Bağımsız Kategori & Master Çalma Listesi Kataloğu:**
+  * 120 aktif kanal hem VLC/Tivimate uyumlu `.m3u8`, hem Saf TV uyumlu `.json` formatında `playlists/` klasörüne ayrıştırıldı.
+  * Tüm döküm [`KANAL_LISTESI.md`](KANAL_LISTESI.md) dokümanı olarak yayına alındı.
 
 ### 📲 v2.8.0 (versionCode: 21) — 17 Kasım 2026
 * **Uygulama İçi Doğrudan OTA Güncelleme (In-App Direct Updater):**
