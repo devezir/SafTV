@@ -1,8 +1,8 @@
 {
-  "versionCode": 21,
-  "versionName": "2.8.0",
-  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.8.0/SafTV_v2.8.0_vc21.apk",
-  "apkName": "SafTV_v2.8.0_vc21.apk",
+  "versionCode": 22,
+  "versionName": "2.9.0",
+  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.9.0/SafTV_v2.9.0_vc22.apk",
+  "apkName": "SafTV_v2.9.0_vc22.apk",
   "history": [
     {
       "versionCode": 1,
@@ -150,6 +150,13 @@
       "apkName": "SafTV_v2.8.0_vc21.apk",
       "date": "2026-11-17",
       "description": "Uygulama İçi Doğrudan OTA Güncelleme: TV kumandasıyla tek tıkla indirme, ilerleme çubuğu, sıfır bağımlılıklı yerel ApkProvider ile otomatik sistem paket kurulumu."
+    },
+    {
+      "versionCode": 22,
+      "versionName": "2.9.0",
+      "apkName": "SafTV_v2.9.0_vc22.apk",
+      "date": "2026-11-18",
+      "description": "Gerçek Download Klasörüne Dışa Aktarma (MediaStore API), Scoped Storage İçe Aktarma Uyumu ve Kategori Bazlı M3U8/JSON Kanal Listeleri"
     }
   ]
 }
