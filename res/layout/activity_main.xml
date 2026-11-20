@@ -67,17 +67,29 @@
                 android:layout_marginTop="6dp"
                 android:text="🚀 %95+ Veri Tasarrufu • Video Akışı Kapalı" />
 
-            <Button
-                android:id="@+id/btn_audio_only_restore"
+            <!-- Bilgilendirme Rozeti (Görüntüyü Geri Açma Rehberi) -->
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="38dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="👁️ Görüntüyü Geri Aç (OK / Dokun)"
-                android:textSize="12sp"
-                android:textColor="@color/text_white"
-                android:background="@drawable/selector_chip"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp" />
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@drawable/bg_osd"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/tv_audio_only_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💡 Görüntüyü açmak için Kalite Menüsü'nden\n(Yeşil Tuş veya Ayarlar ➔ Kalite) bir video çözünürlüğü seçiniz."
+                    android:textColor="@color/text_white"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="3dp" />
+            </LinearLayout>
         </LinearLayout>
     </FrameLayout>
 

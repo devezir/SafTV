@@ -1,8 +1,8 @@
 {
-  "versionCode": 23,
-  "versionName": "2.10.0",
-  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.10.0/SafTV_v2.10.0_vc23.apk",
-  "apkName": "SafTV_v2.10.0_vc23.apk",
+  "versionCode": 24,
+  "versionName": "2.11.0",
+  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.11.0/SafTV_v2.11.0_vc24.apk",
+  "apkName": "SafTV_v2.11.0_vc24.apk",
   "history": [
     {
       "versionCode": 1,
@@ -164,6 +164,13 @@
       "apkName": "SafTV_v2.10.0_vc23.apk",
       "date": "2026-11-20",
       "description": "Çıkış (BACK) Diyaloğuna '⚙️ Ayarlar' Erişimi (Settings tuşu bulunmayan minimalist Android TV kumandaları için garantili emniyet kilidi)"
+    },
+    {
+      "versionCode": 24,
+      "versionName": "2.11.0",
+      "apkName": "SafTV_v2.11.0_vc24.apk",
+      "date": "2026-11-21",
+      "description": "Sadece Ses (Radyo Modu) Kalıcılığı: Ekrana tıklama veya tuşlarla görüntünün kazara açılması engellendi, video dönüşü Kalite Menüsüne bağlandı ve ekran rehberi eklendi"
     }
   ]
 }

@@ -115,7 +115,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private View cardAudioOnly;
     private TextView tvAudioOnlyChannelName;
     private TextView tvAudioOnlySavings;
-    private Button btnAudioOnlyRestore;
     private boolean isAudioOnlyMode = false;
 
     // Touch Controls
@@ -428,22 +427,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         cardAudioOnly = findViewById(R.id.card_audio_only);
         tvAudioOnlyChannelName = findViewById(R.id.tv_audio_only_channel_name);
         tvAudioOnlySavings = findViewById(R.id.tv_audio_only_savings);
-        btnAudioOnlyRestore = findViewById(R.id.btn_audio_only_restore);
-        if (btnAudioOnlyRestore != null) {
-            btnAudioOnlyRestore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setStreamQuality("auto");
-                    Toast.makeText(MainActivity.this, "Görüntü açıldı ✓", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
         if (layoutAudioOnlyOverlay != null) {
             layoutAudioOnlyOverlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setStreamQuality("auto");
-                    Toast.makeText(MainActivity.this, "Görüntü açıldı ✓", Toast.LENGTH_SHORT).show();
+                    toggleOverlay();
                 }
             });
         }
@@ -2033,9 +2021,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             if (ch != null && tvAudioOnlyChannelName != null) {
                 tvAudioOnlyChannelName.setText(ch.getName());
             }
-            if (btnAudioOnlyRestore != null) {
-                btnAudioOnlyRestore.requestFocus();
-            }
         }
         handler.removeCallbacks(burnInProtectRunnable);
         handler.postDelayed(burnInProtectRunnable, 60000);
@@ -2407,11 +2392,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
         // 4. Canlı yayın izlenirken kumanda kontrolleri:
         if (isEnterKey) {
-            if (layoutAudioOnlyOverlay != null && layoutAudioOnlyOverlay.getVisibility() == View.VISIBLE) {
-                setStreamQuality("auto");
-                Toast.makeText(MainActivity.this, "Görüntü açıldı ✓", Toast.LENGTH_SHORT).show();
-                return true;
-            }
             openDrawer();
             return true;
         }
@@ -2469,11 +2449,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 return true;
 
             case KeyEvent.KEYCODE_BACK:
-                if (layoutAudioOnlyOverlay != null && layoutAudioOnlyOverlay.getVisibility() == View.VISIBLE) {
-                    setStreamQuality("auto");
-                    Toast.makeText(MainActivity.this, "Görüntü açıldı ✓", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
                 showExitDialog();
                 return true;
 

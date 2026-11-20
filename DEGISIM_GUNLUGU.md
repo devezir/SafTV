@@ -10,6 +10,7 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 
 | Sürüm | Sürüm Kodu (versionCode) | Yayın Tarihi | APK Boyutu | Doğrudan APK İndir | Başlıca Yenilikler ve Odak Noktası |
 |:---:|:---:|:---:|:---:|:---:|---|
+| **v2.11.0** | 24 | 21.11.2026 | ~185.4 KB | [⬇️ **SafTV_v2.11.0_vc24.apk**](https://github.com/devezir/SafTV/releases/download/v2.11.0/SafTV_v2.11.0_vc24.apk) | 📻 **Sadece Ses (Radyo Modu) Kalıcılığı & Bilgilendirme Ekranı:** Sadece Ses modu geçici ekran koruyucudan kalıcı bir kalite moduna dönüştürüldü. Ekrana dokunma/tıklama, OK veya BACK tuşlarıyla kazara videoya dönme engellendi; videoyu açmak için Kalite Menüsü şart koşuldu ve şık bilgilendirme rozeti eklendi. |
 | **v2.10.0** | 23 | 20.11.2026 | ~185.4 KB | [⬇️ **SafTV_v2.10.0_vc23.apk**](https://github.com/devezir/SafTV/releases/download/v2.10.0/SafTV_v2.10.0_vc23.apk) | 🛡️ **Çıkış (BACK) Diyaloğuna "⚙️ Ayarlar" Erişimi (Emniyet Kilidi):** Settings veya Menu tuşu bulunmayan minimalist Android TV kumandalarında (Mi Box, Chromecast vb.) kumandadan sadece GERİ (BACK) tuşuna basarak anında Ayarlar paneline geçebilme garantisi. |
 | **v2.9.0** | 22 | 18.11.2026 | ~185.4 KB | [⬇️ **SafTV_v2.9.0_vc22.apk**](https://github.com/devezir/SafTV/releases/download/v2.9.0/SafTV_v2.9.0_vc22.apk) | 📁 **Gerçek Download Klasörüne Dışa Aktarma (MediaStore API), Scoped Storage İçe Aktarma & 10 Bağımsız Kategori Listesi:** Android 11+ kısıtlı `/Android/data/` klasörü yerine doğrudan kullanıcı tarafından erişilebilir `/storage/emulated/0/Download/` klasörüne yazma, sıfır depolama izni, mükerrer önleme ve 120 kanalın 10 ayrı M3U8 ve JSON listeleri. |
 | **v2.8.0** | 21 | 17.11.2026 | ~185.4 KB | [⬇️ **SafTV_v2.8.0_vc21.apk**](https://github.com/devezir/SafTV/releases/download/v2.8.0/SafTV_v2.8.0_vc21.apk) | 📲 **Uygulama İçi Doğrudan OTA Güncelleme & Canlı İndirme Çubuğu:** Harici web tarayıcısına gerek kalmadan TV kumandasıyla tek tıkla doğrudan indirme, canlı yüzde ve KB sayacı, sıfır harici kütüphaneli yerel `ApkProvider` ile Android Paket Yükleyicisini otomatik başlatma, kesintisiz TV deneyimi ve ayar/kanal koruma güvencesi. |
@@ -37,6 +38,20 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 ---
 
 ## 🔍 Detaylı Sürüm Notları
+
+### 📻 v2.11.0 (versionCode: 24) — 21 Kasım 2026
+* **Sadece Ses (Radyo Modu) Kalıcılığı (Kalıcı Tercih Mantığı):**
+  * Sadece Ses seçildiğinde, ekrana dokunulduğunda veya kumandada `OK` / `BACK` tuşlarına basıldığında görüntünün aniden geri gelmesi (ekran koruyucu gibi davranması) sonlandırıldı.
+  * Kalite tercihi "Sadece Ses" olduğu sürece kanal değiştirilse veya kontroller açılsa dahi radyo modunda kalmaya devam eder (%95+ veri tasarrufu ve siyah ekran koruması korunur).
+* **Kazara Görüntü Açılmasını Önleme & Normal Kontrol Davranışı:**
+  * Ekrana dokunulduğunda veya tıklandığında yalnızca OSD kontrolleri açılıp kapanır (`toggleOverlay`).
+  * Kumandadan `OK` tuşuna basıldığında kanal çekmecesi (`openDrawer`) normal şekilde açılır, radyo modundan çıkmadan kanal listesi gezilebilir ve kanal değiştirilebilir.
+  * Kumandadan `BACK` tuşuna basıldığında çıkış onay diyaloğu açılır.
+* **Görüntüyü Geri Açma Yolu & Bilgilendirme Rozeti:**
+  * Görüntü yalnızca kullanıcı Kalite Menüsü'nden (Yeşil Tuş veya Ayarlar ➔ Kalite) açıkça bir video çözünürlüğü (Otomatik, 1080p, 720p vb.) seçtiğinde geri açılır.
+  * Siyah radyo ekranına şık bir bilgilendirme rozeti eklendi:
+    `"💡 Görüntüyü açmak için Kalite Menüsü'nden (Yeşil Tuş veya Ayarlar ➔ Kalite) bir video çözünürlüğü seçiniz."`
+  * OLED TV'ler için burn-in (piksel yanma) koruyucu hareket mekanizması korunmaya devam etmektedir.
 
 ### 🛡️ v2.10.0 (versionCode: 23) — 20 Kasım 2026
 * **Minimalist Kumandalar İçin Çıkış Diyaloğundan Ayarlara Erişim:**
