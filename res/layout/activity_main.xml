@@ -2099,7 +2099,7 @@
         android:visibility="gone">
 
         <LinearLayout
-            android:layout_width="380dp"
+            android:layout_width="400dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/bg_osd"
@@ -2132,6 +2132,19 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:id="@+id/btn_exit_settings"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_weight="1"
+                    android:text="⚙️ Ayarlar"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/accent_blue"
+                    android:background="@drawable/selector_chip"
+                    android:nextFocusRight="@+id/btn_exit_cancel"
+                    android:layout_marginRight="6dp" />
+
+                <Button
                     android:id="@+id/btn_exit_cancel"
                     android:layout_width="0dp"
                     android:layout_height="38dp"
@@ -2141,18 +2154,21 @@
                     android:textStyle="bold"
                     android:textColor="@color/text_white"
                     android:background="@drawable/selector_chip"
-                    android:layout_marginRight="8dp" />
+                    android:nextFocusLeft="@+id/btn_exit_settings"
+                    android:nextFocusRight="@+id/btn_exit_confirm"
+                    android:layout_marginRight="6dp" />
 
                 <Button
                     android:id="@+id/btn_exit_confirm"
                     android:layout_width="0dp"
                     android:layout_height="38dp"
                     android:layout_weight="1"
-                    android:text="✓ Evet, Çık"
+                    android:text="✓ Çıkış"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:textColor="@color/accent_red"
-                    android:background="@drawable/selector_chip" />
+                    android:background="@drawable/selector_chip"
+                    android:nextFocusLeft="@+id/btn_exit_cancel" />
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>

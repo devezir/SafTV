@@ -5,11 +5,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/devezir/SafTV/releases/latest"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v2.9.0_(vc_22)-blue?style=for-the-badge&logo=android" alt="Sürüm v2.9.0"></a>
+  <a href="https://github.com/devezir/SafTV/releases/latest"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v2.10.0_(vc_23)-blue?style=for-the-badge&logo=android" alt="Sürüm v2.10.0"></a>
   <a href="#"><img src="https://img.shields.io/badge/Boyut-Sadece_185_KB-brightgreen?style=for-the-badge" alt="Boyut 185 KB"></a>
   <a href="#"><img src="https://img.shields.io/badge/A%C3%A7%C4%B1l%C4%B1%C5%9F-0.1_Saniye-orange?style=for-the-badge" alt="0.1s Açılış Hızı"></a>
   <a href="#"><img src="https://img.shields.io/badge/Reklam-SIFIR_(%250)-red?style=for-the-badge" alt="Sıfır Reklam"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Yedekleme-Ger%C3%A7ek_Download-blueviolet?style=for-the-badge" alt="Gerçek Download Klasörüne Dışa Aktarma"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Kumanda_Eri%C5%9Fimi-BACK_Tu%C5%9Fu_Ayarlar-blueviolet?style=for-the-badge" alt="BACK Tuşundan Ayarlara Erişim"></a>
   <a href="#"><img src="https://img.shields.io/badge/Android-5.0%2B_(API_21%2B)-success?style=for-the-badge&logo=android" alt="Android 5.0+"></a>
 </p>
 
@@ -19,9 +19,9 @@
 
 | Dosya | Boyut | Açıklama | Doğrudan İndir |
 |---|---|---|:---:|
-| 🚀 **Saf TV v2.9.0 (En Son Kararlı - Yasal)** | **~185 KB** | Güncel, resmi imzalı en son APK (Gerçek Download Klasörüne Dışa Aktarma & MediaStore) | [⬇️ **SafTV_v2.9.0_vc22.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.9.0/SafTV_v2.9.0_vc22.apk) |
-| 📱 **SafTV.apk (Sabit Bağlantı)** | **~185 KB** | Daima en son stabil sürümü işaret eder | [⬇️ **SafTV.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.9.0/SafTV.apk) |
-| 📦 **Tüm 22 Sürümün Arşivi (ZIP)** | **~1.58 MB** | v1.0.0'dan v2.9.0'a tüm APK'lar tek pakette | [📦 **SafTV_All_Releases_Archive.zip**](https://github.com/devezir/SafTV/releases/download/v2.9.0/SafTV_All_Releases_Archive.zip) |
+| 🚀 **Saf TV v2.10.0 (En Son Kararlı - Yasal)** | **~185 KB** | Güncel, resmi imzalı en son APK (Minimalist TV Kumandaları İçin BACK Tuşundan Ayarlara Erişim) | [⬇️ **SafTV_v2.10.0_vc23.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.10.0/SafTV_v2.10.0_vc23.apk) |
+| 📱 **SafTV.apk (Sabit Bağlantı)** | **~185 KB** | Daima en son stabil sürümü işaret eder | [⬇️ **SafTV.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.10.0/SafTV.apk) |
+| 📦 **Tüm 23 Sürümün Arşivi (ZIP)** | **~1.77 MB** | v1.0.0'dan v2.10.0'a tüm APK'lar tek pakette | [📦 **SafTV_All_Releases_Archive.zip**](https://github.com/devezir/SafTV/releases/download/v2.10.0/SafTV_All_Releases_Archive.zip) |
 | 📺 **Kanal Listeleri Kataloğu** | — | M3U8 ve JSON formatında kategori bazlı 120 kanal | [📺 **KANAL_LISTESI.md İncele**](KANAL_LISTESI.md) |
 | 📜 **Değişim Günlüğü** | — | Tüm sürümlerin kronolojik teknik detayları | [📜 **DEGISIM_GUNLUGU.md İncele**](DEGISIM_GUNLUGU.md) |
 
