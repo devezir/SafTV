@@ -18,6 +18,17 @@ assets/seed_channels.json
 SafTV_Full.apk
 releases/SafTV_Full*
 
+# Özel çalışma, analiz ve kişisel notlar
+*.xlsx
+KONUSMA.md
+*geliştirme notları*
+*gelistirme notlari*
+
+# Yerel Archive.org ve dağıtım betikleri
+upload_*.py
+update_user_description.py
+create_banner.py
+
 # Geçici ve medya dosyaları
 ~$*
 güncelleme sorunu.mp4

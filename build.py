@@ -219,12 +219,23 @@ def build_and_sign_flavor(flavor_name, seed_json_path, root_apk_name, release_ap
         "--allowResign"
     ]
     if os.path.exists(release_keystore):
-        cmd_sign += [
-            "--ks", release_keystore,
-            "--ksAlias", "saftv",
-            "--ksPass", "REDACTED_PASSWORD",
-            "--ksKeyPass", "REDACTED_PASSWORD"
-        ]
+        ks_pass = os.environ.get("SAFTV_KS_PASS")
+        ks_pass_file = os.path.join(base_dir, "keystore", "keystore_pass.txt")
+        if not ks_pass and os.path.exists(ks_pass_file):
+            try:
+                with open(ks_pass_file, "r", encoding="utf-8") as pf:
+                    ks_pass = pf.read().strip()
+            except Exception:
+                pass
+        if ks_pass:
+            cmd_sign += [
+                "--ks", release_keystore,
+                "--ksAlias", "saftv",
+                "--ksPass", ks_pass,
+                "--ksKeyPass", ks_pass
+            ]
+        else:
+            print("[!] Keystore bulundu fakat sifre saglanmadi (SAFTV_KS_PASS veya keystore/keystore_pass.txt).")
     res = subprocess.run(cmd_sign, capture_output=True, text=True)
     if res.returncode != 0:
         print(f"Signing error for {flavor_name}:", res.stderr)
