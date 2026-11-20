@@ -182,6 +182,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
     // Exit Confirmation Dialog (Option 1B)
     private View layoutExitDialog;
+    private Button btnExitSettings;
     private Button btnExitCancel;
     private Button btnExitConfirm;
     private boolean isExitDialogOpen = false;
@@ -489,8 +490,19 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         tvPlayPauseIcon = findViewById(R.id.tv_play_pause_icon);
 
         layoutExitDialog = findViewById(R.id.layout_exit_dialog);
+        btnExitSettings = findViewById(R.id.btn_exit_settings);
         btnExitCancel = findViewById(R.id.btn_exit_cancel);
         btnExitConfirm = findViewById(R.id.btn_exit_confirm);
+
+        if (btnExitSettings != null) {
+            btnExitSettings.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    closeExitDialog();
+                    openSettings();
+                }
+            });
+        }
 
         if (btnExitCancel != null) {
             btnExitCancel.setOnClickListener(new View.OnClickListener() {
@@ -2293,6 +2305,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         if (isExitDialogOpen) {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 closeExitDialog();
+                return true;
+            }
+            if (keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_M) {
+                closeExitDialog();
+                openSettings();
                 return true;
             }
             return super.onKeyDown(keyCode, event);

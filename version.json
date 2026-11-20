@@ -1,8 +1,8 @@
 {
-  "versionCode": 22,
-  "versionName": "2.9.0",
-  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.9.0/SafTV_v2.9.0_vc22.apk",
-  "apkName": "SafTV_v2.9.0_vc22.apk",
+  "versionCode": 23,
+  "versionName": "2.10.0",
+  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.10.0/SafTV_v2.10.0_vc23.apk",
+  "apkName": "SafTV_v2.10.0_vc23.apk",
   "history": [
     {
       "versionCode": 1,
@@ -157,6 +157,13 @@
       "apkName": "SafTV_v2.9.0_vc22.apk",
       "date": "2026-11-18",
       "description": "Gerçek Download Klasörüne Dışa Aktarma (MediaStore API), Scoped Storage İçe Aktarma Uyumu ve Kategori Bazlı M3U8/JSON Kanal Listeleri"
+    },
+    {
+      "versionCode": 23,
+      "versionName": "2.10.0",
+      "apkName": "SafTV_v2.10.0_vc23.apk",
+      "date": "2026-11-20",
+      "description": "Çıkış (BACK) Diyaloğuna '⚙️ Ayarlar' Erişimi (Settings tuşu bulunmayan minimalist Android TV kumandaları için garantili emniyet kilidi)"
     }
   ]
 }
