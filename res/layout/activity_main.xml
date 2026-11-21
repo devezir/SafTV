@@ -779,9 +779,38 @@
                 android:focusableInTouchMode="false" />
         </LinearLayout>
 
+        <!-- Çift Katmanlı Canlı Durum Rozeti (Seçenek C) -->
+        <LinearLayout
+            android:id="@+id/card_quick_quality_status"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#161b22"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/tv_quick_quality_live_res"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/accent_green"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:text="📺 Canlı: 1920x1080 • 0.0 Mbps" />
+
+            <TextView
+                android:id="@+id/tv_quick_quality_pref_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/accent_blue"
+                android:textSize="10sp"
+                android:layout_marginTop="3dp"
+                android:text="⚙️ Tercih: Otomatik" />
+        </LinearLayout>
+
         <Button
             android:id="@+id/btn_quick_q_auto"
-            android:layout_width="160dp"
+            android:layout_width="180dp"
             android:layout_height="34dp"
             android:text="Otomatik (Tavsiye)"
             android:textSize="11sp"
@@ -791,7 +820,7 @@
 
         <Button
             android:id="@+id/btn_quick_q_1080"
-            android:layout_width="160dp"
+            android:layout_width="180dp"
             android:layout_height="34dp"
             android:text="1080p Full HD"
             android:textSize="11sp"
@@ -801,7 +830,7 @@
 
         <Button
             android:id="@+id/btn_quick_q_720"
-            android:layout_width="160dp"
+            android:layout_width="180dp"
             android:layout_height="34dp"
             android:text="720p HD"
             android:textSize="11sp"
@@ -811,7 +840,7 @@
 
         <Button
             android:id="@+id/btn_quick_q_480"
-            android:layout_width="160dp"
+            android:layout_width="180dp"
             android:layout_height="34dp"
             android:text="480p SD"
             android:textSize="11sp"
@@ -821,7 +850,7 @@
 
         <Button
             android:id="@+id/btn_quick_q_360"
-            android:layout_width="160dp"
+            android:layout_width="180dp"
             android:layout_height="34dp"
             android:text="360p Tasarruf"
             android:textSize="11sp"
@@ -831,7 +860,7 @@
 
         <Button
             android:id="@+id/btn_quick_q_audio_only"
-            android:layout_width="160dp"
+            android:layout_width="180dp"
             android:layout_height="34dp"
             android:text="📻 Sadece Ses (Tasarruf)"
             android:textSize="11sp"
@@ -1138,8 +1167,37 @@
                     android:textColor="@color/text_gray"
                     android:textSize="11sp"
                     android:layout_marginTop="2dp"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="10dp"
                     android:text="Kanal açıldığında veya geçiş yapıldığında öncelikli olarak tercih edilecek çözünürlük." />
+
+                <!-- Çift Katmanlı Canlı Durum Rozeti (Seçenek C) -->
+                <LinearLayout
+                    android:id="@+id/card_settings_quality_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#161b22"
+                    android:padding="10dp"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:id="@+id/tv_settings_quality_live_res"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/accent_green"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:text="📺 Canlı Akış: 1920x1080 (Full HD) • 0.0 Mbps" />
+
+                    <TextView
+                        android:id="@+id/tv_settings_quality_pref_badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/accent_blue"
+                        android:textSize="11sp"
+                        android:layout_marginTop="3dp"
+                        android:text="⚙️ Tercih: Otomatik (Akışa Göre)" />
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/btn_set_q_auto"

@@ -10,6 +10,7 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 
 | Sürüm | Sürüm Kodu (versionCode) | Yayın Tarihi | APK Boyutu | Doğrudan APK İndir | Başlıca Yenilikler ve Odak Noktası |
 |:---:|:---:|:---:|:---:|:---:|---|
+| **v2.13.0** | 26 | 21.11.2026 | ~193.4 KB | [⬇️ **SafTV_v2.13.0_vc26.apk**](https://github.com/devezir/SafTV/releases/download/v2.13.0/SafTV_v2.13.0_vc26.apk) | 📶 **Kalite Menüsünde Çift Katmanlı Canlı Durum Rozeti (Çözünürlük + Anlık Hız) ve Dinamik Buton Vurgusu (Seçenek C):** Hem Yeşil Tuş Hızlı Kalite Paneline hem Ayarlar Kalite sekmesine anlık oynatılan çözünürlük (1080p, 720p vb.) ve tüketim hızını (Mbps) gösteren şık canlı rozet eklendi. Aktif kalite butonuna yeşil `●` noktası, vurgulu renk ve kumandada otomatik odaklanma entegre edildi. |
 | **v2.12.0** | 25 | 21.11.2026 | ~189.4 KB | [⬇️ **SafTV_v2.12.0_vc25.apk**](https://github.com/devezir/SafTV/releases/download/v2.12.0/SafTV_v2.12.0_vc25.apk) | ⏱️ **OSD Süresi Ayarı (2, 3, 5, 10 sn, Süresiz) & Kumandada Çift Kademeli Akıllı OK Tuşu:** Ayarlar ➔ Görünüm sekmesine OSD gösterim süresi tercihi eklendi. TV kumandasında OK tuşu çift kademeli hale getirildi: 1. basışta OSD bilgi çubuğu, 2. basışta kanal listesi açılır; BACK tuşu OSD açıkken OSD'yi anında kapatır, kapalıyken çıkış diyaloğunu açar. |
 | **v2.11.0** | 24 | 21.11.2026 | ~185.4 KB | [⬇️ **SafTV_v2.11.0_vc24.apk**](https://github.com/devezir/SafTV/releases/download/v2.11.0/SafTV_v2.11.0_vc24.apk) | 📻 **Sadece Ses (Radyo Modu) Kalıcılığı & Bilgilendirme Ekranı:** Sadece Ses modu geçici ekran koruyucudan kalıcı bir kalite moduna dönüştürüldü. Ekrana dokunma/tıklama, OK veya BACK tuşlarıyla kazara videoya dönme engellendi; videoyu açmak için Kalite Menüsü şart koşuldu ve şık bilgilendirme rozeti eklendi. |
 | **v2.10.0** | 23 | 20.11.2026 | ~185.4 KB | [⬇️ **SafTV_v2.10.0_vc23.apk**](https://github.com/devezir/SafTV/releases/download/v2.10.0/SafTV_v2.10.0_vc23.apk) | 🛡️ **Çıkış (BACK) Diyaloğuna "⚙️ Ayarlar" Erişimi (Emniyet Kilidi):** Settings veya Menu tuşu bulunmayan minimalist Android TV kumandalarında (Mi Box, Chromecast vb.) kumandadan sadece GERİ (BACK) tuşuna basarak anında Ayarlar paneline geçebilme garantisi. |
@@ -39,6 +40,20 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 ---
 
 ## 🔍 Detaylı Sürüm Notları
+
+### 📶 v2.13.0 (versionCode: 26) — 21 Kasım 2026
+* **Çift Katmanlı Canlı Kalite Rozeti (Seçenek C):**
+  * Hızlı Kalite Paneli (`Yeşil Tuş`) ve Ayarlar ➔ `Kalite` sekmesine iki satırlı canlı bilgi kartı eklendi:
+    * 1. Satır: `📺 Canlı Akış: 1920x1080 (Full HD) • 4.8 Mbps` (veya `📻 Canlı Ses Akışı • 128 Kbps`)
+    * 2. Satır: `⚙️ Tercih: Otomatik (Akışa Göre)`
+  * Özellikle "Otomatik" moddayken yayının o an kaç pikselde aktığı ve internet hızı canlı olarak saniye saniye izlenebilir.
+* **Dinamik Seçim Noktası (`● `) ve Renk Vurgusu:**
+  * Seçili olan kalite butonu parlak yeşil renge (`#34D399`), kalın yazı tipine (`BOLD`) ve başına onay noktasına (`● `) kavuşur.
+  * Seçili olmayan butonlar sade beyaz/normal görünüme geçer.
+* **Kumandada Akıllı Odaklanma (Focus Memory):**
+  * Hızlı Kalite Paneli açıldığında kumanda imleci doğrudan o an seçili olan butonun üzerinde başlar.
+* **Canlı Çözünürlük ve Hız Takibi:**
+  * Yayın çözünürlüğü veya anlık internet hızı değiştiğinde açık olan kalite paneli anında kendini günceller.
 
 ### ⏱️ v2.12.0 (versionCode: 25) — 21 Kasım 2026
 * **OSD Gösterim Süresi Tercihi (Ayarlar ➔ 📏 Görünüm):**

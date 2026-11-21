@@ -133,6 +133,14 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private Button btnCloseSettingsTop;
     private Button btnCloseQuickQuality;
 
+    // Quality Status Views & Badges (Option C)
+    private TextView tvQuickQualityLiveRes;
+    private TextView tvQuickQualityPrefBadge;
+    private TextView tvSettingsQualityLiveRes;
+    private TextView tvSettingsQualityPrefBadge;
+    private Button btnQuickQAuto, btnQuickQ1080, btnQuickQ720, btnQuickQ480, btnQuickQ360, btnQuickQAudioOnly;
+    private Button btnSetQAuto, btnSetQ1080, btnSetQ720, btnSetQ480, btnSetQ360, btnSetQAudioOnly;
+
     // UI Scale Views & State (%60 - %200)
     private static final String KEY_UI_SCALE = "pref_ui_scale";
     private TextView tvScaleStatus;
@@ -305,6 +313,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 dataUsageManager.updateUsage();
                 updateOsdNetworkMeter();
                 updateSettingsNetworkTabIfVisible();
+                updateQualityLiveBadgeIfVisible();
                 checkQuotaLimits();
             }
             handler.postDelayed(this, 1000);
@@ -463,6 +472,25 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         btnCloseDrawer = findViewById(R.id.btn_close_drawer);
         btnCloseSettingsTop = findViewById(R.id.btn_close_settings_top);
         btnCloseQuickQuality = findViewById(R.id.btn_close_quick_quality);
+
+        tvQuickQualityLiveRes = findViewById(R.id.tv_quick_quality_live_res);
+        tvQuickQualityPrefBadge = findViewById(R.id.tv_quick_quality_pref_badge);
+        tvSettingsQualityLiveRes = findViewById(R.id.tv_settings_quality_live_res);
+        tvSettingsQualityPrefBadge = findViewById(R.id.tv_settings_quality_pref_badge);
+
+        btnQuickQAuto = findViewById(R.id.btn_quick_q_auto);
+        btnQuickQ1080 = findViewById(R.id.btn_quick_q_1080);
+        btnQuickQ720 = findViewById(R.id.btn_quick_q_720);
+        btnQuickQ480 = findViewById(R.id.btn_quick_q_480);
+        btnQuickQ360 = findViewById(R.id.btn_quick_q_360);
+        btnQuickQAudioOnly = findViewById(R.id.btn_quick_q_audio_only);
+
+        btnSetQAuto = findViewById(R.id.btn_set_q_auto);
+        btnSetQ1080 = findViewById(R.id.btn_set_q_1080);
+        btnSetQ720 = findViewById(R.id.btn_set_q_720);
+        btnSetQ480 = findViewById(R.id.btn_set_q_480);
+        btnSetQ360 = findViewById(R.id.btn_set_q_360);
+        btnSetQAudioOnly = findViewById(R.id.btn_set_q_audio_only);
 
         tvScaleStatus = findViewById(R.id.tv_scale_status);
         btnScaleAuto = findViewById(R.id.btn_scale_auto);
@@ -1345,6 +1373,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 }
             });
         }
+        updateQualityUi();
 
         // Ayarları & Kanalları Dışa Aktar (Yedekle - Sekme 3)
         View btnExport = findViewById(R.id.btn_settings_export);
@@ -1941,6 +1970,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 }
             });
         }
+        updateQualityUi();
     }
 
     private void setStreamQuality(String quality) {
@@ -1959,7 +1989,101 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             label = quality.toUpperCase(java.util.Locale.ROOT);
         }
         Toast.makeText(this, "Yayın Kalitesi: " + label, Toast.LENGTH_SHORT).show();
+        updateQualityUi();
         playChannel(currentChannelIndex);
+    }
+
+    private String getLiveResolutionText() {
+        if ("audio_only".equalsIgnoreCase(currentQualityPref) || isAudioOnlyMode) {
+            return "Sadece Ses (Video Kapalı)";
+        }
+        if (videoHeight > 0) {
+            String tag = (videoHeight >= 1080) ? " (Full HD)" :
+                         (videoHeight >= 720) ? " (HD)" :
+                         (videoHeight >= 480) ? " (SD)" : "";
+            return videoWidth + "x" + videoHeight + tag;
+        }
+        if (activeStreamQualityLabel != null && !activeStreamQualityLabel.isEmpty() && !"Otomatik".equalsIgnoreCase(activeStreamQualityLabel)) {
+            return activeStreamQualityLabel;
+        }
+        return "Otomatik";
+    }
+
+    private String getQualityPrefDisplayName(String pref) {
+        if ("1080p".equalsIgnoreCase(pref)) return "1080p Full HD";
+        if ("720p".equalsIgnoreCase(pref)) return "720p HD";
+        if ("480p".equalsIgnoreCase(pref)) return "480p SD";
+        if ("360p".equalsIgnoreCase(pref)) return "360p Tasarruf";
+        if ("audio_only".equalsIgnoreCase(pref)) return "Sadece Ses (Radyo Modu)";
+        return "Otomatik (Akışa Göre)";
+    }
+
+    private Button getQuickQualityButtonForPref(String pref) {
+        if ("1080p".equalsIgnoreCase(pref)) return btnQuickQ1080;
+        if ("720p".equalsIgnoreCase(pref)) return btnQuickQ720;
+        if ("480p".equalsIgnoreCase(pref)) return btnQuickQ480;
+        if ("360p".equalsIgnoreCase(pref)) return btnQuickQ360;
+        if ("audio_only".equalsIgnoreCase(pref)) return btnQuickQAudioOnly;
+        return btnQuickQAuto;
+    }
+
+    private void updateQualityUi() {
+        double speed = (dataUsageManager != null) ? dataUsageManager.getCurrentSpeedMbps() : 0.0;
+        String speedStr = DataUsageManager.formatSpeed(speed);
+
+        String liveRes = getLiveResolutionText();
+        String prefName = getQualityPrefDisplayName(currentQualityPref);
+
+        String liveText;
+        if ("audio_only".equalsIgnoreCase(currentQualityPref) || isAudioOnlyMode) {
+            liveText = "📻 Canlı Ses Akışı • " + speedStr;
+        } else {
+            liveText = "📺 Canlı: " + liveRes + " • " + speedStr;
+        }
+        String prefText = "⚙️ Tercih: " + prefName;
+
+        if (tvQuickQualityLiveRes != null) tvQuickQualityLiveRes.setText(liveText);
+        if (tvQuickQualityPrefBadge != null) tvQuickQualityPrefBadge.setText(prefText);
+        if (tvSettingsQualityLiveRes != null) tvSettingsQualityLiveRes.setText(liveText);
+        if (tvSettingsQualityPrefBadge != null) tvSettingsQualityPrefBadge.setText(prefText);
+
+        Button[] qqBtns = { btnQuickQAuto, btnQuickQ1080, btnQuickQ720, btnQuickQ480, btnQuickQ360, btnQuickQAudioOnly };
+        String[] qPrefs = { "auto", "1080p", "720p", "480p", "360p", "audio_only" };
+        String[] qqTitles = { "Otomatik (Akışa Göre)", "1080p Full HD", "720p HD", "480p SD", "360p Tasarruf", "📻 Sadece Ses (Radyo)" };
+
+        for (int i = 0; i < qqBtns.length; i++) {
+            Button b = qqBtns[i];
+            if (b == null) continue;
+            boolean active = qPrefs[i].equalsIgnoreCase(currentQualityPref);
+            b.setText(active ? "● " + qqTitles[i] : qqTitles[i]);
+            b.setTextColor(active ? Color.parseColor("#34D399") : ("audio_only".equals(qPrefs[i]) ? Color.parseColor("#F59E0B") : Color.WHITE));
+            b.setTypeface(null, active ? Typeface.BOLD : Typeface.NORMAL);
+        }
+
+        Button[] setBtns = { btnSetQAuto, btnSetQ1080, btnSetQ720, btnSetQ480, btnSetQ360, btnSetQAudioOnly };
+        String[] setTitles = {
+            "Otomatik (Önerilen - Akışa Göre)",
+            "1080p Full HD (En Yüksek Çözünürlük)",
+            "720p HD (Standart Yüksek Çözünürlük)",
+            "480p SD (Düşük Hızlı Bağlantılar)",
+            "360p Tasarruf (Mobil Veri Dostu)",
+            "📻 Sadece Ses (Radyo / %95+ Veri Tasarrufu)"
+        };
+
+        for (int i = 0; i < setBtns.length; i++) {
+            Button b = setBtns[i];
+            if (b == null) continue;
+            boolean active = qPrefs[i].equalsIgnoreCase(currentQualityPref);
+            b.setText(active ? "● " + setTitles[i] : setTitles[i]);
+            b.setTextColor(active ? Color.parseColor("#34D399") : ("audio_only".equals(qPrefs[i]) ? Color.parseColor("#F59E0B") : Color.WHITE));
+            b.setTypeface(null, active ? Typeface.BOLD : Typeface.NORMAL);
+        }
+    }
+
+    private void updateQualityLiveBadgeIfVisible() {
+        if (isQuickQualityOpen || isSettingsOpen) {
+            updateQualityUi();
+        }
     }
 
     private void playChannel(int index) {
@@ -2267,7 +2391,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 b.setTypeface(null, Typeface.NORMAL);
             }
         }
-        if (index == 5) {
+        if (index == 1) {
+            updateQualityUi();
+        } else if (index == 5) {
             updateSettingsNetworkTab();
         }
         final View activeTab = settingsTabBtns[index];
@@ -2314,7 +2440,14 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         if (viewScrim != null) viewScrim.setVisibility(View.VISIBLE);
         layoutOverlay.setVisibility(View.GONE);
         layoutQuickQuality.setVisibility(View.VISIBLE);
-        findViewById(R.id.btn_quick_q_auto).requestFocus();
+        updateQualityUi();
+
+        Button target = getQuickQualityButtonForPref(currentQualityPref);
+        if (target != null) {
+            target.requestFocus();
+        } else if (btnQuickQAuto != null) {
+            btnQuickQAuto.requestFocus();
+        }
 
         handler.removeCallbacks(hideQuickQualityRunnable);
         handler.postDelayed(hideQuickQualityRunnable, 5000);
@@ -2661,6 +2794,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         this.videoWidth = width;
         this.videoHeight = height;
         applyAspectRatio();
+        updateQualityLiveBadgeIfVisible();
     }
 
     @Override

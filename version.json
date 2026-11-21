@@ -1,8 +1,8 @@
 {
-  "versionCode": 25,
-  "versionName": "2.12.0",
-  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.12.0/SafTV_v2.12.0_vc25.apk",
-  "apkName": "SafTV_v2.12.0_vc25.apk",
+  "versionCode": 26,
+  "versionName": "2.13.0",
+  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.13.0/SafTV_v2.13.0_vc26.apk",
+  "apkName": "SafTV_v2.13.0_vc26.apk",
   "history": [
     {
       "versionCode": 1,
@@ -178,6 +178,13 @@
       "apkName": "SafTV_v2.12.0_vc25.apk",
       "date": "2026-11-21",
       "description": "OSD Süresi Ayarı (2, 3, 5, 10 sn, Süresiz) & Kumandada Çift Kademeli Akıllı OK Tuşu (1. basış OSD, 2. basış Kanal Listesi)"
+    },
+    {
+      "versionCode": 26,
+      "versionName": "2.13.0",
+      "apkName": "SafTV_v2.13.0_vc26.apk",
+      "date": "2026-11-21",
+      "description": "Kalite Menüsünde Çift Katmanlı Canlı Durum Rozeti (Çözünürlük + Anlık Hız) ve Dinamik Buton Vurgusu (Seçenek C)"
     }
   ]
 }
