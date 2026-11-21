@@ -146,6 +146,16 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private Button btnScale200;
     private String currentUiScale = "auto";
 
+    // OSD Timeout Views & State (2, 3, 5, 10, 0 = Süresiz)
+    private static final String KEY_OSD_TIMEOUT = "pref_osd_timeout";
+    private TextView tvOsdTimeoutStatus;
+    private Button btnOsdTimeout2;
+    private Button btnOsdTimeout3;
+    private Button btnOsdTimeout5;
+    private Button btnOsdTimeout10;
+    private Button btnOsdTimeout0;
+    private String currentOsdTimeout = "3";
+
     // Sleep Timer Views & State
     private TextView tvSleepStatus;
     private Button btnSleepOff;
@@ -464,6 +474,13 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         btnScale175 = findViewById(R.id.btn_scale_175);
         btnScale200 = findViewById(R.id.btn_scale_200);
 
+        tvOsdTimeoutStatus = findViewById(R.id.tv_osd_timeout_status);
+        btnOsdTimeout2 = findViewById(R.id.btn_osd_timeout_2);
+        btnOsdTimeout3 = findViewById(R.id.btn_osd_timeout_3);
+        btnOsdTimeout5 = findViewById(R.id.btn_osd_timeout_5);
+        btnOsdTimeout10 = findViewById(R.id.btn_osd_timeout_10);
+        btnOsdTimeout0 = findViewById(R.id.btn_osd_timeout_0);
+
         tvSleepStatus = findViewById(R.id.tv_sleep_status);
         btnSleepOff = findViewById(R.id.btn_sleep_off);
         btnSleep15 = findViewById(R.id.btn_sleep_15);
@@ -641,7 +658,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             if (isTouchDevice) {
                 tvOsdHint.setText("👆 Dokunarak / Kaydırarak kanal değiştirebilirsiniz | [☰] Liste");
             } else {
-                tvOsdHint.setText("▲▼ Kanal | [OK] Liste | [Yeşil] Kalite | [Sarı] Favori | [Mavi] Ekran | [Menü] Ayarlar");
+                tvOsdHint.setText("▲▼ Kanal | [OK] Bilgi / Liste | [Yeşil] Kalite | [Sarı] Favori | [Mavi] Ekran | [Menü] Ayarlar");
             }
         }
     }
@@ -957,7 +974,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
     private void resetOsdTimer() {
         handler.removeCallbacks(hideOsdRunnable);
-        handler.postDelayed(hideOsdRunnable, OSD_TIMEOUT_MS);
+        int timeoutMs = getOsdTimeoutMs();
+        if (timeoutMs > 0) {
+            handler.postDelayed(hideOsdRunnable, timeoutMs);
+        }
     }
 
     private void selectAndPlayChannel(Channel selected) {
@@ -1405,6 +1425,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         }
 
         setupUiScaleControls();
+        setupOsdTimeoutControls();
         setupSleepTimerControls();
         setupBackgroundAudio();
     }
@@ -1547,6 +1568,83 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             b.setText(active ? "● " + titles[i] : titles[i]);
             b.setTextColor(active ? Color.parseColor("#34D399") : Color.WHITE);
             b.setTypeface(null, active ? Typeface.BOLD : Typeface.NORMAL);
+        }
+    }
+
+    private void setupOsdTimeoutControls() {
+        SharedPreferences sp = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        currentOsdTimeout = sp.getString(KEY_OSD_TIMEOUT, "3");
+
+        if (btnOsdTimeout2 != null) {
+            btnOsdTimeout2.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { setOsdTimeout("2"); }
+            });
+        }
+        if (btnOsdTimeout3 != null) {
+            btnOsdTimeout3.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { setOsdTimeout("3"); }
+            });
+        }
+        if (btnOsdTimeout5 != null) {
+            btnOsdTimeout5.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { setOsdTimeout("5"); }
+            });
+        }
+        if (btnOsdTimeout10 != null) {
+            btnOsdTimeout10.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { setOsdTimeout("10"); }
+            });
+        }
+        if (btnOsdTimeout0 != null) {
+            btnOsdTimeout0.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { setOsdTimeout("0"); }
+            });
+        }
+
+        updateOsdTimeoutButtons();
+    }
+
+    private void setOsdTimeout(String timeout) {
+        currentOsdTimeout = timeout;
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .edit()
+                .putString(KEY_OSD_TIMEOUT, timeout)
+                .apply();
+        updateOsdTimeoutButtons();
+        String label = "0".equals(timeout) ? "Süresiz (Manuel)" : timeout + " Saniye";
+        Toast.makeText(this, "OSD Süresi: " + label, Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateOsdTimeoutButtons() {
+        if (tvOsdTimeoutStatus != null) {
+            if ("0".equals(currentOsdTimeout)) {
+                tvOsdTimeoutStatus.setText("● Süresiz (Manuel)");
+            } else {
+                tvOsdTimeoutStatus.setText("● " + currentOsdTimeout + " Saniye");
+            }
+            tvOsdTimeoutStatus.setTextColor(Color.parseColor("#34D399"));
+        }
+
+        Button[] btns = { btnOsdTimeout2, btnOsdTimeout3, btnOsdTimeout5, btnOsdTimeout10, btnOsdTimeout0 };
+        String[] timeouts = { "2", "3", "5", "10", "0" };
+        String[] titles = { "2 sn (Hızlı)", "3 sn (Standart)", "5 sn (Geniş)", "10 sn (Uzun)", "Süresiz (Manuel)" };
+
+        for (int i = 0; i < btns.length; i++) {
+            Button b = btns[i];
+            if (b == null) continue;
+            boolean active = timeouts[i].equals(currentOsdTimeout);
+            b.setText(active ? "● " + titles[i] : titles[i]);
+            b.setTextColor(active ? Color.parseColor("#34D399") : Color.WHITE);
+            b.setTypeface(null, active ? Typeface.BOLD : Typeface.NORMAL);
+        }
+    }
+
+    private int getOsdTimeoutMs() {
+        try {
+            int sec = Integer.parseInt(currentOsdTimeout);
+            return sec * 1000;
+        } catch (Exception e) {
+            return 3000;
         }
     }
 
@@ -2009,7 +2107,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         layoutOverlay.setVisibility(View.VISIBLE);
 
         handler.removeCallbacks(hideOsdRunnable);
-        handler.postDelayed(hideOsdRunnable, OSD_TIMEOUT_MS);
+        int timeoutMs = getOsdTimeoutMs();
+        if (timeoutMs > 0) {
+            handler.postDelayed(hideOsdRunnable, timeoutMs);
+        }
     }
 
     private void showAudioOnlyOverlay() {
@@ -2392,7 +2493,16 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
         // 4. Canlı yayın izlenirken kumanda kontrolleri:
         if (isEnterKey) {
-            openDrawer();
+            // Çift Kademeli Akıllı Tuş: OSD kapalıysa -> OSD'yi aç (1. basış); OSD zaten açıksa -> Kanal çekmecesini aç (2. basış)
+            if (layoutOverlay != null && layoutOverlay.getVisibility() == View.VISIBLE) {
+                openDrawer();
+            } else {
+                Channel cur = (channelManager != null && currentChannelIndex >= 0 && currentChannelIndex < channelManager.getChannelCount())
+                        ? channelManager.getChannelByIndex(currentChannelIndex) : null;
+                if (cur != null) {
+                    showOsd(cur);
+                }
+            }
             return true;
         }
 
@@ -2449,6 +2559,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 return true;
 
             case KeyEvent.KEYCODE_BACK:
+                if (layoutOverlay != null && layoutOverlay.getVisibility() == View.VISIBLE) {
+                    layoutOverlay.setVisibility(View.GONE);
+                    handler.removeCallbacks(hideOsdRunnable);
+                    return true;
+                }
                 showExitDialog();
                 return true;
 
@@ -3239,6 +3354,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             prefsObj.put(KEY_ASPECT_RATIO, aspectRatioMode);
             prefsObj.put(KEY_LAST_CHANNEL, currentChannelIndex);
             prefsObj.put(KEY_UI_SCALE, currentUiScale);
+            prefsObj.put(KEY_OSD_TIMEOUT, currentOsdTimeout);
             prefsObj.put(KEY_BG_AUDIO, isBackgroundAudioEnabled);
             root.put("preferences", prefsObj);
 
@@ -3511,6 +3627,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                         getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putString(KEY_UI_SCALE, currentUiScale).apply();
                         updateUiScaleButtons();
                         applyUiScale();
+                    }
+                    if (p.has(KEY_OSD_TIMEOUT)) {
+                        currentOsdTimeout = p.getString(KEY_OSD_TIMEOUT);
+                        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putString(KEY_OSD_TIMEOUT, currentOsdTimeout).apply();
+                        updateOsdTimeoutButtons();
                     }
                     if (p.has(KEY_BG_AUDIO)) {
                         isBackgroundAudioEnabled = p.getBoolean(KEY_BG_AUDIO);

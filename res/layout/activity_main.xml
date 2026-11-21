@@ -1359,6 +1359,117 @@
                     android:textSize="11sp"
                     android:textColor="@color/text_white"
                     android:background="@drawable/selector_chip" />
+
+                <!-- Ayırıcı Çizgi -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#21262d"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- OSD Gösterim Süresi Bölümü -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/accent_blue"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:text="OSD BİLGİ ÇUBUĞU SÜRESİ:" />
+
+                    <TextView
+                        android:id="@+id/tv_osd_timeout_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/accent_green"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:text="● 3 Saniye" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_gray"
+                    android:textSize="11sp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="Kanal bilgi çubuğu ve ekran kontrollerinin otomatik kapanma süresi." />
+
+                <!-- Row 1: 2 sn | 3 sn | 5 sn -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="6dp">
+
+                    <Button
+                        android:id="@+id/btn_osd_timeout_2"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:text="2 sn (Hızlı)"
+                        android:textSize="11sp"
+                        android:textColor="@color/text_white"
+                        android:background="@drawable/selector_chip"
+                        android:layout_marginRight="4dp" />
+
+                    <Button
+                        android:id="@+id/btn_osd_timeout_3"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:text="3 sn (Standart)"
+                        android:textSize="11sp"
+                        android:textColor="@color/text_white"
+                        android:background="@drawable/selector_chip"
+                        android:layout_marginRight="4dp" />
+
+                    <Button
+                        android:id="@+id/btn_osd_timeout_5"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:text="5 sn (Geniş)"
+                        android:textSize="11sp"
+                        android:textColor="@color/text_white"
+                        android:background="@drawable/selector_chip" />
+                </LinearLayout>
+
+                <!-- Row 2: 10 sn | Süresiz (Manuel Kapanış) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_osd_timeout_10"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:text="10 sn (Uzun)"
+                        android:textSize="11sp"
+                        android:textColor="@color/text_white"
+                        android:background="@drawable/selector_chip"
+                        android:layout_marginRight="4dp" />
+
+                    <Button
+                        android:id="@+id/btn_osd_timeout_0"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:text="Süresiz (Manuel)"
+                        android:textSize="11sp"
+                        android:textColor="@color/text_white"
+                        android:background="@drawable/selector_chip" />
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
 

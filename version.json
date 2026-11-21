@@ -1,8 +1,8 @@
 {
-  "versionCode": 24,
-  "versionName": "2.11.0",
-  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.11.0/SafTV_v2.11.0_vc24.apk",
-  "apkName": "SafTV_v2.11.0_vc24.apk",
+  "versionCode": 25,
+  "versionName": "2.12.0",
+  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.12.0/SafTV_v2.12.0_vc25.apk",
+  "apkName": "SafTV_v2.12.0_vc25.apk",
   "history": [
     {
       "versionCode": 1,
@@ -171,6 +171,13 @@
       "apkName": "SafTV_v2.11.0_vc24.apk",
       "date": "2026-11-21",
       "description": "Sadece Ses (Radyo Modu) Kalıcılığı: Ekrana tıklama veya tuşlarla görüntünün kazara açılması engellendi, video dönüşü Kalite Menüsüne bağlandı ve ekran rehberi eklendi"
+    },
+    {
+      "versionCode": 25,
+      "versionName": "2.12.0",
+      "apkName": "SafTV_v2.12.0_vc25.apk",
+      "date": "2026-11-21",
+      "description": "OSD Süresi Ayarı (2, 3, 5, 10 sn, Süresiz) & Kumandada Çift Kademeli Akıllı OK Tuşu (1. basış OSD, 2. basış Kanal Listesi)"
     }
   ]
 }

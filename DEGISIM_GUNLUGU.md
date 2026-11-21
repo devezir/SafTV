@@ -10,6 +10,7 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 
 | Sürüm | Sürüm Kodu (versionCode) | Yayın Tarihi | APK Boyutu | Doğrudan APK İndir | Başlıca Yenilikler ve Odak Noktası |
 |:---:|:---:|:---:|:---:|:---:|---|
+| **v2.12.0** | 25 | 21.11.2026 | ~189.4 KB | [⬇️ **SafTV_v2.12.0_vc25.apk**](https://github.com/devezir/SafTV/releases/download/v2.12.0/SafTV_v2.12.0_vc25.apk) | ⏱️ **OSD Süresi Ayarı (2, 3, 5, 10 sn, Süresiz) & Kumandada Çift Kademeli Akıllı OK Tuşu:** Ayarlar ➔ Görünüm sekmesine OSD gösterim süresi tercihi eklendi. TV kumandasında OK tuşu çift kademeli hale getirildi: 1. basışta OSD bilgi çubuğu, 2. basışta kanal listesi açılır; BACK tuşu OSD açıkken OSD'yi anında kapatır, kapalıyken çıkış diyaloğunu açar. |
 | **v2.11.0** | 24 | 21.11.2026 | ~185.4 KB | [⬇️ **SafTV_v2.11.0_vc24.apk**](https://github.com/devezir/SafTV/releases/download/v2.11.0/SafTV_v2.11.0_vc24.apk) | 📻 **Sadece Ses (Radyo Modu) Kalıcılığı & Bilgilendirme Ekranı:** Sadece Ses modu geçici ekran koruyucudan kalıcı bir kalite moduna dönüştürüldü. Ekrana dokunma/tıklama, OK veya BACK tuşlarıyla kazara videoya dönme engellendi; videoyu açmak için Kalite Menüsü şart koşuldu ve şık bilgilendirme rozeti eklendi. |
 | **v2.10.0** | 23 | 20.11.2026 | ~185.4 KB | [⬇️ **SafTV_v2.10.0_vc23.apk**](https://github.com/devezir/SafTV/releases/download/v2.10.0/SafTV_v2.10.0_vc23.apk) | 🛡️ **Çıkış (BACK) Diyaloğuna "⚙️ Ayarlar" Erişimi (Emniyet Kilidi):** Settings veya Menu tuşu bulunmayan minimalist Android TV kumandalarında (Mi Box, Chromecast vb.) kumandadan sadece GERİ (BACK) tuşuna basarak anında Ayarlar paneline geçebilme garantisi. |
 | **v2.9.0** | 22 | 18.11.2026 | ~185.4 KB | [⬇️ **SafTV_v2.9.0_vc22.apk**](https://github.com/devezir/SafTV/releases/download/v2.9.0/SafTV_v2.9.0_vc22.apk) | 📁 **Gerçek Download Klasörüne Dışa Aktarma (MediaStore API), Scoped Storage İçe Aktarma & 10 Bağımsız Kategori Listesi:** Android 11+ kısıtlı `/Android/data/` klasörü yerine doğrudan kullanıcı tarafından erişilebilir `/storage/emulated/0/Download/` klasörüne yazma, sıfır depolama izni, mükerrer önleme ve 120 kanalın 10 ayrı M3U8 ve JSON listeleri. |
@@ -38,6 +39,23 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 ---
 
 ## 🔍 Detaylı Sürüm Notları
+
+### ⏱️ v2.12.0 (versionCode: 25) — 21 Kasım 2026
+* **OSD Gösterim Süresi Tercihi (Ayarlar ➔ 📏 Görünüm):**
+  * Kanal bilgi çubuğu (OSD) ve dokunmatik kontrollerin otomatik kapanma süresi kullanıcı seçimine bağlandı.
+  * Seçenekler: `2 sn (Hızlı)`, `3 sn (Standart - Varsayılan)`, `5 sn (Geniş)`, `10 sn (Uzun)`, `Süresiz (Manuel)`.
+  * `Süresiz` seçildiğinde otomatik zamanlayıcı kapanır; OSD ancak kullanıcı ekrana dokunduğunda veya kumandadan `BACK` bastığında kapanır.
+  * Tercih JSON yedekleme/geri yükleme sistemine (`pref_osd_timeout`) dahil edildi.
+* **Kumandada Çift Kademeli Akıllı `OK` Tuşu (Seçenek 1 Uydu/IPTV Modeli):**
+  * Tam ekranda canlı yayın izlenirken `OK` tuşuna basıldığında önce OSD bilgi çubuğu açılır (kanal no, adı, kategori, kalite, saat, veri sayacı).
+  * OSD açıkken `OK` tuşuna ikinci kez basıldığında sol kanal listesi çekmecesi (`openDrawer`) açılır.
+  * Böylece hem tek tıkla kanal ve yayın bilgilerine hızlıca bakılır, hem de kanal listesi açma refleksi korunur.
+* **Kumandada `BACK` Tuşu Emniyet Entegrasyonu:**
+  * OSD açıkken `BACK` basıldığında OSD anında kapatılır.
+  * OSD kapalıyken `BACK` basıldığında çıkış onay diyaloğu (`showExitDialog`) açılır.
+  * Kısır döngü tamamen engellendi; uygulamadan güvenli çıkış güvenceye alındı.
+* **Dokunmatik Ekran Tam Uyumu:**
+  * Ekranda boş alana tek dokunuş (`single tap`) ile OSD açılır ve ayarlanan süre kadar kalır; OSD açıkken tekrar dokunulduğunda anında kapanır.
 
 ### 📻 v2.11.0 (versionCode: 24) — 21 Kasım 2026
 * **Sadece Ses (Radyo Modu) Kalıcılığı (Kalıcı Tercih Mantığı):**
