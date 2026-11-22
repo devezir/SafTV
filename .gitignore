@@ -12,6 +12,8 @@ __pycache__/
 archive.org api keys.txt
 catbox_hash.txt
 *catbox*key*
+r2_credentials.json
+*r2*key*
 keystore/
 *.jks
 *.keystore
