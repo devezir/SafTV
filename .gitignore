@@ -10,6 +10,8 @@ __pycache__/
 
 # Hassas API anahtarları, tohumlar ve özel dağıtım APK'ları
 archive.org api keys.txt
+catbox_hash.txt
+*catbox*key*
 keystore/
 *.jks
 *.keystore
