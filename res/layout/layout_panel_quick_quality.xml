@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layout_quick_quality"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|right"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_osd"
+        android:padding="14dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="YAYIN KALİTESİ"
+                android:textColor="@color/accent_blue"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_close_quick_quality"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:text="✕"
+                android:textSize="12sp"
+                android:textColor="@color/text_white"
+                android:background="@drawable/selector_chip"
+                android:focusable="false"
+                android:focusableInTouchMode="false" />
+        </LinearLayout>
+
+        <!-- Çift Katmanlı Canlı Durum Rozeti (Seçenek C) -->
+        <LinearLayout
+            android:id="@+id/card_quick_quality_status"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#161b22"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/tv_quick_quality_live_res"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/accent_green"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:text="📺 Canlı: 1920x1080 • 0.0 Mbps" />
+
+            <TextView
+                android:id="@+id/tv_quick_quality_pref_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/accent_blue"
+                android:textSize="10sp"
+                android:layout_marginTop="3dp"
+                android:text="⚙️ Tercih: Otomatik" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_quick_q_auto"
+            android:layout_width="180dp"
+            android:layout_height="34dp"
+            android:text="Otomatik (Tavsiye)"
+            android:textSize="11sp"
+            android:textColor="@color/text_white"
+            android:background="@drawable/selector_chip"
+            android:layout_marginBottom="4dp" />
+
+        <Button
+            android:id="@+id/btn_quick_q_1080"
+            android:layout_width="180dp"
+            android:layout_height="34dp"
+            android:text="1080p Full HD"
+            android:textSize="11sp"
+            android:textColor="@color/text_white"
+            android:background="@drawable/selector_chip"
+            android:layout_marginBottom="4dp" />
+
+        <Button
+            android:id="@+id/btn_quick_q_720"
+            android:layout_width="180dp"
+            android:layout_height="34dp"
+            android:text="720p HD"
+            android:textSize="11sp"
+            android:textColor="@color/text_white"
+            android:background="@drawable/selector_chip"
+            android:layout_marginBottom="4dp" />
+
+        <Button
+            android:id="@+id/btn_quick_q_480"
+            android:layout_width="180dp"
+            android:layout_height="34dp"
+            android:text="480p SD"
+            android:textSize="11sp"
+            android:textColor="@color/text_white"
+            android:background="@drawable/selector_chip"
+            android:layout_marginBottom="4dp" />
+
+        <Button
+            android:id="@+id/btn_quick_q_360"
+            android:layout_width="180dp"
+            android:layout_height="34dp"
+            android:text="360p Tasarruf"
+            android:textSize="11sp"
+            android:textColor="@color/text_white"
+            android:background="@drawable/selector_chip"
+            android:layout_marginBottom="4dp" />
+
+        <Button
+            android:id="@+id/btn_quick_q_audio_only"
+            android:layout_width="180dp"
+            android:layout_height="34dp"
+            android:text="📻 Sadece Ses (Tasarruf)"
+            android:textSize="11sp"
+            android:textColor="@color/accent_yellow"
+            android:background="@drawable/selector_chip" />
+    </LinearLayout>

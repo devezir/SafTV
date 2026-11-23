@@ -24,4 +24,28 @@
     <style name="TvSettingsButton.Full">
         <item name="android:layout_width">match_parent</item>
     </style>
+
+    <!-- Panel Kapatma Butonu Stili (DRY) -->
+    <style name="TvCloseButton">
+        <item name="android:layout_width">32dp</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:text">✕</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/text_white</item>
+        <item name="android:background">@drawable/selector_chip</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <!-- Panel Başlık Stili (DRY) -->
+    <style name="TvPanelTitle">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <!-- Ayar Alt Başlık / Açıklama Stili (DRY) -->
+    <style name="TvSectionSubtitle">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/text_muted</item>
+    </style>
 </resources>

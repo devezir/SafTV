@@ -10,6 +10,7 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 
 | Sürüm | Sürüm Kodu (versionCode) | Yayın Tarihi | APK Boyutu | Doğrudan APK İndir | Başlıca Yenilikler ve Odak Noktası |
 |:---:|:---:|:---:|:---:|:---:|---|
+| **v2.17.0** | 30 | 23.11.2026 | ~238.0 KB | [⬇️ **SafTV_v2.17.0_vc30.apk**](https://github.com/devezir/SafTV/releases/download/v2.17.0/SafTV_v2.17.0_vc30.apk) | 🏗️ **Kapsamlı Modüler DRY Mimari & Kod Ayrıştırması:** 3.500+ satır mükerrer kod ve XML bloğu temizlendi. `activity_main.xml` 2.625 satırdan 181 satıra indirilerek 6 bağımsız modüler layout'a (`<include>`) bölündü. `UpdateManager` (OTA motoru) ve `BackupManager` (JSON/M3U yedekleme) bağımsız sınıflara taşındı. `BaseScaleAdapter` ile tüm adaptörler ortak ölçek tabanına bağlandı. Panel durumları (`closeAllPanels`) tekilleştirildi. |
 | **v2.16.0** | 29 | 23.11.2026 | ~229.5 KB | [⬇️ **SafTV_v2.16.0_vc29.apk**](https://github.com/devezir/SafTV/releases/download/v2.16.0/SafTV_v2.16.0_vc29.apk) | 📐 **Evrensel Arayüz Ölçeği (Universal UI Scale):** Tüm menü, çekmece ve diyalogların tek merkezden kusursuz simetrisi. Sağ EPG Çekmecesi dinamik genişlik (`330dp * scale`) ve program kartı ölçeklemesi (`EpgProgramAdapter`), OSD Mini EPG metin boyutları, Hızlı Kalite paneli ve 9 sekmeli Ayarlar paneli tam entegre edildi. |
 | **v2.15.0** | 28 | 23.11.2026 | ~225.5 KB | [⬇️ **SafTV_v2.15.0_vc28.apk**](https://github.com/devezir/SafTV/releases/download/v2.15.0/SafTV_v2.15.0_vc28.apk) | 📅 **Full Pro EPG (Elektronik Program Rehberi) Motoru:** Sıfır harici kütüphane ile yerel `XmlPullParser` ve `GZIPInputStream` akış ayrıştırıcı. OSD Mini EPG (Şu An + Sırada + Canlı İlerleme Çubuğu ve Kalan Dakika), Sol Çekmecede 2 satırlı anlık program gösterimi, Sağ Çekmecede 24 saatlik tam gün akış rehberi (Canlı rozeti ve açıklamalar), Ayarlar Sekme 9 (EPG Aç/Kapat, Manuel Yenileme, Kotalı Ağ Koruması). |
 | **v2.14.0** | 27 | 23.11.2026 | ~202.1 KB | [⬇️ **SafTV_v2.14.0_vc27.apk**](https://github.com/devezir/SafTV/releases/download/v2.14.0/SafTV_v2.14.0_vc27.apk) | 🏗️ **Tam Kapsamlı DRY Mimari Refaktörü & Kod Tabanı Optimizasyonu:** `BaseChannelAdapter` ile kanal ve ayarlar adaptörleri tekilleştirildi; `SelectorGroupHelper` fluent builder ile 5 farklı ayar butonu grubu tek çatı altında toplandı. `AppPreferences` ve `AppColors` ile dağınık tercihler ve renk kodları standartlaştırıldı. `IoUtils` ile dosya/ağ I/O akışları konsolide edildi; `DataUsageManager` kota fonksiyonları birleştirildi ve XML stilleri yeniden yapılandırıldı (%40 daha sade ve hızlı kod tabanı). |
@@ -43,6 +44,14 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 ---
 
 ## 🔍 Detaylı Sürüm Notları
+
+### 🏗️ v2.17.0 (versionCode: 30) — 23 Kasım 2026
+* **Kapsamlı Modüler DRY Mimari & Kod Tabanı Ayrıştırması:**
+  * **Modüler XML Arayüzü (`activity_main.xml`):** 2.625 satırlık dev monolithic layout, 6 bağımsız alt layout dosyasına (`layout_overlay_osd`, `layout_drawer_channels`, `layout_drawer_epg`, `layout_panel_quick_quality`, `layout_panel_settings`, `layout_dialog_exit`) bölünerek ana dosya 181 satıra indirildi (%93 sadeleşme).
+  * **Bağımsız `UpdateManager` & `BackupManager`:** OTA güncelleme kontrolü, indirme ve APK kurulumu `UpdateManager`'a; JSON yedekleme/içe aktarma ve çalma listesi ayrıştırması `BackupManager`'a taşındı. `MainActivity` 4.614 satırdan 3.873 satıra indi (741 satır azalma).
+  * **Ortak `BaseScaleAdapter<T>` Tabanı:** Kanal listeleri, ayarlar ve EPG yayın akışı adaptörlerinin ölçek ve padding hesaplamaları tek çatı altında konsolide edildi.
+  * **Merkezi Panel Durum Makinesi:** `closeAllPanels(closeScrim)` ile tüm menü/çekmece yaşam döngüsü tekilleştirildi, v2.15'ten kalan EPG çekmecesi kapanma açıkları giderildi.
+  * **Merkezi Renk ve Stiller:** Dağınık `Color.parseColor` çağrıları `AppColors` sabitlerine bağlandı; `styles.xml` içine `TvCloseButton` ve başlık stilleri eklendi.
 
 ### 📐 v2.16.0 (versionCode: 29) — 23 Kasım 2026
 * **Evrensel Arayüz Ölçeği (Universal UI Scale) & Tam Menü Simetrisi:**

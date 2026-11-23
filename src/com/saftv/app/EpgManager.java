@@ -67,71 +67,58 @@ public class EpgManager {
         return instance;
     }
 
+    private void putAliases(String epgId, String... names) {
+        for (String n : names) {
+            aliasMap.put(n, epgId);
+        }
+    }
+
     private void initAliasMap() {
-        aliasMap.put("trt 1", "TRT.1.HD.tr");
-        aliasMap.put("atv", "ATV.HD.tr");
-        aliasMap.put("kanal d", "KANAL.D.HD.tr");
-        aliasMap.put("show tv", "SHOW.TV.HD.tr");
-        aliasMap.put("show", "SHOW.TV.HD.tr");
-        aliasMap.put("star tv", "STAR.TV.HD.tr");
-        aliasMap.put("star", "STAR.TV.HD.tr");
-        aliasMap.put("now", "FOX.HD.tr");
-        aliasMap.put("fox", "FOX.HD.tr");
-        aliasMap.put("tv8", "TV8.HD.tr");
-        aliasMap.put("kanal 7", "KANAL.7.HD.tr");
-        aliasMap.put("beyaz tv", "BEYAZ.TV.HD.tr");
-        aliasMap.put("beyaz", "BEYAZ.TV.HD.tr");
-        aliasMap.put("a2", "A2.HD.tr");
-        aliasMap.put("teve2", "TEVE2.HD.tr");
-        aliasMap.put("360", "360.HD.tr");
-        aliasMap.put("trt haber", "TRT.HABER.HD.tr");
-        aliasMap.put("ntv", "NTV.HD.tr");
-        aliasMap.put("cnn türk", "CNN.TÜRK.HD.tr");
-        aliasMap.put("cnn turk", "CNN.TÜRK.HD.tr");
-        aliasMap.put("habertürk", "HABERTÜRK.tr");
-        aliasMap.put("haberturk", "HABERTÜRK.tr");
-        aliasMap.put("a haber", "A.HABER.HD.tr");
-        aliasMap.put("24 tv", "24.TV.tr");
-        aliasMap.put("kanal 24", "24.TV.tr");
-        aliasMap.put("tgrt haber", "TGRT.HABER.tr");
-        aliasMap.put("tgrt", "TGRT.HABER.tr");
-        aliasMap.put("bloomberg ht", "BLOOMBERG.HT.HD.tr");
-        aliasMap.put("bloomberg", "BLOOMBERG.HT.HD.tr");
-        aliasMap.put("trt türk", "TRT.TÜRK.tr");
-        aliasMap.put("trt turk", "TRT.TÜRK.tr");
-        aliasMap.put("trt avaz", "TRT.AVAZ.HD.tr");
-        aliasMap.put("trt world", "TRT.WORLD.HD.tr");
-        aliasMap.put("trt kurdi", "TRT.KURDİ.tr");
-        aliasMap.put("trt kurdî", "TRT.KURDİ.tr");
-        aliasMap.put("trt belgesel", "TRT.BELGESEL.HD.tr");
-        aliasMap.put("trt spor", "TRT.SPOR.HD.tr");
-        aliasMap.put("a spor", "A.SPOR.tr");
-        aliasMap.put("bein sports haber", "beIN.SPORTS.HABER.HD.tr");
-        aliasMap.put("beın sports haber", "beIN.SPORTS.HABER.HD.tr");
-        aliasMap.put("tlc", "TLC.HD.tr");
-        aliasMap.put("dmax", "DMAX.HD.tr");
-        aliasMap.put("nat geo wild", "NATIONAL.GEOGRAPHIC.WILD.tr");
-        aliasMap.put("national geographic", "NATIONAL.GEOGRAPHIC.HD.tr");
-        aliasMap.put("nat geo", "NATIONAL.GEOGRAPHIC.HD.tr");
-        aliasMap.put("trt çocuk", "TRT.ÇOCUK.tr");
-        aliasMap.put("trt cocuk", "TRT.ÇOCUK.tr");
-        aliasMap.put("minika çocuk", "MİNİKA.ÇOCUK.tr");
-        aliasMap.put("minika cocuk", "MİNİKA.ÇOCUK.tr");
-        aliasMap.put("minika go", "MİNİKA.GO.tr");
-        aliasMap.put("trt müzik", "TRT.MÜZİK.tr");
-        aliasMap.put("trt muzik", "TRT.MÜZİK.tr");
-        aliasMap.put("power tv", "POWER.TV.HD.tr");
-        aliasMap.put("dream tv", "DREAM.TV.tr");
-        aliasMap.put("dream türk", "DREAM.TV.tr");
-        aliasMap.put("fenerbahçe tv", "FENERBAHÇE.TV.tr");
-        aliasMap.put("fb tv", "FENERBAHÇE.TV.tr");
-        aliasMap.put("sports tv", "SPORTS.TV.tr");
-        aliasMap.put("ülke tv", "ÜLKE.TV.HD.tr");
-        aliasMap.put("ulke tv", "ÜLKE.TV.HD.tr");
-        aliasMap.put("tvnet", "TVNET.HD.tr");
-        aliasMap.put("akit tv", "AKİT.TV.tr");
-        aliasMap.put("a para", "A.PARA.tr");
-        aliasMap.put("ekotürk", "EKOTÜRK.tr");
+        putAliases("TRT.1.HD.tr", "trt 1");
+        putAliases("ATV.HD.tr", "atv");
+        putAliases("KANAL.D.HD.tr", "kanal d");
+        putAliases("SHOW.TV.HD.tr", "show tv", "show");
+        putAliases("STAR.TV.HD.tr", "star tv", "star");
+        putAliases("FOX.HD.tr", "now", "fox");
+        putAliases("TV8.HD.tr", "tv8");
+        putAliases("KANAL.7.HD.tr", "kanal 7");
+        putAliases("BEYAZ.TV.HD.tr", "beyaz tv", "beyaz");
+        putAliases("A2.HD.tr", "a2");
+        putAliases("TEVE2.HD.tr", "teve2");
+        putAliases("360.HD.tr", "360");
+        putAliases("TRT.HABER.HD.tr", "trt haber");
+        putAliases("NTV.HD.tr", "ntv");
+        putAliases("CNN.TÜRK.HD.tr", "cnn türk", "cnn turk");
+        putAliases("HABERTÜRK.tr", "habertürk", "haberturk");
+        putAliases("A.HABER.HD.tr", "a haber");
+        putAliases("24.TV.tr", "24 tv", "kanal 24");
+        putAliases("TGRT.HABER.tr", "tgrt haber", "tgrt");
+        putAliases("BLOOMBERG.HT.HD.tr", "bloomberg ht", "bloomberg");
+        putAliases("TRT.TÜRK.tr", "trt türk", "trt turk");
+        putAliases("TRT.AVAZ.HD.tr", "trt avaz");
+        putAliases("TRT.WORLD.HD.tr", "trt world");
+        putAliases("TRT.KURDİ.tr", "trt kurdi", "trt kurdî");
+        putAliases("TRT.BELGESEL.HD.tr", "trt belgesel");
+        putAliases("TRT.SPOR.HD.tr", "trt spor");
+        putAliases("A.SPOR.tr", "a spor");
+        putAliases("beIN.SPORTS.HABER.HD.tr", "bein sports haber", "beın sports haber");
+        putAliases("TLC.HD.tr", "tlc");
+        putAliases("DMAX.HD.tr", "dmax");
+        putAliases("NATIONAL.GEOGRAPHIC.WILD.tr", "nat geo wild");
+        putAliases("NATIONAL.GEOGRAPHIC.HD.tr", "national geographic", "nat geo");
+        putAliases("TRT.ÇOCUK.tr", "trt çocuk", "trt cocuk");
+        putAliases("MİNİKA.ÇOCUK.tr", "minika çocuk", "minika cocuk");
+        putAliases("MİNİKA.GO.tr", "minika go");
+        putAliases("TRT.MÜZİK.tr", "trt müzik", "trt muzik");
+        putAliases("POWER.TV.HD.tr", "power tv");
+        putAliases("DREAM.TV.tr", "dream tv", "dream türk");
+        putAliases("FENERBAHÇE.TV.tr", "fenerbahçe tv", "fb tv");
+        putAliases("SPORTS.TV.tr", "sports tv");
+        putAliases("ÜLKE.TV.HD.tr", "ülke tv", "ulke tv");
+        putAliases("TVNET.HD.tr", "tvnet");
+        putAliases("AKİT.TV.tr", "akit tv");
+        putAliases("A.PARA.tr", "a para");
+        putAliases("EKOTÜRK.tr", "ekotürk");
     }
 
     /**

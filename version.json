@@ -1,8 +1,8 @@
 {
-  "versionCode": 29,
-  "versionName": "2.16.0",
-  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.16.0/SafTV_v2.16.0_vc29.apk",
-  "apkName": "SafTV_v2.16.0_vc29.apk",
+  "versionCode": 30,
+  "versionName": "2.17.0",
+  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.17.0/SafTV_v2.17.0_vc30.apk",
+  "apkName": "SafTV_v2.17.0_vc30.apk",
   "history": [
     {
       "versionCode": 1,
@@ -206,6 +206,13 @@
       "apkName": "SafTV_v2.16.0_vc29.apk",
       "date": "2026-11-23",
       "description": "Evrensel Arayuz Olcegi (Universal UI Scale) ve Tum Menu/Katmanlarin Kusursuz Simetrisi"
+    },
+    {
+      "versionCode": 30,
+      "versionName": "2.17.0",
+      "apkName": "SafTV_v2.17.0_vc30.apk",
+      "date": "2026-11-23",
+      "description": "Tam Kapsamli Moduler DRY Mimari: Moduler Layoutlar, Bagimsiz Update/Backup Yoneticileri ve BaseScaleAdapter"
     }
   ]
 }

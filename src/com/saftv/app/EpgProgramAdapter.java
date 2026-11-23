@@ -15,43 +15,16 @@ import java.util.List;
  * Saf TV - 24 Saatlik EPG Program Listesi Adaptörü
  * Günlük yayın akışını canlı rozet ve saat formatıyla listeler.
  */
-public class EpgProgramAdapter extends BaseAdapter {
-    private final Context context;
+public class EpgProgramAdapter extends BaseScaleAdapter<EpgProgram> {
     private final LayoutInflater inflater;
-    private List<EpgProgram> programs = new ArrayList<>();
-    private float scaleFactor = 1.0f;
 
     public EpgProgramAdapter(Context context) {
-        this.context = context;
+        super(context, new ArrayList<EpgProgram>());
         this.inflater = LayoutInflater.from(context);
     }
 
-    public void setUiScale(float scaleFactor) {
-        this.scaleFactor = scaleFactor;
-        notifyDataSetChanged();
-    }
-
     public void setPrograms(List<EpgProgram> list) {
-        this.programs = (list != null) ? list : new ArrayList<EpgProgram>();
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public int getCount() {
-        return programs.size();
-    }
-
-    @Override
-    public EpgProgram getItem(int position) {
-        if (position >= 0 && position < programs.size()) {
-            return programs.get(position);
-        }
-        return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+        updateList(list);
     }
 
     @Override
@@ -71,18 +44,17 @@ public class EpgProgramAdapter extends BaseAdapter {
 
         EpgProgram p = getItem(position);
         if (p != null) {
-            float density = context.getResources().getDisplayMetrics().density;
-            int padH = (int) (10 * scaleFactor * density);
-            int padV = (int) (6 * scaleFactor * density);
+            int padH = getScaledHorizontalPadding();
+            int padV = Math.max(2, (int) (6 * scaleFactor * getDensity()));
             convertView.setPadding(padH, padV, padH, padV);
 
             h.tvTime.setText(p.getFormattedTimeRange());
-            h.tvTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(12 * scaleFactor));
+            h.tvTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, getScaledSp(12));
 
-            h.tvLive.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(10 * scaleFactor));
+            h.tvLive.setTextSize(TypedValue.COMPLEX_UNIT_SP, getScaledSp(10));
 
             h.tvTitle.setText(p.getTitle());
-            h.tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(13 * scaleFactor));
+            h.tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, getScaledSp(13));
 
             long now = System.currentTimeMillis();
             boolean isLive = p.isCurrentlyAir(now);
@@ -94,13 +66,13 @@ public class EpgProgramAdapter extends BaseAdapter {
             } else {
                 h.tvLive.setVisibility(View.GONE);
                 h.tvTime.setTextColor(AppColors.AMBER_GOLD);
-                h.tvTitle.setTextColor(0xFFFFFFFF);
+                h.tvTitle.setTextColor(AppColors.TEXT_WHITE);
             }
 
             if (p.getDescription() != null && !p.getDescription().isEmpty()) {
                 h.tvDesc.setVisibility(View.VISIBLE);
                 h.tvDesc.setText(p.getDescription());
-                h.tvDesc.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scaleFactor));
+                h.tvDesc.setTextSize(TypedValue.COMPLEX_UNIT_SP, getScaledSp(11));
             } else {
                 h.tvDesc.setVisibility(View.GONE);
             }

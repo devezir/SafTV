@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layout_drawer"
+        android:layout_width="380dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:background="@drawable/bg_drawer"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:visibility="gone">
+
+        <!-- Channel Search & Close Row (Compact 32dp - Option K2) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_search_box"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="8dp"
+                android:paddingRight="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🔍"
+                    android:textSize="12sp"
+                    android:layout_marginRight="4dp" />
+
+                <EditText
+                    android:id="@+id/et_channel_search"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="Kanal ara... (örn: trt, haber)"
+                    android:textColorHint="#8899A6"
+                    android:textColor="@color/text_white"
+                    android:textSize="12sp"
+                    android:singleLine="true"
+                    android:imeOptions="actionDone"
+                    android:inputType="text" />
+
+                <Button
+                    android:id="@+id/btn_clear_search"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:text="✕"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_gray"
+                    android:background="@drawable/selector_chip"
+                    android:visibility="gone"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false" />
+            </LinearLayout>
+
+            <!-- Close Drawer Button (✕ for Touch - Option K2) -->
+            <Button
+                android:id="@+id/btn_close_drawer"
+                style="@style/TvCloseButton"
+                android:layout_marginLeft="6dp"
+                android:textStyle="bold"
+                android:focusable="false"
+                android:focusableInTouchMode="false" />
+        </LinearLayout>
+
+        <!-- Category Filter Chips (Compact 28dp) -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp">
+
+            <LinearLayout
+                android:id="@+id/layout_categories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_cat_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="28dp"
+                    android:text="Tümü"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_white"
+                    android:background="@drawable/selector_chip"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_marginRight="4dp" />
+
+                <Button
+                    android:id="@+id/btn_cat_fav"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="28dp"
+                    android:text="★ Favoriler"
+                    android:textSize="11sp"
+                    android:textColor="@color/accent_yellow"
+                    android:background="@drawable/selector_chip"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_marginRight="4dp" />
+
+                <Button
+                    android:id="@+id/btn_cat_national"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="28dp"
+                    android:text="Ulusal"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_white"
+                    android:background="@drawable/selector_chip"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_marginRight="4dp" />
+
+                <Button
+                    android:id="@+id/btn_cat_news"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="28dp"
+                    android:text="Haber"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_white"
+                    android:background="@drawable/selector_chip"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_marginRight="4dp" />
+
+                <Button
+                    android:id="@+id/btn_cat_sports"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="28dp"
+                    android:text="Spor"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_white"
+                    android:background="@drawable/selector_chip"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_marginRight="4dp" />
+
+                <Button
+                    android:id="@+id/btn_cat_doc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="28dp"
+                    android:text="Belgesel"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_white"
+                    android:background="@drawable/selector_chip"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_marginRight="4dp" />
+
+                <Button
+                    android:id="@+id/btn_cat_kids"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="28dp"
+                    android:text="Çocuk"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_white"
+                    android:background="@drawable/selector_chip"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_marginRight="4dp" />
+
+                <Button
+                    android:id="@+id/btn_cat_music"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="28dp"
+                    android:text="Müzik"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_white"
+                    android:background="@drawable/selector_chip"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_marginRight="4dp" />
+
+                <Button
+                    android:id="@+id/btn_cat_culture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="28dp"
+                    android:text="Kültür"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_white"
+                    android:background="@drawable/selector_chip"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- Channels List (Now comfortably fits 5+ channels) -->
+        <ListView
+            android:id="@+id/lv_channels"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:descendantFocusability="afterDescendants"
+            android:choiceMode="singleChoice"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:scrollbars="vertical"
+            android:fadingEdge="vertical"
+            android:fadingEdgeLength="14dp" />
+
+        <!-- Drawer Footer -->
+        <TextView
+            android:id="@+id/tv_drawer_footer_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:textColor="@color/text_gray"
+            android:textSize="10sp"
+            android:text="[OK/Dokun] İzle  |  [Uzun Bas] Favori  |  [✕/GERİ] Kapat" />
+    </LinearLayout>

@@ -13,6 +13,8 @@ public final class AppColors {
     public static final int ACTIVE_GREEN = Color.parseColor("#34D399");      // Canlı / Aktif / Seçili yeşil
     public static final int EMERALD_GREEN = 0xFF10B981;                      // Standart zümrüt yeşili
     public static final int ACCENT_BLUE = 0xFF3B82F6;                        // Oynatılıyor mavi
+    public static final int ACCENT_BLUE_LIGHT = Color.parseColor("#58A6FF");  // Açık mavi vurgu
+    public static final int ACCENT_PURPLE = Color.parseColor("#A371F7");      // Mor ağ vurgusu
     public static final int AMBER_GOLD = Color.parseColor("#FBBF24");       // Taşıma / Uyarı altın sarısı
     public static final int WARNING_AMBER = Color.parseColor("#F59E0B");    // Sadece ses / Uyarı sarısı
     public static final int ERROR_RED = Color.parseColor("#EF4444");        // Hata / Kapalı kırmızı

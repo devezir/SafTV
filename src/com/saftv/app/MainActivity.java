@@ -86,11 +86,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
         MediaPlayer.OnVideoSizeChangedListener, MediaPlayer.OnInfoListener {
 
-    private static final String PREFS_NAME = "saf_tv_prefs";
-    private static final String KEY_LAST_CHANNEL = "last_channel_index";
-    private static final String KEY_ASPECT_RATIO = "aspect_ratio_mode"; // 0: Stretch, 1: Fit
-    private static final String KEY_QUALITY = "stream_quality_pref"; // auto, 1080p, 720p, 480p, 360p
-    private static final int OSD_TIMEOUT_MS = 4000;
+    private UpdateManager updateManager;
+    private BackupManager backupManager;
 
     private SurfaceView surfaceView;
     private SurfaceHolder surfaceHolder;
@@ -310,7 +307,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private int playbackRetryCount = 0;
 
     private GestureDetector gestureDetector;
-    private File pendingInstallFile = null;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable hideOsdRunnable = new Runnable() {
@@ -433,6 +429,38 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         }
 
         initViews();
+        updateManager = new UpdateManager(this);
+        backupManager = new BackupManager(this, channelManager, new BackupManager.BackupListener() {
+            @Override
+            public void onChannelsReloaded() {
+                if (channelAdapter != null) channelAdapter.updateList(channelManager.getActiveChannels());
+                if (settingsChannelAdapter != null) settingsChannelAdapter.notifyDataSetChanged();
+                if (tvDrawerSubtitle != null) {
+                    tvDrawerSubtitle.setText("Aktif Kanallar (" + channelManager.getChannelCount() + ")");
+                }
+                if (channelManager.getChannelCount() > 0) {
+                    currentChannelIndex = 0;
+                    playChannel(0);
+                }
+            }
+
+            @Override
+            public void onPreferencesRestored() {
+                AppPreferences ap = AppPreferences.getInstance(MainActivity.this);
+                currentQualityPref = ap.getStreamQuality();
+                aspectRatioMode = ap.getAspectRatioMode();
+                currentUiScale = ap.getUiScale();
+                currentOsdTimeout = ap.getOsdTimeout();
+                isBackgroundAudioEnabled = ap.isBackgroundAudioEnabled();
+
+                applyAspectRatio();
+                updateUiScaleButtons();
+                applyUiScale();
+                updateOsdTimeoutButtons();
+                updateBgAudioButton();
+                updateQualityUi();
+            }
+        });
         dataUsageManager = DataUsageManager.getInstance(this);
         handler.post(dataUsageRunnable);
 
@@ -1076,16 +1104,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     }
 
     private void showExitDialog() {
-        closeDrawer();
-        closeSettings();
-        closeQuickQuality();
-        if (layoutOverlay != null) {
-            layoutOverlay.setVisibility(View.GONE);
-            handler.removeCallbacks(hideOsdRunnable);
-        }
+        prepareOpenPanel();
+        isExitDialogOpen = true;
         if (layoutExitDialog != null) {
             layoutExitDialog.setVisibility(View.VISIBLE);
-            isExitDialogOpen = true;
             if (btnExitCancel != null) {
                 btnExitCancel.requestFocus();
             }
@@ -1093,24 +1115,16 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     }
 
     private void closeExitDialog() {
+        isExitDialogOpen = false;
         if (layoutExitDialog != null) {
             layoutExitDialog.setVisibility(View.GONE);
-            isExitDialogOpen = false;
         }
-        if (surfaceView != null) {
-            surfaceView.requestFocus();
-        }
+        checkAndHideScrim();
     }
 
     private void toggleOverlay() {
-        if (isExitDialogOpen) {
-            closeExitDialog();
-            return;
-        }
-        if (isDrawerOpen || isSettingsOpen || isQuickQualityOpen) {
-            closeDrawer();
-            closeSettings();
-            closeQuickQuality();
+        if (isExitDialogOpen || isDrawerOpen || isSettingsOpen || isQuickQualityOpen || isEpgDrawerOpen) {
+            closeAllPanels(true);
             return;
         }
         if (layoutOverlay.getVisibility() == View.VISIBLE) {
@@ -1199,17 +1213,33 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         builder.show();
     }
 
-    private void promptTargetPosition(final int fromPosition, final Channel ch) {
-        final int totalCount = channelManager.getAllChannels().size();
+    // =========================================================================
+    // DRY YARDIMCI VE MERKEZİ PANEL YÖNETİMİ METOTLARI
+    // =========================================================================
+
+    public void showToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public void showToastLong(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+    public interface TextInputCallback {
+        void onInput(String text);
+    }
+
+    private void promptTextInput(String title, String message, String hint, int inputType, String positiveBtn, final TextInputCallback callback) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("🔢 Kanal Sırası Belirle");
-        builder.setMessage(ch.getName() + " kanalını kaçıncı sıraya taşımak istiyorsunuz? (1 - " + totalCount + ")");
+        builder.setTitle(title);
+        if (message != null && !message.isEmpty()) builder.setMessage(message);
 
         final EditText input = new EditText(this);
-        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
-        input.setHint("Örn: 1");
+        if (inputType != 0) input.setInputType(inputType);
+        input.setSingleLine(true);
         input.setTextColor(Color.WHITE);
-        input.setHintTextColor(0xFF888888);
+        input.setHintTextColor(AppColors.TEXT_MUTED);
+        if (hint != null) input.setHint(hint);
 
         FrameLayout container = new FrameLayout(this);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
@@ -1219,29 +1249,99 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         int margin = (int) (18 * getResources().getDisplayMetrics().density);
         params.leftMargin = margin;
         params.rightMargin = margin;
+        params.topMargin = margin / 2;
+        params.bottomMargin = margin / 2;
         input.setLayoutParams(params);
         container.addView(input);
         builder.setView(container);
 
-        builder.setPositiveButton("Taşı", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(positiveBtn != null ? positiveBtn : "Tamam", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String text = input.getText().toString().trim();
-                if (text.isEmpty()) return;
-                try {
-                    int targetNum = Integer.parseInt(text);
-                    if (targetNum < 1) targetNum = 1;
-                    if (targetNum > totalCount) targetNum = totalCount;
-                    int targetIndex = targetNum - 1;
-
-                    channelManager.moveChannel(fromPosition, targetIndex, MainActivity.this);
-                    refreshChannelsAfterSort(ch.getName() + " " + targetNum + ". sıraya taşındı");
-                    lvSettingsChannels.setSelection(targetIndex);
-                } catch (NumberFormatException ignored) {}
+                if (callback != null) callback.onInput(text);
             }
         });
         builder.setNegativeButton("İptal", null);
         builder.show();
+    }
+
+    private int getSelectedOrFocusedPosition(ListView lv) {
+        if (lv == null) return -1;
+        int pos = lv.getSelectedItemPosition();
+        if (pos < 0) {
+            View focusedChild = lv.getFocusedChild();
+            if (focusedChild != null) {
+                pos = lv.getPositionForView(focusedChild);
+            }
+        }
+        return pos;
+    }
+
+    private void checkAndHideScrim() {
+        if (!isDrawerOpen && !isSettingsOpen && !isQuickQualityOpen && !isEpgDrawerOpen && !isExitDialogOpen) {
+            if (viewScrim != null) viewScrim.setVisibility(View.GONE);
+            if (surfaceView != null) surfaceView.requestFocus();
+        }
+    }
+
+    private void prepareOpenPanel() {
+        closeAllPanels(false);
+        if (viewScrim != null) viewScrim.setVisibility(View.VISIBLE);
+        if (layoutOverlay != null) layoutOverlay.setVisibility(View.GONE);
+        handler.removeCallbacks(hideOsdRunnable);
+    }
+
+    private void closeAllPanels(boolean closeScrim) {
+        isDrawerOpen = false;
+        if (layoutDrawer != null) layoutDrawer.setVisibility(View.GONE);
+        if (etChannelSearch != null && etChannelSearch.getText().length() > 0) {
+            etChannelSearch.setText("");
+        }
+        hideKeyboard(etChannelSearch);
+
+        isSettingsOpen = false;
+        if (layoutSettings != null) layoutSettings.setVisibility(View.GONE);
+
+        isQuickQualityOpen = false;
+        if (layoutQuickQuality != null) layoutQuickQuality.setVisibility(View.GONE);
+        handler.removeCallbacks(hideQuickQualityRunnable);
+
+        isEpgDrawerOpen = false;
+        if (layoutEpgDrawer != null) layoutEpgDrawer.setVisibility(View.GONE);
+
+        isExitDialogOpen = false;
+        if (layoutExitDialog != null) layoutExitDialog.setVisibility(View.GONE);
+
+        if (closeScrim && viewScrim != null) {
+            viewScrim.setVisibility(View.GONE);
+            if (surfaceView != null) surfaceView.requestFocus();
+        }
+    }
+
+    private void promptTargetPosition(final int fromPosition, final Channel ch) {
+        final int totalCount = channelManager.getAllChannels().size();
+        promptTextInput("🔢 Kanal Sırası Belirle",
+                ch.getName() + " kanalını kaçıncı sıraya taşımak istiyorsunuz? (1 - " + totalCount + ")",
+                "Örn: 1",
+                android.text.InputType.TYPE_CLASS_NUMBER,
+                "Taşı",
+                new TextInputCallback() {
+                    @Override
+                    public void onInput(String text) {
+                        if (text.isEmpty()) return;
+                        try {
+                            int targetNum = Integer.parseInt(text);
+                            if (targetNum < 1) targetNum = 1;
+                            if (targetNum > totalCount) targetNum = totalCount;
+                            int targetIndex = targetNum - 1;
+
+                            channelManager.moveChannel(fromPosition, targetIndex, MainActivity.this);
+                            refreshChannelsAfterSort(ch.getName() + " " + targetNum + ". sıraya taşındı");
+                            lvSettingsChannels.setSelection(targetIndex);
+                        } catch (NumberFormatException ignored) {}
+                    }
+                });
     }
 
     private void refreshChannelsAfterSort(String toastMsg) {
@@ -1856,7 +1956,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         if (tvSleepStatus == null) return;
         if (sleepTimerEndTime <= System.currentTimeMillis()) {
             tvSleepStatus.setText("● Kapalı");
-            tvSleepStatus.setTextColor(Color.parseColor("#8b949e"));
+            tvSleepStatus.setTextColor(AppColors.TEXT_MUTED);
         } else {
             long remainingSec = (sleepTimerEndTime - System.currentTimeMillis()) / 1000;
             if (remainingSec < 0) remainingSec = 0;
@@ -2394,14 +2494,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     }
 
     private void openDrawer() {
+        prepareOpenPanel();
         isDrawerOpen = true;
-        closeSettings();
-        closeQuickQuality();
-        closeEpgDrawer();
-        if (viewScrim != null) viewScrim.setVisibility(View.VISIBLE);
-        layoutOverlay.setVisibility(View.GONE);
         layoutDrawer.setVisibility(View.VISIBLE);
-        handler.removeCallbacks(hideOsdRunnable);
 
         if (etChannelSearch != null && etChannelSearch.getText().length() > 0) {
             etChannelSearch.setText("");
@@ -2436,15 +2531,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
     private void closeDrawer() {
         isDrawerOpen = false;
-        layoutDrawer.setVisibility(View.GONE);
+        if (layoutDrawer != null) layoutDrawer.setVisibility(View.GONE);
         if (etChannelSearch != null && etChannelSearch.getText().length() > 0) {
             etChannelSearch.setText("");
         }
         hideKeyboard(etChannelSearch);
-        if (!isSettingsOpen && !isQuickQualityOpen && !isEpgDrawerOpen && viewScrim != null) {
-            viewScrim.setVisibility(View.GONE);
-        }
-        surfaceView.requestFocus();
+        checkAndHideScrim();
     }
 
     private void selectSettingsTab(int index) {
@@ -2460,7 +2552,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 b.setTypeface(null, Typeface.BOLD);
             } else {
                 c.setVisibility(View.GONE);
-                b.setTextColor(Color.parseColor("#8b949e"));
+                b.setTextColor(AppColors.TEXT_MUTED);
                 b.setTypeface(null, Typeface.NORMAL);
             }
         }
@@ -2484,14 +2576,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     }
 
     private void openSettings() {
+        prepareOpenPanel();
         isSettingsOpen = true;
-        closeDrawer();
-        closeQuickQuality();
-        closeEpgDrawer();
-        if (viewScrim != null) viewScrim.setVisibility(View.VISIBLE);
-        layoutOverlay.setVisibility(View.GONE);
         layoutSettings.setVisibility(View.VISIBLE);
-        handler.removeCallbacks(hideOsdRunnable);
         selectSettingsTab(0);
         settingsChannelAdapter.notifyDataSetChanged();
         lvSettingsChannels.requestFocus();
@@ -2502,20 +2589,13 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
     private void closeSettings() {
         isSettingsOpen = false;
-        layoutSettings.setVisibility(View.GONE);
-        if (!isDrawerOpen && !isQuickQualityOpen && !isEpgDrawerOpen && viewScrim != null) {
-            viewScrim.setVisibility(View.GONE);
-        }
-        surfaceView.requestFocus();
+        if (layoutSettings != null) layoutSettings.setVisibility(View.GONE);
+        checkAndHideScrim();
     }
 
     private void openQuickQuality() {
+        prepareOpenPanel();
         isQuickQualityOpen = true;
-        closeDrawer();
-        closeSettings();
-        closeEpgDrawer();
-        if (viewScrim != null) viewScrim.setVisibility(View.VISIBLE);
-        layoutOverlay.setVisibility(View.GONE);
         layoutQuickQuality.setVisibility(View.VISIBLE);
         updateQualityUi();
 
@@ -2532,11 +2612,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
     private void closeQuickQuality() {
         isQuickQualityOpen = false;
-        layoutQuickQuality.setVisibility(View.GONE);
-        if (!isDrawerOpen && !isSettingsOpen && !isEpgDrawerOpen && viewScrim != null) {
-            viewScrim.setVisibility(View.GONE);
-        }
-        surfaceView.requestFocus();
+        if (layoutQuickQuality != null) layoutQuickQuality.setVisibility(View.GONE);
+        handler.removeCallbacks(hideQuickQualityRunnable);
+        checkAndHideScrim();
     }
 
     private void openEpgDrawer() {
@@ -2544,13 +2622,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         Channel currentChannel = channelManager.getChannelByIndex(currentChannelIndex);
         if (currentChannel == null) return;
 
+        prepareOpenPanel();
         isEpgDrawerOpen = true;
-        closeDrawer();
-        closeSettings();
-        closeQuickQuality();
-        if (viewScrim != null) viewScrim.setVisibility(View.VISIBLE);
-        if (layoutOverlay != null) layoutOverlay.setVisibility(View.GONE);
-        handler.removeCallbacks(hideOsdRunnable);
 
         if (layoutEpgDrawer != null) {
             layoutEpgDrawer.setVisibility(View.VISIBLE);
@@ -2612,10 +2685,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         if (layoutEpgDrawer != null) {
             layoutEpgDrawer.setVisibility(View.GONE);
         }
-        if (!isDrawerOpen && !isSettingsOpen && !isQuickQualityOpen && viewScrim != null) {
-            viewScrim.setVisibility(View.GONE);
-        }
-        surfaceView.requestFocus();
+        checkAndHideScrim();
     }
 
     private void nextChannel() {
@@ -2655,16 +2725,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             closeExitDialog();
             return;
         }
-        if (isQuickQualityOpen) {
-            closeQuickQuality();
-            return;
-        }
-        if (isSettingsOpen) {
-            closeSettings();
-            return;
-        }
-        if (isDrawerOpen) {
-            closeDrawer();
+        if (isDrawerOpen || isSettingsOpen || isQuickQualityOpen || isEpgDrawerOpen) {
+            closeAllPanels(true);
             return;
         }
         if (layoutOverlay != null && layoutOverlay.getVisibility() == View.VISIBLE) {
@@ -2706,13 +2768,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             if (isEnterKey) {
                 View focused = getCurrentFocus();
                 if (!(focused instanceof Button)) {
-                    int pos = lvSettingsChannels.getSelectedItemPosition();
-                    if (pos < 0) {
-                        View focusedChild = lvSettingsChannels.getFocusedChild();
-                        if (focusedChild != null) {
-                            pos = lvSettingsChannels.getPositionForView(focusedChild);
-                        }
-                    }
+                    int pos = getSelectedOrFocusedPosition(lvSettingsChannels);
                     if (pos >= 0 && pos < settingsChannelAdapter.getCount()) {
                         toggleChannelSettingAt(pos);
                         return true;
@@ -2740,13 +2796,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             if (isEnterKey) {
                 View focused = getCurrentFocus();
                 if (!(focused instanceof Button)) {
-                    int pos = lvChannels.getSelectedItemPosition();
-                    if (pos < 0) {
-                        View focusedChild = lvChannels.getFocusedChild();
-                        if (focusedChild != null) {
-                            pos = lvChannels.getPositionForView(focusedChild);
-                        }
-                    }
+                    int pos = getSelectedOrFocusedPosition(lvChannels);
                     if (pos >= 0 && pos < channelAdapter.getCount()) {
                         Channel selected = channelAdapter.getItem(pos);
                         selectAndPlayChannel(selected);
@@ -2756,13 +2806,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 }
             }
             if (keyCode == KeyEvent.KEYCODE_PROG_YELLOW || keyCode == KeyEvent.KEYCODE_Y || keyCode == KeyEvent.KEYCODE_F) {
-                int pos = lvChannels.getSelectedItemPosition();
-                if (pos < 0) {
-                    View focusedChild = lvChannels.getFocusedChild();
-                    if (focusedChild != null) {
-                        pos = lvChannels.getPositionForView(focusedChild);
-                    }
-                }
+                int pos = getSelectedOrFocusedPosition(lvChannels);
                 if (pos >= 0 && pos < channelAdapter.getCount()) {
                     toggleFavoriteChannel(channelAdapter.getItem(pos));
                     return true;
@@ -3015,12 +3059,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         super.onResume();
         hideSystemUI();
 
-        if (pendingInstallFile != null && pendingInstallFile.exists()) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || getPackageManager().canRequestPackageInstalls()) {
-                File fileToInstall = pendingInstallFile;
-                pendingInstallFile = null;
-                installApk(fileToInstall);
-            }
+        if (updateManager != null) {
+            updateManager.onResume();
         }
 
         if (dataUsageRunnable != null) {
@@ -3148,17 +3188,17 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         if ("audio_only".equalsIgnoreCase(currentQualityPref)) {
             if (isMetered) {
                 tvOsdNetworkMeter.setText("📻 Ses (Kotalı) • " + speedStr + " • " + sessionStr);
-                tvOsdNetworkMeter.setTextColor(Color.parseColor("#f59e0b"));
+                tvOsdNetworkMeter.setTextColor(AppColors.WARNING_AMBER);
             } else {
                 tvOsdNetworkMeter.setText("📻 Sadece Ses • " + speedStr + " • " + sessionStr);
-                tvOsdNetworkMeter.setTextColor(Color.parseColor("#a371f7"));
+                tvOsdNetworkMeter.setTextColor(AppColors.ACCENT_PURPLE);
             }
         } else if (isMetered) {
             tvOsdNetworkMeter.setText("⚠️ Kotalı • " + speedStr + " • " + sessionStr);
-            tvOsdNetworkMeter.setTextColor(Color.parseColor("#f59e0b"));
+            tvOsdNetworkMeter.setTextColor(AppColors.WARNING_AMBER);
         } else {
             tvOsdNetworkMeter.setText("📶 " + speedStr + " • " + sessionStr);
-            tvOsdNetworkMeter.setTextColor(Color.parseColor("#58a6ff"));
+            tvOsdNetworkMeter.setTextColor(AppColors.ACCENT_BLUE_LIGHT);
         }
         tvOsdNetworkMeter.setVisibility(View.VISIBLE);
     }
@@ -3181,7 +3221,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             String icon = dataUsageManager.getNetworkIcon();
             String status = icon + " " + typeName + (isMetered ? " (Kotalı Ağ - Hotspot/Hücresel)" : " (Sınırsız Ağ)");
             tvNetCurrentStatus.setText(status);
-            tvNetCurrentStatus.setTextColor(isMetered ? Color.parseColor("#f59e0b") : Color.WHITE);
+            tvNetCurrentStatus.setTextColor(isMetered ? AppColors.WARNING_AMBER : Color.WHITE);
         }
 
         updateNetPolicyButtons(dataUsageManager.getMeteredPolicy());
@@ -3202,36 +3242,36 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         if (tvQuotaSessionVal != null) {
             long qSession = dataUsageManager.getSessionQuotaBytes();
             tvQuotaSessionVal.setText(qSession > 0 ? DataUsageManager.formatBytes(qSession) : "Kapalı");
-            tvQuotaSessionVal.setTextColor(qSession > 0 ? Color.parseColor("#58a6ff") : Color.parseColor("#8b949e"));
+            tvQuotaSessionVal.setTextColor(qSession > 0 ? AppColors.ACCENT_BLUE_LIGHT : AppColors.TEXT_MUTED);
         }
         if (tvQuotaDailyVal != null) {
             long qDaily = dataUsageManager.getDailyQuotaBytes();
             tvQuotaDailyVal.setText(qDaily > 0 ? DataUsageManager.formatBytes(qDaily) : "Kapalı");
-            tvQuotaDailyVal.setTextColor(qDaily > 0 ? Color.parseColor("#58a6ff") : Color.parseColor("#8b949e"));
+            tvQuotaDailyVal.setTextColor(qDaily > 0 ? AppColors.ACCENT_BLUE_LIGHT : AppColors.TEXT_MUTED);
         }
         if (tvQuotaMonthlyVal != null) {
             long qMonthly = dataUsageManager.getMonthlyQuotaBytes();
             tvQuotaMonthlyVal.setText(qMonthly > 0 ? DataUsageManager.formatBytes(qMonthly) : "Kapalı");
-            tvQuotaMonthlyVal.setTextColor(qMonthly > 0 ? Color.parseColor("#58a6ff") : Color.parseColor("#8b949e"));
+            tvQuotaMonthlyVal.setTextColor(qMonthly > 0 ? AppColors.ACCENT_BLUE_LIGHT : AppColors.TEXT_MUTED);
         }
     }
 
     private void updateNetPolicyButtons(int policy) {
         if (btnNetPolicyAllow != null) {
             boolean sel = (policy == DataUsageManager.POLICY_ALLOW);
-            btnNetPolicyAllow.setTextColor(sel ? Color.WHITE : Color.parseColor("#8b949e"));
+            btnNetPolicyAllow.setTextColor(sel ? Color.WHITE : AppColors.TEXT_MUTED);
             btnNetPolicyAllow.setTypeface(null, sel ? Typeface.BOLD : Typeface.NORMAL);
             btnNetPolicyAllow.setSelected(sel);
         }
         if (btnNetPolicyWarn != null) {
             boolean sel = (policy == DataUsageManager.POLICY_WARN);
-            btnNetPolicyWarn.setTextColor(sel ? Color.parseColor("#f59e0b") : Color.parseColor("#8b949e"));
+            btnNetPolicyWarn.setTextColor(sel ? AppColors.WARNING_AMBER : AppColors.TEXT_MUTED);
             btnNetPolicyWarn.setTypeface(null, sel ? Typeface.BOLD : Typeface.NORMAL);
             btnNetPolicyWarn.setSelected(sel);
         }
         if (btnNetPolicyBlock != null) {
             boolean sel = (policy == DataUsageManager.POLICY_BLOCK);
-            btnNetPolicyBlock.setTextColor(sel ? Color.parseColor("#f85149") : Color.parseColor("#8b949e"));
+            btnNetPolicyBlock.setTextColor(sel ? AppColors.ERROR_RED_ALT : AppColors.TEXT_MUTED);
             btnNetPolicyBlock.setTypeface(null, sel ? Typeface.BOLD : Typeface.NORMAL);
             btnNetPolicyBlock.setSelected(sel);
         }
@@ -3511,7 +3551,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         etValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         etValue.setHint("Miktar girin (Örn: 2.5 veya 750)");
         etValue.setTextColor(Color.WHITE);
-        etValue.setHintTextColor(Color.parseColor("#8b949e"));
+        etValue.setHintTextColor(AppColors.TEXT_MUTED);
         container.addView(etValue);
 
         final RadioGroup rgUnit = new RadioGroup(this);
@@ -3722,498 +3762,41 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     }
 
     private int getAppVersionCode() {
-        try {
-            return getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
-        } catch (Exception e) {
-            return 10;
-        }
+        return updateManager != null ? updateManager.getAppVersionCode() : 29;
     }
 
     private String getAppVersionName() {
-        try {
-            return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-        } catch (Exception e) {
-            return "1.7.0";
-        }
+        return updateManager != null ? updateManager.getAppVersionName() : "2.16.0";
     }
 
     private void exportSettings() {
-        try {
-            JSONObject root = new JSONObject();
-            root.put("app", "SafTV");
-            root.put("versionCode", getAppVersionCode());
-            root.put("versionName", getAppVersionName());
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-            root.put("backupDate", sdf.format(new Date()));
-
-            JSONObject prefsObj = new JSONObject();
-            prefsObj.put(KEY_QUALITY, currentQualityPref);
-            prefsObj.put(KEY_ASPECT_RATIO, aspectRatioMode);
-            prefsObj.put(KEY_LAST_CHANNEL, currentChannelIndex);
-            prefsObj.put(KEY_UI_SCALE, currentUiScale);
-            prefsObj.put(KEY_OSD_TIMEOUT, currentOsdTimeout);
-            prefsObj.put(KEY_BG_AUDIO, isBackgroundAudioEnabled);
-            prefsObj.put(AppPreferences.KEY_EPG_ENABLED, AppPreferences.getInstance(this).isEpgEnabled());
-            prefsObj.put(AppPreferences.KEY_EPG_METERED_BLOCK, AppPreferences.getInstance(this).isEpgMeteredBlockEnabled());
-            root.put("preferences", prefsObj);
-
-            JSONArray favArray = new JSONArray();
-            for (String f : channelManager.getFavoritesSet(this)) {
-                try {
-                    favArray.put(Integer.parseInt(f));
-                } catch (NumberFormatException ignored) {}
-            }
-            root.put("favorites", favArray);
-
-            JSONArray disabledArray = new JSONArray();
-            for (String d : channelManager.getDisabledChannelsSet(this)) {
-                try {
-                    disabledArray.put(Integer.parseInt(d));
-                } catch (NumberFormatException ignored) {}
-            }
-            root.put("disabled_channels", disabledArray);
-
-            // Kanalları da JSON yedeğine ekle (böylece harici M3U/JSON listesi de tam yedeklenir)
-            root.put("channels", new JSONArray(channelManager.exportToJson()));
-
-            SimpleDateFormat fileDateSdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
-            String fileName = "saf_tv_yedek_" + fileDateSdf.format(new Date()) + ".json";
-            byte[] fileBytes = root.toString(2).getBytes("UTF-8");
-
-            boolean writtenToPublic = false;
-
-            // 1. Android 10+ (API 29+) MediaStore.Downloads API ile doğrudan genel Download klasörüne yaz
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                try {
-                    ContentValues values = new ContentValues();
-                    values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
-                    values.put(MediaStore.MediaColumns.MIME_TYPE, "application/json");
-                    values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
-                    Uri uri = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
-                    if (uri != null) {
-                        OutputStream os = getContentResolver().openOutputStream(uri);
-                        if (os != null) {
-                            os.write(fileBytes);
-                            os.close();
-                            writtenToPublic = true;
-                        }
-                    }
-                } catch (Exception ignored) {}
-            }
-
-            // 2. Android 9 ve altı için veya MediaStore başarısız olursa genel Download klasörüne doğrudan yaz
-            if (!writtenToPublic) {
-                try {
-                    File publicDl = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                    if (publicDl != null) {
-                        if (!publicDl.exists()) publicDl.mkdirs();
-                        File pubFile = new File(publicDl, fileName);
-                        FileOutputStream fosPub = new FileOutputStream(pubFile);
-                        fosPub.write(fileBytes);
-                        fosPub.close();
-                        writtenToPublic = true;
-                    }
-                } catch (Exception ignored) {}
-            }
-
-            // 3. Uygulama içi klasörüne de her halükarda bir kopya bırak (içe aktarma güvencesi)
-            try {
-                File appDir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-                if (appDir == null) appDir = getFilesDir();
-                if (!appDir.exists()) appDir.mkdirs();
-                File destFile = new File(appDir, fileName);
-                FileOutputStream fos = new FileOutputStream(destFile);
-                fos.write(fileBytes);
-                fos.close();
-            } catch (Exception ignored) {}
-
-            String toastMsg = writtenToPublic
-                    ? "💾 İndirilenler (Download) klasörüne kaydedildi:\n" + fileName
-                    : "💾 Yedekleme tamamlandı:\n" + fileName;
-
-            Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            Toast.makeText(this, "Yedekleme hatası: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
+        if (backupManager != null) backupManager.exportSettings();
     }
 
     private void importSettings() {
-        try {
-            List<File> fileList = new ArrayList<>();
-            Set<String> seenNames = new HashSet<>();
-
-            // 1. Genel Download Klasörü (Öncelikli)
-            File publicDl = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            if (publicDl != null && publicDl.exists() && publicDl.canRead()) {
-                File[] arr = publicDl.listFiles();
-                if (arr != null) {
-                    for (File f : arr) {
-                        String name = f.getName().toLowerCase();
-                        if (name.endsWith(".json") || name.endsWith(".m3u") || name.endsWith(".m3u8")) {
-                            if (!seenNames.contains(name)) {
-                                seenNames.add(name);
-                                fileList.add(f);
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 2. Android 10+ MediaStore.Downloads API ile genel Download klasörünü tara (Scoped Storage korumalı cihazlar için)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                try {
-                    Uri queryUri = MediaStore.Downloads.EXTERNAL_CONTENT_URI;
-                    String[] proj = new String[]{MediaStore.MediaColumns._ID, MediaStore.MediaColumns.DISPLAY_NAME};
-                    Cursor c = getContentResolver().query(queryUri, proj, null, null, MediaStore.MediaColumns.DATE_ADDED + " DESC");
-                    if (c != null) {
-                        int idCol = c.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
-                        int nameCol = c.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
-                        while (c.moveToNext()) {
-                            long id = c.getLong(idCol);
-                            String displayName = c.getString(nameCol);
-                            if (displayName != null) {
-                                String dLower = displayName.toLowerCase();
-                                if (dLower.endsWith(".json") || dLower.endsWith(".m3u") || dLower.endsWith(".m3u8")) {
-                                    if (!seenNames.contains(dLower)) {
-                                        seenNames.add(dLower);
-                                        Uri itemUri = ContentUris.withAppendedId(MediaStore.Downloads.EXTERNAL_CONTENT_URI, id);
-                                        File cachedFile = new File(getCacheDir(), displayName);
-                                        InputStream in = getContentResolver().openInputStream(itemUri);
-                                        if (in != null) {
-                                            FileOutputStream fos = new FileOutputStream(cachedFile);
-                                            byte[] buf = new byte[8192];
-                                            int len;
-                                            while ((len = in.read(buf)) != -1) {
-                                                fos.write(buf, 0, len);
-                                            }
-                                            fos.close();
-                                            in.close();
-                                            fileList.add(cachedFile);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        c.close();
-                    }
-                } catch (Exception ignored) {}
-            }
-
-            // 3. Uygulamaya Özel Download Klasörü
-            File dlDir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-            if (dlDir != null && dlDir.exists()) {
-                File[] arr = dlDir.listFiles();
-                if (arr != null) {
-                    for (File f : arr) {
-                        String name = f.getName().toLowerCase();
-                        if (name.endsWith(".json") || name.endsWith(".m3u") || name.endsWith(".m3u8")) {
-                            if (!seenNames.contains(name)) {
-                                seenNames.add(name);
-                                fileList.add(f);
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 4. Dahili Uygulama Klasörü
-            File intDir = getFilesDir();
-            if (intDir != null && intDir.exists()) {
-                File[] arr = intDir.listFiles();
-                if (arr != null) {
-                    for (File f : arr) {
-                        String name = f.getName().toLowerCase();
-                        if (name.endsWith(".json") || name.endsWith(".m3u") || name.endsWith(".m3u8")) {
-                            if (!name.equals("channels.json") && !seenNames.contains(name)) {
-                                seenNames.add(name);
-                                fileList.add(f);
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (fileList.isEmpty()) {
-                Toast.makeText(this, "⚠️ İçe aktarılacak .json veya .m3u dosyası bulunamadı!\nDosyayı Download klasörüne kopyalayınız.", Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            if (fileList.size() == 1) {
-                loadDataFromFile(fileList.get(0));
-                return;
-            }
-
-            // Birden fazla dosya varsa kullanıcıya seçtir
-            final File[] candidates = fileList.toArray(new File[0]);
-            String[] fileNames = new String[candidates.length];
-            for (int i = 0; i < candidates.length; i++) {
-                fileNames[i] = candidates[i].getName();
-            }
-
-            new AlertDialog.Builder(this)
-                    .setTitle("📂 Yüklenecek Dosyayı Seçin")
-                    .setItems(fileNames, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            loadDataFromFile(candidates[which]);
-                        }
-                    })
-                    .setNegativeButton("İptal", null)
-                    .show();
-
-        } catch (Exception e) {
-            Toast.makeText(this, "İçe aktarma listeleme hatası: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void loadDataFromFile(File file) {
-        try {
-            String content = IoUtils.readFileToString(file).trim();
-            boolean isM3u = file.getName().toLowerCase().endsWith(".m3u")
-                    || file.getName().toLowerCase().endsWith(".m3u8")
-                    || content.startsWith("#EXTM3U")
-                    || content.startsWith("#EXTINF");
-
-            if (isM3u) {
-                boolean ok = channelManager.importFromM3u(content, this);
-                if (ok) {
-                    channelAdapter.updateList(channelManager.getActiveChannels());
-                    settingsChannelAdapter.notifyDataSetChanged();
-                    if (tvDrawerSubtitle != null) {
-                        tvDrawerSubtitle.setText("Aktif Kanallar (" + channelManager.getChannelCount() + ")");
-                    }
-                    Toast.makeText(this, "✅ M3U Çalma Listesi Yüklendi (" + channelManager.getChannelCount() + " kanal)\n" + file.getName(), Toast.LENGTH_LONG).show();
-                    if (channelManager.getChannelCount() > 0) {
-                        currentChannelIndex = 0;
-                        playChannel(0);
-                    }
-                } else {
-                    Toast.makeText(this, "⚠️ M3U dosyası okunamadı veya geçerli kanal bulunamadı.", Toast.LENGTH_LONG).show();
-                }
-                return;
-            }
-
-            if (content.startsWith("{")) {
-                JSONObject root = new JSONObject(content);
-
-                if (root.has("channels")) {
-                    channelManager.importFromJson(root.getJSONArray("channels").toString(), this);
-                }
-
-                if (root.has("preferences")) {
-                    JSONObject p = root.getJSONObject("preferences");
-                    AppPreferences ap = AppPreferences.getInstance(this);
-                    if (p.has(KEY_QUALITY)) {
-                        currentQualityPref = p.getString(KEY_QUALITY);
-                        ap.setStreamQuality(currentQualityPref);
-                    }
-                    if (p.has(KEY_ASPECT_RATIO)) {
-                        aspectRatioMode = p.getInt(KEY_ASPECT_RATIO);
-                        ap.setAspectRatioMode(aspectRatioMode);
-                        applyAspectRatio();
-                    }
-                    if (p.has(KEY_UI_SCALE)) {
-                        currentUiScale = p.getString(KEY_UI_SCALE);
-                        ap.setUiScale(currentUiScale);
-                        updateUiScaleButtons();
-                        applyUiScale();
-                    }
-                    if (p.has(KEY_OSD_TIMEOUT)) {
-                        currentOsdTimeout = p.getString(KEY_OSD_TIMEOUT);
-                        ap.setOsdTimeout(currentOsdTimeout);
-                        updateOsdTimeoutButtons();
-                    }
-                    if (p.has(KEY_BG_AUDIO)) {
-                        isBackgroundAudioEnabled = p.getBoolean(KEY_BG_AUDIO);
-                        ap.setBackgroundAudioEnabled(isBackgroundAudioEnabled);
-                        updateBgAudioButton();
-                    }
-                    if (p.has(AppPreferences.KEY_EPG_ENABLED)) {
-                        ap.setEpgEnabled(p.getBoolean(AppPreferences.KEY_EPG_ENABLED));
-                    }
-                    if (p.has(AppPreferences.KEY_EPG_METERED_BLOCK)) {
-                        ap.setEpgMeteredBlockEnabled(p.getBoolean(AppPreferences.KEY_EPG_METERED_BLOCK));
-                    }
-                    updateSettingsEpgTab();
-                }
-
-                if (root.has("favorites")) {
-                    JSONArray fArr = root.getJSONArray("favorites");
-                    Set<String> newFavs = new HashSet<>();
-                    for (int i = 0; i < fArr.length(); i++) {
-                        newFavs.add(String.valueOf(fArr.getInt(i)));
-                    }
-                    channelManager.setFavoritesSet(newFavs, this);
-                }
-
-                if (root.has("disabled_channels")) {
-                    JSONArray dArr = root.getJSONArray("disabled_channels");
-                    Set<String> newDisabled = new HashSet<>();
-                    for (int i = 0; i < dArr.length(); i++) {
-                        newDisabled.add(String.valueOf(dArr.getInt(i)));
-                    }
-                    channelManager.setDisabledChannelsSet(newDisabled, this);
-                }
-
-                channelManager.syncChannelSettings(this);
-                channelAdapter.updateList(channelManager.getActiveChannels());
-                settingsChannelAdapter.notifyDataSetChanged();
-                if (tvDrawerSubtitle != null) {
-                    tvDrawerSubtitle.setText("Aktif Kanallar (" + channelManager.getChannelCount() + ")");
-                }
-                playChannel(currentChannelIndex);
-
-                Channel cur = channelManager.getChannelByIndex(currentChannelIndex);
-                if (cur != null) {
-                    showOsd(cur);
-                }
-
-                Toast.makeText(this, "📂 Yedek/Kanal listesi geri yüklendi:\n" + file.getName(), Toast.LENGTH_LONG).show();
-            } else if (content.startsWith("[")) {
-                boolean ok = channelManager.importFromJson(content, this);
-                if (ok) {
-                    channelAdapter.updateList(channelManager.getActiveChannels());
-                    settingsChannelAdapter.notifyDataSetChanged();
-                    if (tvDrawerSubtitle != null) {
-                        tvDrawerSubtitle.setText("Aktif Kanallar (" + channelManager.getChannelCount() + ")");
-                    }
-                    Toast.makeText(this, "✅ JSON Kanal Listesi Yüklendi (" + channelManager.getChannelCount() + " kanal)\n" + file.getName(), Toast.LENGTH_LONG).show();
-                    if (channelManager.getChannelCount() > 0) {
-                        currentChannelIndex = 0;
-                        playChannel(0);
-                    }
-                } else {
-                    Toast.makeText(this, "⚠️ JSON listesi okunamadı.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        } catch (Exception e) {
-            Toast.makeText(this, "Dosya okuma hatası: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+        if (backupManager != null) backupManager.importSettings();
     }
 
     private void showImportUrlDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("🌐 Web'den Kanal Listesi İndir");
-
-        final EditText input = new EditText(this);
-        input.setHint("https://ornek.com/liste.m3u veya JSON linki");
-        input.setSingleLine(true);
-        input.setTextColor(Color.WHITE);
-        input.setHintTextColor(0xFF888888);
-
-        FrameLayout container = new FrameLayout(this);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
-        int margin = (int) (18 * getResources().getDisplayMetrics().density);
-        params.leftMargin = margin;
-        params.rightMargin = margin;
-        params.topMargin = margin / 2;
-        params.bottomMargin = margin / 2;
-        input.setLayoutParams(params);
-        container.addView(input);
-        builder.setView(container);
-
-        builder.setPositiveButton("İndir & Yükle", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                final String urlStr = input.getText().toString().trim();
-                if (urlStr.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Lütfen bir link girin", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                downloadPlaylistFromUrl(urlStr);
-            }
-        });
-
-        builder.setNegativeButton("İptal", null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        promptTextInput("🌐 Web'den Kanal Listesi İndir",
+                null,
+                "https://ornek.com/liste.m3u veya JSON linki",
+                0,
+                "İndir & Yükle",
+                new TextInputCallback() {
+                    @Override
+                    public void onInput(String urlStr) {
+                        if (urlStr.isEmpty()) {
+                            showToast("Lütfen bir link girin");
+                            return;
+                        }
+                        downloadPlaylistFromUrl(urlStr);
+                    }
+                });
     }
 
     private void downloadPlaylistFromUrl(final String urlStr) {
-        Toast.makeText(this, "⏳ Çalma listesi indiriliyor...", Toast.LENGTH_SHORT).show();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String fullUrl = urlStr;
-                    if (!fullUrl.startsWith("http://") && !fullUrl.startsWith("https://")) {
-                        fullUrl = "https://" + fullUrl;
-                    }
-                    URL url = new URL(fullUrl);
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setConnectTimeout(10000);
-                    conn.setReadTimeout(15000);
-                    conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36");
-                    conn.setInstanceFollowRedirects(true);
-
-                    int status = conn.getResponseCode();
-                    int redirects = 0;
-                    while ((status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM || status == 307 || status == 308) && redirects < 5) {
-                        String newUrl = conn.getHeaderField("Location");
-                        conn.disconnect();
-                        url = new URL(url, newUrl);
-                        conn = (HttpURLConnection) url.openConnection();
-                        conn.setConnectTimeout(10000);
-                        conn.setReadTimeout(15000);
-                        conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36");
-                        status = conn.getResponseCode();
-                        redirects++;
-                    }
-
-                    if (status != HttpURLConnection.HTTP_OK) {
-                        final int errCode = status;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(MainActivity.this, "İndirme başarısız (HTTP " + errCode + ")", Toast.LENGTH_LONG).show();
-                            }
-                        });
-                        return;
-                    }
-
-                    final String content = IoUtils.readStreamToString(conn.getInputStream()).trim();
-                    conn.disconnect();
-                    boolean parsed = false;
-
-                    if (content.toUpperCase().contains("#EXTM3U") || content.toUpperCase().contains("#EXTINF")) {
-                        parsed = channelManager.importFromM3u(content, MainActivity.this);
-                    } else if (content.startsWith("{") || content.startsWith("[")) {
-                        parsed = channelManager.importFromJson(content, MainActivity.this);
-                    }
-
-                    final boolean success = parsed;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (success) {
-                                channelAdapter.updateList(channelManager.getActiveChannels());
-                                settingsChannelAdapter.notifyDataSetChanged();
-                                if (tvDrawerSubtitle != null) {
-                                    tvDrawerSubtitle.setText("Aktif Kanallar (" + channelManager.getChannelCount() + ")");
-                                }
-                                Toast.makeText(MainActivity.this, "✅ " + channelManager.getChannelCount() + " kanal başarıyla yüklendi!", Toast.LENGTH_LONG).show();
-                                if (channelManager.getChannelCount() > 0) {
-                                    currentChannelIndex = 0;
-                                    playChannel(0);
-                                }
-                            } else {
-                                Toast.makeText(MainActivity.this, "⚠️ Geçerli M3U veya JSON formatında kanal bulunamadı!", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                } catch (final Exception e) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(MainActivity.this, "Hata: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-            }
-        }).start();
+        if (backupManager != null) backupManager.downloadPlaylistFromUrl(urlStr);
     }
 
     private void showClearChannelsDialog() {
@@ -4240,7 +3823,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                             tvStatus.setText("📺 Henüz kanal eklenmedi.\nKendi çalma listenizi (M3U / JSON) yüklemek için Ayarlar menüsünü kullanabilirsiniz.");
                             tvStatus.setVisibility(View.VISIBLE);
                         }
-                        Toast.makeText(MainActivity.this, "Kanal listesi temizlendi.", Toast.LENGTH_SHORT).show();
+                        showToast("Kanal listesi temizlendi.");
                     }
                 })
                 .setNegativeButton("İptal", null)
@@ -4248,335 +3831,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     }
 
     private void checkUpdatesOnline() {
-        Toast.makeText(this, "🔄 Güncellemeler denetleniyor...", Toast.LENGTH_SHORT).show();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String[] endpoints = new String[] {
-                    "https://raw.githubusercontent.com/devezir/SafTV/main/version.json?t=" + System.currentTimeMillis(),
-                    "https://cdn.jsdelivr.net/gh/devezir/SafTV@main/version.json?t=" + System.currentTimeMillis()
-                };
-
-                JSONObject json = null;
-                int maxFoundVc = -1;
-                for (String endpointUrl : endpoints) {
-                    try {
-                        URL url = new URL(endpointUrl);
-                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                        conn.setUseCaches(false);
-                        conn.setDefaultUseCaches(false);
-                        conn.setConnectTimeout(5000);
-                        conn.setReadTimeout(5000);
-                        conn.setRequestProperty("User-Agent", "SafTV-Updater");
-                        conn.setRequestProperty("Cache-Control", "no-cache, no-store, must-revalidate");
-                        conn.setRequestProperty("Pragma", "no-cache");
-
-                        if (conn.getResponseCode() == 200) {
-                            String resp = IoUtils.readStreamToString(conn.getInputStream());
-                            conn.disconnect();
-                            JSONObject candidate = new JSONObject(resp);
-                            int candidateVc = candidate.optInt("versionCode", 0);
-                            if (candidateVc > maxFoundVc) {
-                                maxFoundVc = candidateVc;
-                                json = candidate;
-                            }
-                            if (maxFoundVc > getAppVersionCode()) {
-                                break;
-                            }
-                        } else {
-                            conn.disconnect();
-                        }
-                    } catch (Exception ignored) {
-                    }
-                }
-
-                if (json != null) {
-                    final int remoteVc = json.optInt("versionCode", 0);
-                    final String remoteVn = json.optString("versionName", "");
-                    final String downloadUrl = json.optString("apkUrl",
-                            "https://github.com/devezir/SafTV/releases/download/v" + remoteVn + "/SafTV_v" + remoteVn + "_vc" + remoteVc + ".apk");
-
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (remoteVc > getAppVersionCode()) {
-                                new AlertDialog.Builder(MainActivity.this)
-                                        .setTitle("🚀 Yeni Sürüm Mevcut!")
-                                        .setMessage("Saf TV v" + remoteVn + " yayında.\nYeni sürümü şimdi indirip kurmak ister misiniz?")
-                                        .setPositiveButton("Güncelle", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                startApkDownload(downloadUrl, remoteVn);
-                                            }
-                                        })
-                                        .setNeutralButton("Tarayıcıda Aç", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                openInBrowser(downloadUrl);
-                                            }
-                                        })
-                                        .setNegativeButton("Daha Sonra", null)
-                                        .show();
-                            } else {
-                                Toast.makeText(MainActivity.this, "✓ Saf TV güncel (v" + getAppVersionName() + ")", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                } else {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(MainActivity.this, "Güncelleme sunucusuna ulaşılamadı (İnterneti kontrol edin)", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
-        }).start();
-    }
-
-    private void startApkDownload(final String apkUrl, final String versionName) {
-        float density = getResources().getDisplayMetrics().density;
-        int padH = (int) (24 * density);
-        int padV = (int) (16 * density);
-
-        LinearLayout container = new LinearLayout(this);
-        container.setOrientation(LinearLayout.VERTICAL);
-        container.setPadding(padH, padV, padH, padV);
-
-        final TextView tvStatus = new TextView(this);
-        tvStatus.setText("İndiriliyor: %0");
-        tvStatus.setTextSize(14);
-        tvStatus.setTextColor(Color.WHITE);
-        container.addView(tvStatus);
-
-        final ProgressBar pb = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
-        pb.setIndeterminate(false);
-        pb.setMax(100);
-        pb.setProgress(0);
-        LinearLayout.LayoutParams lpPb = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                (int) (18 * density));
-        lpPb.topMargin = (int) (8 * density);
-        lpPb.bottomMargin = (int) (6 * density);
-        container.addView(pb, lpPb);
-
-        final TextView tvBytes = new TextView(this);
-        tvBytes.setText("0 KB / 0 KB");
-        tvBytes.setTextSize(12);
-        tvBytes.setTextColor(Color.LTGRAY);
-        container.addView(tvBytes);
-
-        final boolean[] isCancelled = new boolean[]{false};
-
-        final AlertDialog downloadDialog = new AlertDialog.Builder(this)
-                .setTitle("🚀 Saf TV v" + versionName + " İndiriliyor")
-                .setView(container)
-                .setNegativeButton("İptal", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        isCancelled[0] = true;
-                    }
-                })
-                .setCancelable(false)
-                .create();
-
-        downloadDialog.show();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                File updateDir = new File(getCacheDir(), "updates");
-                if (!updateDir.exists()) {
-                    updateDir.mkdirs();
-                }
-                final File targetApk = new File(updateDir, "SafTV_v" + versionName + ".apk");
-                if (targetApk.exists()) {
-                    targetApk.delete();
-                }
-
-                HttpURLConnection conn = null;
-                InputStream in = null;
-                FileOutputStream out = null;
-                boolean success = false;
-                String errorMsg = "";
-
-                try {
-                    String currentUrl = apkUrl;
-                    int redirects = 0;
-                    while (redirects < 5) {
-                        URL u = new URL(currentUrl);
-                        conn = (HttpURLConnection) u.openConnection();
-                        conn.setInstanceFollowRedirects(true);
-                        conn.setConnectTimeout(10000);
-                        conn.setReadTimeout(20000);
-                        conn.setRequestProperty("User-Agent", "SafTV-Updater");
-                        int code = conn.getResponseCode();
-                        if (code == HttpURLConnection.HTTP_MOVED_TEMP || code == HttpURLConnection.HTTP_MOVED_PERM
-                                || code == 307 || code == 308) {
-                            String loc = conn.getHeaderField("Location");
-                            if (loc != null) {
-                                currentUrl = loc;
-                                conn.disconnect();
-                                redirects++;
-                                continue;
-                            }
-                        }
-                        break;
-                    }
-
-                    if (conn.getResponseCode() == 200) {
-                        final int totalBytes = conn.getContentLength();
-                        in = conn.getInputStream();
-                        out = new FileOutputStream(targetApk);
-
-                        byte[] buffer = new byte[8192];
-                        int read;
-                        int downloaded = 0;
-                        long lastUpdate = 0;
-
-                        while ((read = in.read(buffer)) != -1) {
-                            if (isCancelled[0]) {
-                                break;
-                            }
-                            out.write(buffer, 0, read);
-                            downloaded += read;
-
-                            final int curDown = downloaded;
-                            long now = System.currentTimeMillis();
-                            if (now - lastUpdate > 100 || curDown == totalBytes) {
-                                lastUpdate = now;
-                                final int progress = (totalBytes > 0) ? (int) ((curDown * 100L) / totalBytes) : 0;
-                                handler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (downloadDialog.isShowing()) {
-                                            pb.setProgress(progress);
-                                            tvStatus.setText("İndiriliyor: %" + progress);
-                                            if (totalBytes > 0) {
-                                                tvBytes.setText((curDown / 1024) + " KB / " + (totalBytes / 1024) + " KB");
-                                            } else {
-                                                tvBytes.setText((curDown / 1024) + " KB");
-                                            }
-                                        }
-                                    }
-                                });
-                            }
-                        }
-
-                        if (!isCancelled[0]) {
-                            out.flush();
-                            success = true;
-                        }
-                    } else {
-                        errorMsg = "Sunucu yanıt kodu: " + conn.getResponseCode();
-                    }
-                } catch (Exception e) {
-                    errorMsg = e.getMessage() != null ? e.getMessage() : "Bağlantı hatası";
-                } finally {
-                    try { if (in != null) in.close(); } catch (Exception ignored) {}
-                    try { if (out != null) out.close(); } catch (Exception ignored) {}
-                    if (conn != null) conn.disconnect();
-                }
-
-                final boolean finalSuccess = success;
-                final String finalError = errorMsg;
-
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (downloadDialog.isShowing()) {
-                            try { downloadDialog.dismiss(); } catch (Exception ignored) {}
-                        }
-
-                        if (isCancelled[0]) {
-                            if (targetApk.exists()) targetApk.delete();
-                            Toast.makeText(MainActivity.this, "Güncelleme iptal edildi", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        if (finalSuccess && targetApk.exists() && targetApk.length() > 0) {
-                            installApk(targetApk);
-                        } else {
-                            new AlertDialog.Builder(MainActivity.this)
-                                    .setTitle("⚠️ İndirme Başarısız")
-                                    .setMessage("Güncelleme indirilemedi: " + finalError + "\nTarayıcı ile indirmek ister misiniz?")
-                                    .setPositiveButton("Tarayıcıda Aç", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            openInBrowser(apkUrl);
-                                        }
-                                    })
-                                    .setNegativeButton("Kapat", null)
-                                    .show();
-                        }
-                    }
-                });
-            }
-        }).start();
-    }
-
-    private void installApk(final File targetApk) {
-        if (targetApk == null || !targetApk.exists()) {
-            Toast.makeText(this, "Hata: APK dosyası bulunamadı", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Android 8.0+ (API 26+) Unknown Sources Permission Check
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (!getPackageManager().canRequestPackageInstalls()) {
-                pendingInstallFile = targetApk;
-                new AlertDialog.Builder(this)
-                        .setTitle("⚙️ Kurulum İzni Gerekli")
-                        .setMessage("Saf TV'nin güncellemeyi kurabilmesi için 'Bilinmeyen uygulamaları yükle' iznini açmanız gerekmektedir.")
-                        .setPositiveButton("Ayarlara Git", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
-                                    intent.setData(Uri.parse("package:" + getPackageName()));
-                                    startActivity(intent);
-                                } catch (Exception e) {
-                                    try {
-                                        startActivity(new Intent(Settings.ACTION_SECURITY_SETTINGS));
-                                    } catch (Exception ignored) {}
-                                }
-                            }
-                        })
-                        .setNegativeButton("İptal", null)
-                        .show();
-                return;
-            }
-        }
-
-        try {
-            Uri apkUri = Uri.parse("content://com.saftv.app.apkprovider/" + targetApk.getName());
-            Intent installIntent = new Intent(Intent.ACTION_VIEW);
-            installIntent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-            installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            installIntent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
-            startActivity(installIntent);
-        } catch (Exception e) {
-            new AlertDialog.Builder(this)
-                    .setTitle("⚠️ Kurulum Başlatılamadı")
-                    .setMessage("Paket yükleyici açılamadı: " + e.getMessage() + "\nTarayıcı üzerinden indirmek ister misiniz?")
-                    .setPositiveButton("Tarayıcıda Aç", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            openInBrowser("https://github.com/devezir/SafTV/releases");
-                        }
-                    })
-                    .setNegativeButton("Kapat", null)
-                    .show();
-        }
+        if (updateManager != null) updateManager.checkUpdatesOnline();
     }
 
     private void openInBrowser(String url) {
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(intent);
-        } catch (Exception e) {
-            Toast.makeText(this, "Tarayıcı açılamadı: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
+        if (updateManager != null) updateManager.openInBrowser(url);
     }
 
     @Override

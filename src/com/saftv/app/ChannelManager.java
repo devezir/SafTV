@@ -143,19 +143,22 @@ public class ChannelManager {
         return false;
     }
 
-    public synchronized boolean saveToLocalFile(Context context) {
+    private synchronized boolean saveToFile(Context context, String fileName) {
         if (context == null) return false;
         try {
             String jsonStr = exportToJson();
-            File file = new File(context.getFilesDir(), CHANNELS_FILE_NAME);
+            File file = new File(context.getFilesDir(), fileName);
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(jsonStr.getBytes("UTF-8"));
             fos.close();
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
+    }
+
+    public synchronized boolean saveToLocalFile(Context context) {
+        return saveToFile(context, CHANNELS_FILE_NAME);
     }
 
     public synchronized boolean importFromJson(String jsonContent, Context context) {
@@ -249,17 +252,21 @@ public class ChannelManager {
     }
 
     public synchronized boolean saveToDefaultFile(Context context) {
-        if (context == null) return false;
-        try {
-            String jsonStr = exportToJson();
-            File file = new File(context.getFilesDir(), CHANNELS_DEFAULT_FILE);
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(jsonStr.getBytes("UTF-8"));
-            fos.close();
-            return true;
-        } catch (Exception e) {
-            return false;
+        return saveToFile(context, CHANNELS_DEFAULT_FILE);
+    }
+
+    private static class ChannelStateSnapshot {
+        final Set<Channel> favChannels = new HashSet<>();
+        final Set<Channel> disabledChannels = new HashSet<>();
+    }
+
+    private ChannelStateSnapshot captureChannelStates(Context context) {
+        ChannelStateSnapshot snapshot = new ChannelStateSnapshot();
+        for (Channel c : channels) {
+            if (isFavorite(c.getId(), context)) snapshot.favChannels.add(c);
+            if (!c.isActive()) snapshot.disabledChannels.add(c);
         }
+        return snapshot;
     }
 
     public synchronized boolean moveChannel(int fromPos, int toPos, Context context) {
@@ -268,17 +275,11 @@ public class ChannelManager {
         }
         if (fromPos == toPos) return true;
 
-        Set<Channel> favChannels = new HashSet<>();
-        Set<Channel> disabledChannels = new HashSet<>();
-        for (Channel c : channels) {
-            if (isFavorite(c.getId(), context)) favChannels.add(c);
-            if (!c.isActive()) disabledChannels.add(c);
-        }
-
+        ChannelStateSnapshot s = captureChannelStates(context);
         Channel item = channels.remove(fromPos);
         channels.add(toPos, item);
 
-        renumberAndSave(favChannels, disabledChannels, context);
+        renumberAndSave(s.favChannels, s.disabledChannels, context);
         return true;
     }
 
@@ -288,29 +289,17 @@ public class ChannelManager {
         }
         if (pos1 == pos2) return true;
 
-        Set<Channel> favChannels = new HashSet<>();
-        Set<Channel> disabledChannels = new HashSet<>();
-        for (Channel c : channels) {
-            if (isFavorite(c.getId(), context)) favChannels.add(c);
-            if (!c.isActive()) disabledChannels.add(c);
-        }
-
+        ChannelStateSnapshot s = captureChannelStates(context);
         Collections.swap(channels, pos1, pos2);
 
-        renumberAndSave(favChannels, disabledChannels, context);
+        renumberAndSave(s.favChannels, s.disabledChannels, context);
         return true;
     }
 
     public synchronized void sortAlphabetical(Context context) {
         if (channels.isEmpty()) return;
 
-        Set<Channel> favChannels = new HashSet<>();
-        Set<Channel> disabledChannels = new HashSet<>();
-        for (Channel c : channels) {
-            if (isFavorite(c.getId(), context)) favChannels.add(c);
-            if (!c.isActive()) disabledChannels.add(c);
-        }
-
+        ChannelStateSnapshot s = captureChannelStates(context);
         final Collator collator = Collator.getInstance(new Locale("tr", "TR"));
         collator.setStrength(Collator.PRIMARY);
 
@@ -321,19 +310,13 @@ public class ChannelManager {
             }
         });
 
-        renumberAndSave(favChannels, disabledChannels, context);
+        renumberAndSave(s.favChannels, s.disabledChannels, context);
     }
 
     public synchronized void sortByCategory(Context context) {
         if (channels.isEmpty()) return;
 
-        Set<Channel> favChannels = new HashSet<>();
-        Set<Channel> disabledChannels = new HashSet<>();
-        for (Channel c : channels) {
-            if (isFavorite(c.getId(), context)) favChannels.add(c);
-            if (!c.isActive()) disabledChannels.add(c);
-        }
-
+        ChannelStateSnapshot s = captureChannelStates(context);
         final Collator collator = Collator.getInstance(new Locale("tr", "TR"));
         collator.setStrength(Collator.PRIMARY);
 
@@ -365,7 +348,7 @@ public class ChannelManager {
             }
         });
 
-        renumberAndSave(favChannels, disabledChannels, context);
+        renumberAndSave(s.favChannels, s.disabledChannels, context);
     }
 
     public synchronized boolean resetToOriginalOrder(Context context) {
