@@ -1684,14 +1684,20 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
     private void applyUiScale() {
         float scale = getScaleFactor();
+        float density = getResources().getDisplayMetrics().density;
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+
         if (channelAdapter != null) {
             channelAdapter.setUiScale(scale);
         }
         if (settingsChannelAdapter != null) {
             settingsChannelAdapter.setUiScale(scale);
         }
+        if (epgProgramAdapter != null) {
+            epgProgramAdapter.setUiScale(scale);
+        }
 
-        // OSD Text sizes
+        // 1. OSD Metin Boyutları (Ana Banner)
         if (tvOsdNum != null) tvOsdNum.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(15 * scale));
         if (tvOsdName != null) tvOsdName.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(17 * scale));
         if (tvOsdCat != null) tvOsdCat.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scale));
@@ -1699,16 +1705,22 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         if (tvOsdTime != null) tvOsdTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(13 * scale));
         if (tvOsdHint != null) tvOsdHint.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scale));
         if (tvOsdNetworkMeter != null) tvOsdNetworkMeter.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(12 * scale));
+
+        // 2. OSD Mini EPG Kartı Metin Boyutları
+        if (tvEpgNowTime != null) tvEpgNowTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scale));
+        if (tvEpgNowTitle != null) tvEpgNowTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(13 * scale));
+        if (tvEpgRemaining != null) tvEpgRemaining.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scale));
+        if (tvEpgNextTitle != null) tvEpgNextTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scale));
+
+        // 3. Sadece Ses / Radyo Modu Ekranı
         if (tvAudioOnlyChannelName != null) tvAudioOnlyChannelName.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(20 * scale));
         if (tvAudioOnlySavings != null) tvAudioOnlySavings.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scale));
 
-        // Sol Çekmece Genişliği (Drawer Width)
+        // 4. Sol Çekmece Genişliği (Drawer Width)
         if (layoutDrawer != null) {
             ViewGroup.LayoutParams lp = layoutDrawer.getLayoutParams();
             if (lp != null) {
-                float density = getResources().getDisplayMetrics().density;
                 int newWidth = (int) (270 * scale * density);
-                int screenWidth = getResources().getDisplayMetrics().widthPixels;
                 int maxWidth = (int) (screenWidth * 0.52f);
                 int minWidth = (int) (180 * density);
                 if (newWidth > maxWidth && maxWidth > 0) newWidth = maxWidth;
@@ -1718,21 +1730,73 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             }
         }
 
-        // Üst Bar Buton Fontları
-        int btnFontSz = Math.max(9, Math.min(15, Math.round(11 * scale)));
+        // 5. Sağ Çekmece Genişliği (EPG Drawer Width) & Başlıklar
+        if (layoutEpgDrawer != null) {
+            ViewGroup.LayoutParams lp = layoutEpgDrawer.getLayoutParams();
+            if (lp != null) {
+                int newWidth = (int) (330 * scale * density);
+                int maxWidth = (int) (screenWidth * 0.58f);
+                int minWidth = (int) (220 * density);
+                if (newWidth > maxWidth && maxWidth > 0) newWidth = maxWidth;
+                if (newWidth < minWidth && minWidth > 0) newWidth = minWidth;
+                lp.width = newWidth;
+                layoutEpgDrawer.setLayoutParams(lp);
+            }
+        }
+        if (tvEpgDrawerTitle != null) tvEpgDrawerTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(14 * scale));
+        if (tvEpgDrawerInfo != null) tvEpgDrawerInfo.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(12 * scale));
+
+        // 6. Üst Dokunmatik Bar & Yan Oklar
+        int btnFontSz = Math.max(9, Math.min(16, Math.round(11 * scale)));
+        if (btnTouchEpg != null) btnTouchEpg.setTextSize(TypedValue.COMPLEX_UNIT_SP, btnFontSz);
         if (btnTouchQuality != null) btnTouchQuality.setTextSize(TypedValue.COMPLEX_UNIT_SP, btnFontSz);
         if (btnTouchAspect != null) btnTouchAspect.setTextSize(TypedValue.COMPLEX_UNIT_SP, btnFontSz);
         if (btnTouchPip != null) btnTouchPip.setTextSize(TypedValue.COMPLEX_UNIT_SP, btnFontSz);
         if (btnTouchSettings != null) btnTouchSettings.setTextSize(TypedValue.COMPLEX_UNIT_SP, btnFontSz);
         if (btnTouchExit != null) btnTouchExit.setTextSize(TypedValue.COMPLEX_UNIT_SP, btnFontSz);
 
-        // Çekmece Alt Bilgilendirme ve Arama Kutusu Fontu Ölçekleme
+        if (btnTouchPrev != null) btnTouchPrev.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(18 * scale));
+        if (btnTouchNext != null) btnTouchNext.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(18 * scale));
+        if (tvPlayPauseIcon != null) tvPlayPauseIcon.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(28 * scale));
+
+        // 7. Çekmece Alt Bilgilendirme ve Arama Kutusu
         if (tvDrawerFooterHint != null) {
             tvDrawerFooterHint.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(10 * scale));
         }
         if (etChannelSearch != null) {
             etChannelSearch.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(12 * scale));
         }
+
+        // 8. Hızlı Kalite Paneli
+        if (tvQuickQualityLiveRes != null) tvQuickQualityLiveRes.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(12 * scale));
+        if (tvQuickQualityPrefBadge != null) tvQuickQualityPrefBadge.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scale));
+        int qBtnFontSz = Math.max(9, Math.min(16, Math.round(12 * scale)));
+        Button[] qBtns = { btnQuickQAuto, btnQuickQ1080, btnQuickQ720, btnQuickQ480, btnQuickQ360, btnQuickQAudioOnly };
+        for (Button b : qBtns) {
+            if (b != null) b.setTextSize(TypedValue.COMPLEX_UNIT_SP, qBtnFontSz);
+        }
+
+        // 9. Ayarlar Paneli Genişliği & Sekme Butonları
+        if (layoutSettings != null) {
+            ViewGroup.LayoutParams lp = layoutSettings.getLayoutParams();
+            if (lp != null) {
+                int newWidth = (int) (500 * scale * density);
+                int maxWidth = (int) (screenWidth * 0.70f);
+                int minWidth = (int) (300 * density);
+                if (newWidth > maxWidth && maxWidth > 0) newWidth = maxWidth;
+                if (newWidth < minWidth && minWidth > 0) newWidth = minWidth;
+                lp.width = newWidth;
+                layoutSettings.setLayoutParams(lp);
+            }
+        }
+        if (settingsTabBtns != null) {
+            int tabFontSz = Math.max(9, Math.min(15, Math.round(12 * scale)));
+            for (Button b : settingsTabBtns) {
+                if (b != null) b.setTextSize(TypedValue.COMPLEX_UNIT_SP, tabFontSz);
+            }
+        }
+        if (tvSettingsQualityLiveRes != null) tvSettingsQualityLiveRes.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(12 * scale));
+        if (tvSettingsQualityPrefBadge != null) tvSettingsQualityPrefBadge.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scale));
     }
 
     private void setupSleepTimerControls() {
@@ -2501,6 +2565,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 : Collections.<EpgProgram>emptyList();
 
         if (epgProgramAdapter != null) {
+            epgProgramAdapter.setUiScale(getScaleFactor());
             epgProgramAdapter.setPrograms(programs);
         }
 

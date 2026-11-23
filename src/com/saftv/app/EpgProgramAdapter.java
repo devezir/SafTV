@@ -1,6 +1,7 @@
 package com.saftv.app;
 
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +19,16 @@ public class EpgProgramAdapter extends BaseAdapter {
     private final Context context;
     private final LayoutInflater inflater;
     private List<EpgProgram> programs = new ArrayList<>();
+    private float scaleFactor = 1.0f;
 
     public EpgProgramAdapter(Context context) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
+    }
+
+    public void setUiScale(float scaleFactor) {
+        this.scaleFactor = scaleFactor;
+        notifyDataSetChanged();
     }
 
     public void setPrograms(List<EpgProgram> list) {
@@ -64,8 +71,18 @@ public class EpgProgramAdapter extends BaseAdapter {
 
         EpgProgram p = getItem(position);
         if (p != null) {
+            float density = context.getResources().getDisplayMetrics().density;
+            int padH = (int) (10 * scaleFactor * density);
+            int padV = (int) (6 * scaleFactor * density);
+            convertView.setPadding(padH, padV, padH, padV);
+
             h.tvTime.setText(p.getFormattedTimeRange());
+            h.tvTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(12 * scaleFactor));
+
+            h.tvLive.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(10 * scaleFactor));
+
             h.tvTitle.setText(p.getTitle());
+            h.tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(13 * scaleFactor));
 
             long now = System.currentTimeMillis();
             boolean isLive = p.isCurrentlyAir(now);
@@ -83,6 +100,7 @@ public class EpgProgramAdapter extends BaseAdapter {
             if (p.getDescription() != null && !p.getDescription().isEmpty()) {
                 h.tvDesc.setVisibility(View.VISIBLE);
                 h.tvDesc.setText(p.getDescription());
+                h.tvDesc.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scaleFactor));
             } else {
                 h.tvDesc.setVisibility(View.GONE);
             }
