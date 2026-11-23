@@ -78,18 +78,8 @@ public class ChannelManager {
         try {
             File file = new File(context.getFilesDir(), CHANNELS_FILE_NAME);
             if (!file.exists() || file.length() == 0) return false;
-
-            FileInputStream fis = new FileInputStream(file);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-            reader.close();
-            fis.close();
-
-            return parseJsonChannelArray(sb.toString());
+            String jsonStr = IoUtils.readFileToString(file);
+            return parseJsonChannelArray(jsonStr);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -99,16 +89,8 @@ public class ChannelManager {
     private boolean loadFromSeedAsset(Context context) {
         try {
             InputStream is = context.getAssets().open(SEED_ASSET_NAME);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-            reader.close();
-            is.close();
-
-            return parseJsonChannelArray(sb.toString());
+            String jsonStr = IoUtils.readStreamToString(is);
+            return parseJsonChannelArray(jsonStr);
         } catch (Exception ignored) {
             // Seed dosyası yok (Yasal / Tohumsuz sürüm)
             return false;
@@ -376,20 +358,14 @@ public class ChannelManager {
         try {
             File defFile = new File(context.getFilesDir(), CHANNELS_DEFAULT_FILE);
             if (defFile.exists() && defFile.length() > 0) {
-                FileInputStream fis = new FileInputStream(defFile);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
-                StringBuilder sb = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-                reader.close();
-                fis.close();
-                boolean ok = parseJsonChannelArray(sb.toString());
-                if (ok) {
-                    saveToLocalFile(context);
-                    syncChannelSettings(context);
-                    return true;
+                String jsonStr = IoUtils.readFileToString(defFile);
+                if (!jsonStr.isEmpty()) {
+                    boolean ok = parseJsonChannelArray(jsonStr);
+                    if (ok) {
+                        saveToLocalFile(context);
+                        syncChannelSettings(context);
+                        return true;
+                    }
                 }
             }
 

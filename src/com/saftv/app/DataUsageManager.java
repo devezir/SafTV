@@ -131,14 +131,46 @@ public class DataUsageManager {
         }
     }
 
+    private interface HistoryEntryConsumer {
+        void accept(String dateKey, long bytes);
+    }
+
+    private JSONObject getDailyHistoryJson() {
+        try {
+            return new JSONObject(prefs.getString(KEY_DAILY_HISTORY, "{}"));
+        } catch (Exception e) {
+            return new JSONObject();
+        }
+    }
+
+    private Date getCutoffDate(int daysAgo) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, -daysAgo);
+        return cal.getTime();
+    }
+
+    private void forEachRecentHistory(int daysAgo, HistoryEntryConsumer consumer) {
+        JSONObject json = getDailyHistoryJson();
+        Date cutoffDate = getCutoffDate(daysAgo);
+        Iterator<String> keys = json.keys();
+        while (keys.hasNext()) {
+            String dateKey = keys.next();
+            try {
+                Date d = dateFormat.parse(dateKey);
+                if (d != null && !d.before(cutoffDate)) {
+                    consumer.accept(dateKey, json.getLong(dateKey));
+                }
+            } catch (Exception ignored) {}
+        }
+    }
+
     /**
      * Bugünün tarihine ait kovanın üstüne ekler.
      */
     private synchronized void addBytesToToday(long bytes) {
         String today = dateFormat.format(new Date());
         try {
-            String jsonStr = prefs.getString(KEY_DAILY_HISTORY, "{}");
-            JSONObject json = new JSONObject(jsonStr);
+            JSONObject json = getDailyHistoryJson();
             long currentDayBytes = json.optLong(today, 0L);
             json.put(today, currentDayBytes + bytes);
             prefs.edit().putString(KEY_DAILY_HISTORY, json.toString()).apply();
@@ -152,23 +184,15 @@ public class DataUsageManager {
      */
     public synchronized void cleanOldHistory() {
         try {
-            String jsonStr = prefs.getString(KEY_DAILY_HISTORY, "{}");
-            JSONObject json = new JSONObject(jsonStr);
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.DAY_OF_YEAR, -30);
-            Date cutoffDate = cal.getTime();
-
-            JSONObject cleanedJson = new JSONObject();
-            Iterator<String> keys = json.keys();
-            while (keys.hasNext()) {
-                String dateKey = keys.next();
-                try {
-                    Date d = dateFormat.parse(dateKey);
-                    if (d != null && !d.before(cutoffDate)) {
-                        cleanedJson.put(dateKey, json.getLong(dateKey));
-                    }
-                } catch (Exception ignored) {}
-            }
+            final JSONObject cleanedJson = new JSONObject();
+            forEachRecentHistory(30, new HistoryEntryConsumer() {
+                @Override
+                public void accept(String dateKey, long bytes) {
+                    try {
+                        cleanedJson.put(dateKey, bytes);
+                    } catch (Exception ignored) {}
+                }
+            });
             prefs.edit().putString(KEY_DAILY_HISTORY, cleanedJson.toString()).apply();
         } catch (Exception e) {
             e.printStackTrace();
@@ -183,41 +207,21 @@ public class DataUsageManager {
 
     public synchronized long getTodayBytes() {
         String today = dateFormat.format(new Date());
-        try {
-            String jsonStr = prefs.getString(KEY_DAILY_HISTORY, "{}");
-            JSONObject json = new JSONObject(jsonStr);
-            return json.optLong(today, 0L);
-        } catch (Exception e) {
-            return 0L;
-        }
+        return getDailyHistoryJson().optLong(today, 0L);
     }
 
     /**
      * Son 30 günün (Rolling 30 Days) toplam veri tüketimini döndürür.
      */
     public synchronized long getRolling30DaysBytes() {
-        try {
-            String jsonStr = prefs.getString(KEY_DAILY_HISTORY, "{}");
-            JSONObject json = new JSONObject(jsonStr);
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.DAY_OF_YEAR, -30);
-            Date cutoffDate = cal.getTime();
-
-            long total = 0;
-            Iterator<String> keys = json.keys();
-            while (keys.hasNext()) {
-                String dateKey = keys.next();
-                try {
-                    Date d = dateFormat.parse(dateKey);
-                    if (d != null && !d.before(cutoffDate)) {
-                        total += json.getLong(dateKey);
-                    }
-                } catch (Exception ignored) {}
+        final long[] total = new long[1];
+        forEachRecentHistory(30, new HistoryEntryConsumer() {
+            @Override
+            public void accept(String dateKey, long bytes) {
+                total[0] += bytes;
             }
-            return total;
-        } catch (Exception e) {
-            return 0L;
-        }
+        });
+        return total[0];
     }
 
     public double getCurrentSpeedMbps() {
@@ -302,31 +306,80 @@ public class DataUsageManager {
 
     // --- KOTA LİMİTLERİ (4-A+) ---
 
+    private long getQuotaBytesInternal(String key) {
+        return prefs.getLong(key, 0L);
+    }
+
+    private void setQuotaBytesInternal(String key, long bytes) {
+        prefs.edit().putLong(key, bytes).apply();
+    }
+
     public long getSessionQuotaBytes() {
-        return prefs.getLong(KEY_SESSION_QUOTA, 0L);
+        return getQuotaBytesInternal(KEY_SESSION_QUOTA);
     }
 
     public void setSessionQuotaBytes(long bytes) {
-        prefs.edit().putLong(KEY_SESSION_QUOTA, bytes).apply();
+        setQuotaBytesInternal(KEY_SESSION_QUOTA, bytes);
         sessionQuotaDismissed = false;
     }
 
     public long getDailyQuotaBytes() {
-        return prefs.getLong(KEY_DAILY_QUOTA, 0L);
+        return getQuotaBytesInternal(KEY_DAILY_QUOTA);
     }
 
     public void setDailyQuotaBytes(long bytes) {
-        prefs.edit().putLong(KEY_DAILY_QUOTA, bytes).apply();
+        setQuotaBytesInternal(KEY_DAILY_QUOTA, bytes);
         dailyQuotaDismissed = false;
     }
 
     public long getMonthlyQuotaBytes() {
-        return prefs.getLong(KEY_MONTHLY_QUOTA, 0L);
+        return getQuotaBytesInternal(KEY_MONTHLY_QUOTA);
     }
 
     public void setMonthlyQuotaBytes(long bytes) {
-        prefs.edit().putLong(KEY_MONTHLY_QUOTA, bytes).apply();
+        setQuotaBytesInternal(KEY_MONTHLY_QUOTA, bytes);
         monthlyQuotaDismissed = false;
+    }
+
+    public void setQuotaBytes(int quotaType, long bytes) {
+        if (quotaType == QUOTA_SESSION_EXCEEDED) {
+            setSessionQuotaBytes(bytes);
+        } else if (quotaType == QUOTA_DAILY_EXCEEDED) {
+            setDailyQuotaBytes(bytes);
+        } else if (quotaType == QUOTA_MONTHLY_EXCEEDED) {
+            setMonthlyQuotaBytes(bytes);
+        }
+    }
+
+    public long getQuotaLimit(int quotaType) {
+        if (quotaType == QUOTA_SESSION_EXCEEDED) return getSessionQuotaBytes();
+        if (quotaType == QUOTA_DAILY_EXCEEDED) return getDailyQuotaBytes();
+        if (quotaType == QUOTA_MONTHLY_EXCEEDED) return getMonthlyQuotaBytes();
+        return 0L;
+    }
+
+    public long getQuotaUsage(int quotaType) {
+        if (quotaType == QUOTA_SESSION_EXCEEDED) return getSessionBytes();
+        if (quotaType == QUOTA_DAILY_EXCEEDED) return getTodayBytes();
+        if (quotaType == QUOTA_MONTHLY_EXCEEDED) return getRolling30DaysBytes();
+        return 0L;
+    }
+
+    public String getQuotaPeriodName(int quotaType) {
+        if (quotaType == QUOTA_SESSION_EXCEEDED) return "oturum";
+        if (quotaType == QUOTA_DAILY_EXCEEDED) return "günlük";
+        if (quotaType == QUOTA_MONTHLY_EXCEEDED) return "son 30 günlük";
+        return "";
+    }
+
+    public void dismissQuota(int quotaType) {
+        if (quotaType == QUOTA_SESSION_EXCEEDED) {
+            sessionQuotaDismissed = true;
+        } else if (quotaType == QUOTA_DAILY_EXCEEDED) {
+            dailyQuotaDismissed = true;
+        } else if (quotaType == QUOTA_MONTHLY_EXCEEDED) {
+            monthlyQuotaDismissed = true;
+        }
     }
 
     public void setSessionQuotaDismissed(boolean dismissed) {
@@ -346,22 +399,20 @@ public class DataUsageManager {
      * Öncelik sırası: Oturum -> Günlük -> Son 30 Günlük
      */
     public int checkQuotaExceeded() {
-        long sessionLimit = getSessionQuotaBytes();
-        if (sessionLimit > 0 && !sessionQuotaDismissed && sessionRxBytes >= sessionLimit) {
+        if (isQuotaExceeded(getSessionQuotaBytes(), sessionQuotaDismissed, sessionRxBytes)) {
             return QUOTA_SESSION_EXCEEDED;
         }
-
-        long dailyLimit = getDailyQuotaBytes();
-        if (dailyLimit > 0 && !dailyQuotaDismissed && getTodayBytes() >= dailyLimit) {
+        if (isQuotaExceeded(getDailyQuotaBytes(), dailyQuotaDismissed, getTodayBytes())) {
             return QUOTA_DAILY_EXCEEDED;
         }
-
-        long monthlyLimit = getMonthlyQuotaBytes();
-        if (monthlyLimit > 0 && !monthlyQuotaDismissed && getRolling30DaysBytes() >= monthlyLimit) {
+        if (isQuotaExceeded(getMonthlyQuotaBytes(), monthlyQuotaDismissed, getRolling30DaysBytes())) {
             return QUOTA_MONTHLY_EXCEEDED;
         }
-
         return QUOTA_OK;
+    }
+
+    private boolean isQuotaExceeded(long limit, boolean dismissed, long current) {
+        return limit > 0 && !dismissed && current >= limit;
     }
 
     // --- FORMATLAMA YARDIMCILARI ---

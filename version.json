@@ -1,8 +1,8 @@
 {
-  "versionCode": 26,
-  "versionName": "2.13.0",
-  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.13.0/SafTV_v2.13.0_vc26.apk",
-  "apkName": "SafTV_v2.13.0_vc26.apk",
+  "versionCode": 27,
+  "versionName": "2.14.0",
+  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.14.0/SafTV_v2.14.0_vc27.apk",
+  "apkName": "SafTV_v2.14.0_vc27.apk",
   "history": [
     {
       "versionCode": 1,
@@ -185,6 +185,13 @@
       "apkName": "SafTV_v2.13.0_vc26.apk",
       "date": "2026-11-21",
       "description": "Kalite Menüsünde Çift Katmanlı Canlı Durum Rozeti (Çözünürlük + Anlık Hız) ve Dinamik Buton Vurgusu (Seçenek C)"
+    },
+    {
+      "versionCode": 27,
+      "versionName": "2.14.0",
+      "apkName": "SafTV_v2.14.0_vc27.apk",
+      "date": "2026-11-23",
+      "description": "v2.14.0: Tam Kapsamli DRY Mimarisi (BaseChannelAdapter, SelectorGroupHelper, AppPreferences, IoUtils, DataUsageManager konsolidasyonu ve XML stilleri)"
     }
   ]
 }

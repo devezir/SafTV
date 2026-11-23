@@ -2,55 +2,30 @@ package com.saftv.app;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 import java.util.List;
 
-public class SettingsChannelAdapter extends BaseAdapter {
-    private final Context context;
-    private final List<Channel> channels;
-    private float scaleFactor = 1.0f;
+/**
+ * SafTV Ayarlar Sekmesi 1 (Kanal Yönetimi) Adaptörü
+ */
+public class SettingsChannelAdapter extends BaseChannelAdapter {
     private int movingPosition = -1;
 
     public SettingsChannelAdapter(Context context, List<Channel> channels) {
-        this.context = context;
-        this.channels = channels;
+        super(context, channels);
     }
 
-    public void setMovingPosition(int pos) {
-        this.movingPosition = pos;
+    public void setMovingPosition(int position) {
+        this.movingPosition = position;
         notifyDataSetChanged();
     }
 
     public int getMovingPosition() {
         return movingPosition;
-    }
-
-    public void setTvMode(boolean isTvMode) {
-        setUiScale(isTvMode ? 1.30f : 1.0f);
-    }
-
-    public void setUiScale(float scaleFactor) {
-        this.scaleFactor = scaleFactor;
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public int getCount() {
-        return channels.size();
-    }
-
-    @Override
-    public Channel getItem(int position) {
-        return channels.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return channels.get(position).getId();
     }
 
     @Override
@@ -69,41 +44,42 @@ public class SettingsChannelAdapter extends BaseAdapter {
         }
 
         Channel channel = getItem(position);
-        float density = context.getResources().getDisplayMetrics().density;
-        int rowHeight = (int) (38 * scaleFactor * density);
+        if (channel == null) return convertView;
+
+        int rowHeight = getScaledRowHeight();
         convertView.setMinimumHeight(rowHeight);
-        int vPad = Math.max(2, (int) (4 * scaleFactor * density));
-        int hPad = (int) (10 * scaleFactor * density);
+        int hPad = getScaledHorizontalPadding();
+        int vPad = getScaledVerticalPadding();
         convertView.setPadding(hPad, vPad, hPad, vPad);
 
         holder.tvNum.setText(String.valueOf(channel.getId()));
-        holder.tvNum.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, Math.round(12 * scaleFactor));
+        holder.tvNum.setTextSize(TypedValue.COMPLEX_UNIT_SP, getScaledSp(12));
 
         holder.tvName.setText(channel.getName());
-        holder.tvName.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, Math.round(14 * scaleFactor));
+        holder.tvName.setTextSize(TypedValue.COMPLEX_UNIT_SP, getScaledSp(14));
 
         holder.tvCat.setText(channel.getCategory());
-        holder.tvCat.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scaleFactor));
+        holder.tvCat.setTextSize(TypedValue.COMPLEX_UNIT_SP, getScaledSp(11));
 
-        holder.tvStatus.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scaleFactor));
+        holder.tvStatus.setTextSize(TypedValue.COMPLEX_UNIT_SP, getScaledSp(11));
 
         if (position == movingPosition) {
-            convertView.setBackgroundColor(0xFF78350F); // Deep amber
+            convertView.setBackgroundColor(AppColors.MOVING_BG);
             holder.tvStatus.setText("↕ TAŞINIYOR");
-            holder.tvStatus.setTextColor(0xFFFBBF24); // Amber gold
-            holder.tvName.setTextColor(0xFFFBBF24);
+            holder.tvStatus.setTextColor(AppColors.AMBER_GOLD);
+            holder.tvName.setTextColor(AppColors.AMBER_GOLD);
             holder.tvName.setPaintFlags(holder.tvName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         } else {
             convertView.setBackgroundResource(R.drawable.selector_channel_item);
             if (channel.isActive()) {
                 holder.tvStatus.setText("AÇIK ✓");
-                holder.tvStatus.setTextColor(0xFF10B981); // Emerald Green
-                holder.tvName.setTextColor(0xFFFFFFFF); // White
+                holder.tvStatus.setTextColor(AppColors.EMERALD_GREEN);
+                holder.tvName.setTextColor(AppColors.TEXT_WHITE);
                 holder.tvName.setPaintFlags(holder.tvName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             } else {
                 holder.tvStatus.setText("KAPALI ✕");
-                holder.tvStatus.setTextColor(0xFFEF4444); // Red
-                holder.tvName.setTextColor(0xFF64748B); // Muted gray
+                holder.tvStatus.setTextColor(AppColors.ERROR_RED);
+                holder.tvName.setTextColor(AppColors.TEXT_GRAY);
                 holder.tvName.setPaintFlags(holder.tvName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
         }

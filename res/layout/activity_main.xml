@@ -1330,24 +1330,14 @@
 
                     <Button
                         android:id="@+id/btn_scale_60"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_weight="1"
+                        style="@style/TvSettingsButton.Row"
                         android:text="%60 (Ultra Mikro)"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_white"
-                        android:background="@drawable/selector_chip"
                         android:layout_marginRight="4dp" />
 
                     <Button
                         android:id="@+id/btn_scale_80"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_weight="1"
-                        android:text="%80 (Kompakt)"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_white"
-                        android:background="@drawable/selector_chip" />
+                        style="@style/TvSettingsButton.Row"
+                        android:text="%80 (Kompakt)" />
                 </LinearLayout>
 
                 <!-- Row 2: %100 (Standart) | %125 (Orta-Büyük / Tablet) -->
@@ -1359,24 +1349,14 @@
 
                     <Button
                         android:id="@+id/btn_scale_100"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_weight="1"
+                        style="@style/TvSettingsButton.Row"
                         android:text="%100 (Standart Mobil)"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_white"
-                        android:background="@drawable/selector_chip"
                         android:layout_marginRight="4dp" />
 
                     <Button
                         android:id="@+id/btn_scale_125"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_weight="1"
-                        android:text="%125 (Tablet / Küçük TV)"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_white"
-                        android:background="@drawable/selector_chip" />
+                        style="@style/TvSettingsButton.Row"
+                        android:text="%125 (Tablet / Küçük TV)" />
                 </LinearLayout>
 
                 <!-- Row 3: %150 (Büyük / Salon TV) | %175 (Dev / 75"+ TV) -->
@@ -1388,35 +1368,21 @@
 
                     <Button
                         android:id="@+id/btn_scale_150"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_weight="1"
+                        style="@style/TvSettingsButton.Row"
                         android:text="%150 (Büyük TV / 3m)"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_white"
-                        android:background="@drawable/selector_chip"
                         android:layout_marginRight="4dp" />
 
                     <Button
                         android:id="@+id/btn_scale_175"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_weight="1"
-                        android:text="%175 (Dev Ekran / 75&quot;+)"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_white"
-                        android:background="@drawable/selector_chip" />
+                        style="@style/TvSettingsButton.Row"
+                        android:text="%175 (Dev Ekran / 75&quot;+)" />
                 </LinearLayout>
 
                 <!-- Row 4: %200 (Maksimum Erişilebilirlik / 4m+ Uzak TV) -->
                 <Button
                     android:id="@+id/btn_scale_200"
-                    android:layout_width="match_parent"
-                    android:layout_height="36dp"
-                    android:text="%200 (Maksimum / 4m+ Salon TV)"
-                    android:textSize="11sp"
-                    android:textColor="@color/text_white"
-                    android:background="@drawable/selector_chip" />
+                    style="@style/TvSettingsButton.Full"
+                    android:text="%200 (Maksimum / 4m+ Salon TV)" />
 
                 <!-- Ayırıcı Çizgi -->
                 <View
@@ -1470,35 +1436,20 @@
 
                     <Button
                         android:id="@+id/btn_osd_timeout_2"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_weight="1"
+                        style="@style/TvSettingsButton.Row"
                         android:text="2 sn (Hızlı)"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_white"
-                        android:background="@drawable/selector_chip"
                         android:layout_marginRight="4dp" />
 
                     <Button
                         android:id="@+id/btn_osd_timeout_3"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_weight="1"
+                        style="@style/TvSettingsButton.Row"
                         android:text="3 sn (Standart)"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_white"
-                        android:background="@drawable/selector_chip"
                         android:layout_marginRight="4dp" />
 
                     <Button
                         android:id="@+id/btn_osd_timeout_5"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_weight="1"
-                        android:text="5 sn (Geniş)"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_white"
-                        android:background="@drawable/selector_chip" />
+                        style="@style/TvSettingsButton.Row"
+                        android:text="5 sn (Geniş)" />
                 </LinearLayout>
 
                 <!-- Row 2: 10 sn | Süresiz (Manuel Kapanış) -->
@@ -1509,24 +1460,14 @@
 
                     <Button
                         android:id="@+id/btn_osd_timeout_10"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_weight="1"
+                        style="@style/TvSettingsButton.Row"
                         android:text="10 sn (Uzun)"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_white"
-                        android:background="@drawable/selector_chip"
                         android:layout_marginRight="4dp" />
 
                     <Button
                         android:id="@+id/btn_osd_timeout_0"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_weight="1"
-                        android:text="Süresiz (Manuel)"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_white"
-                        android:background="@drawable/selector_chip" />
+                        style="@style/TvSettingsButton.Row"
+                        android:text="Süresiz (Manuel)" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
@@ -1588,36 +1529,22 @@
 
                     <Button
                         android:id="@+id/btn_sleep_off"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_weight="1"
+                        style="@style/TvSettingsButton.Row"
                         android:text="● Kapalı"
-                        android:textSize="11sp"
                         android:textStyle="bold"
                         android:textColor="@color/accent_green"
-                        android:background="@drawable/selector_chip"
                         android:layout_marginRight="4dp" />
 
                     <Button
                         android:id="@+id/btn_sleep_15"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_weight="1"
+                        style="@style/TvSettingsButton.Row"
                         android:text="15 Dk"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_white"
-                        android:background="@drawable/selector_chip"
                         android:layout_marginRight="4dp" />
 
                     <Button
                         android:id="@+id/btn_sleep_30"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_weight="1"
-                        android:text="30 Dk"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_white"
-                        android:background="@drawable/selector_chip" />
+                        style="@style/TvSettingsButton.Row"
+                        android:text="30 Dk" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -1627,35 +1554,20 @@
 
                     <Button
                         android:id="@+id/btn_sleep_60"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_weight="1"
+                        style="@style/TvSettingsButton.Row"
                         android:text="60 Dk"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_white"
-                        android:background="@drawable/selector_chip"
                         android:layout_marginRight="4dp" />
 
                     <Button
                         android:id="@+id/btn_sleep_90"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_weight="1"
+                        style="@style/TvSettingsButton.Row"
                         android:text="90 Dk"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_white"
-                        android:background="@drawable/selector_chip"
                         android:layout_marginRight="4dp" />
 
                     <Button
                         android:id="@+id/btn_sleep_120"
-                        android:layout_width="0dp"
-                        android:layout_height="36dp"
-                        android:layout_weight="1"
-                        android:text="120 Dk"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_white"
-                        android:background="@drawable/selector_chip" />
+                        style="@style/TvSettingsButton.Row"
+                        android:text="120 Dk" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

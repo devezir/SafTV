@@ -1,56 +1,26 @@
 package com.saftv.app;
 
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 import java.util.List;
 
-public class ChannelAdapter extends BaseAdapter {
-    private final Context context;
-    private List<Channel> channels;
+/**
+ * SafTV Sol Çekmece Canlı Kanal Listesi Adaptörü
+ */
+public class ChannelAdapter extends BaseChannelAdapter {
     private int currentPlayingId = 1;
-    private float scaleFactor = 1.0f;
 
     public ChannelAdapter(Context context, List<Channel> channels) {
-        this.context = context;
-        this.channels = channels;
-    }
-
-    public void setTvMode(boolean isTvMode) {
-        setUiScale(isTvMode ? 1.30f : 1.0f);
-    }
-
-    public void setUiScale(float scaleFactor) {
-        this.scaleFactor = scaleFactor;
-        notifyDataSetChanged();
-    }
-
-    public void updateList(List<Channel> newChannels) {
-        this.channels = newChannels;
-        notifyDataSetChanged();
+        super(context, channels);
     }
 
     public void setCurrentPlayingId(int channelId) {
         this.currentPlayingId = channelId;
         notifyDataSetChanged();
-    }
-
-    @Override
-    public int getCount() {
-        return channels.size();
-    }
-
-    @Override
-    public Channel getItem(int position) {
-        return channels.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return channels.get(position).getId();
     }
 
     @Override
@@ -70,41 +40,42 @@ public class ChannelAdapter extends BaseAdapter {
         }
 
         Channel channel = getItem(position);
-        float density = context.getResources().getDisplayMetrics().density;
-        int rowHeight = (int) (38 * scaleFactor * density);
+        if (channel == null) return convertView;
+
+        int rowHeight = getScaledRowHeight();
         convertView.setMinimumHeight(rowHeight);
-        int vPad = Math.max(2, (int) (5 * scaleFactor * density));
-        int hPad = (int) (10 * scaleFactor * density);
+        int hPad = getScaledHorizontalPadding();
+        int vPad = getScaledVerticalPadding();
         convertView.setPadding(hPad, vPad, hPad, vPad);
 
         holder.tvNum.setText(String.valueOf(channel.getId()));
-        holder.tvNum.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, Math.round(12 * scaleFactor));
-        int badgeSz = (int) (28 * scaleFactor * density);
+        holder.tvNum.setTextSize(TypedValue.COMPLEX_UNIT_SP, getScaledSp(12));
+        int badgeSz = (int) (28 * scaleFactor * getDensity());
         holder.tvNum.setMinimumWidth(badgeSz);
         holder.tvNum.setMinimumHeight(badgeSz);
 
         holder.tvName.setText(channel.getName());
-        holder.tvName.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, Math.round(14 * scaleFactor));
+        holder.tvName.setTextSize(TypedValue.COMPLEX_UNIT_SP, getScaledSp(14));
 
         holder.tvCat.setText(channel.getCategory());
-        holder.tvCat.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, Math.round(11 * scaleFactor));
+        holder.tvCat.setTextSize(TypedValue.COMPLEX_UNIT_SP, getScaledSp(11));
 
         boolean isFav = ChannelManager.getInstance().isFavorite(channel.getId(), context);
         if (holder.tvFav != null) {
             holder.tvFav.setVisibility(isFav ? View.VISIBLE : View.GONE);
-            holder.tvFav.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, Math.round(13 * scaleFactor));
+            holder.tvFav.setTextSize(TypedValue.COMPLEX_UNIT_SP, getScaledSp(13));
         }
 
         if (channel.getId() == currentPlayingId) {
             holder.tvLive.setText("● OYNUYOR");
-            holder.tvLive.setTextColor(0xFF3B82F6); // Blue
+            holder.tvLive.setTextColor(AppColors.ACCENT_BLUE);
             convertView.setSelected(true);
         } else {
             holder.tvLive.setText("CANLI");
-            holder.tvLive.setTextColor(0xFF10B981); // Emerald green
+            holder.tvLive.setTextColor(AppColors.EMERALD_GREEN);
             convertView.setSelected(false);
         }
-        holder.tvLive.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, Math.round(10 * scaleFactor));
+        holder.tvLive.setTextSize(TypedValue.COMPLEX_UNIT_SP, getScaledSp(10));
 
         return convertView;
     }

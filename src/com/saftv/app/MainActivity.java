@@ -173,6 +173,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private Button btnSleep90;
     private Button btnSleep120;
     private long sleepTimerEndTime = 0;
+    private SelectorGroupHelper<String> uiScaleGroup;
+    private SelectorGroupHelper<String> osdTimeoutGroup;
+    private SelectorGroupHelper<Integer> sleepTimerGroup;
+    private SelectorGroupHelper<String> quickQualityGroup;
+    private SelectorGroupHelper<String> settingsQualityGroup;
     private final Handler sleepTimerHandler = new Handler(Looper.getMainLooper());
     private Runnable sleepTimerRunnable;
     private final Runnable sleepTimerTickRunnable = new Runnable() {
@@ -378,10 +383,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         channelManager.init(this);
         channelManager.syncChannelSettings(this); // İlk kuruluşta hepsi aktif
 
-        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        currentChannelIndex = prefs.getInt(KEY_LAST_CHANNEL, 0);
-        aspectRatioMode = prefs.getInt(KEY_ASPECT_RATIO, 0);
-        currentQualityPref = prefs.getString(KEY_QUALITY, "auto");
+        AppPreferences appPrefs = AppPreferences.getInstance(this);
+        currentChannelIndex = appPrefs.getLastChannelIndex();
+        aspectRatioMode = appPrefs.getAspectRatioMode();
+        currentQualityPref = appPrefs.getStreamQuality();
 
         if (currentChannelIndex < 0 || currentChannelIndex >= channelManager.getChannelCount()) {
             currentChannelIndex = 0;
@@ -1350,29 +1355,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             });
         }
 
-        // Kalite Butonları (Sekme 2)
-        int[] qBtnIds = {
-                R.id.btn_set_q_auto,
-                R.id.btn_set_q_1080,
-                R.id.btn_set_q_720,
-                R.id.btn_set_q_480,
-                R.id.btn_set_q_360,
-                R.id.btn_set_q_audio_only
-        };
-        final String[] qPrefs = { "auto", "1080p", "720p", "480p", "360p", "audio_only" };
-
-        for (int i = 0; i < qBtnIds.length; i++) {
-            Button b = findViewById(qBtnIds[i]);
-            if (b == null) continue;
-            final String q = qPrefs[i];
-            b.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setStreamQuality(q);
-                    Toast.makeText(MainActivity.this, "Varsayılan kalite: " + q.toUpperCase(java.util.Locale.ROOT), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+        // Kalite Butonları (Sekme 2 - SelectorGroupHelper tarafından yönetilir)
         updateQualityUi();
 
         // Ayarları & Kanalları Dışa Aktar (Yedekle - Sekme 3)
@@ -1495,52 +1478,20 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     }
 
     private void setupUiScaleControls() {
-        SharedPreferences sp = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        currentUiScale = sp.getString(KEY_UI_SCALE, "auto");
+        currentUiScale = AppPreferences.getInstance(this).getUiScale();
 
-        if (btnScaleAuto != null) {
-            btnScaleAuto.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setUiScale("auto");
-                }
-            });
-        }
-        if (btnScale60 != null) {
-            btnScale60.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setUiScale("60"); }
-            });
-        }
-        if (btnScale80 != null) {
-            btnScale80.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setUiScale("80"); }
-            });
-        }
-        if (btnScale100 != null) {
-            btnScale100.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setUiScale("100"); }
-            });
-        }
-        if (btnScale125 != null) {
-            btnScale125.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setUiScale("125"); }
-            });
-        }
-        if (btnScale150 != null) {
-            btnScale150.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setUiScale("150"); }
-            });
-        }
-        if (btnScale175 != null) {
-            btnScale175.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setUiScale("175"); }
-            });
-        }
-        if (btnScale200 != null) {
-            btnScale200.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setUiScale("200"); }
-            });
-        }
+        uiScaleGroup = new SelectorGroupHelper<String>()
+                .setOnSelectedListener(new SelectorGroupHelper.OnSelectedListener<String>() {
+                    @Override public void onSelected(String val) { setUiScale(val); }
+                })
+                .addOption(btnScaleAuto, "auto", "Otomatik (Akıllı Cihaz Tespiti)")
+                .addOption(btnScale60, "60", "%60 (Ultra Mikro)")
+                .addOption(btnScale80, "80", "%80 (Kompakt)")
+                .addOption(btnScale100, "100", "%100 (Standart Mobil)")
+                .addOption(btnScale125, "125", "%125 (Tablet / Küçük TV)")
+                .addOption(btnScale150, "150", "%150 (Büyük TV / 3m)")
+                .addOption(btnScale175, "175", "%175 (Dev / 75\"+ TV)")
+                .addOption(btnScale200, "200", "%200 (Maksimum / 4m+ Salon TV)");
 
         updateUiScaleButtons();
         applyUiScale();
@@ -1549,10 +1500,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
     private void setUiScale(String scale) {
         currentUiScale = scale;
-        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-                .edit()
-                .putString(KEY_UI_SCALE, scale)
-                .apply();
+        AppPreferences.getInstance(this).setUiScale(scale);
         updateUiScaleButtons();
         applyUiScale();
         String label = "auto".equals(scale)
@@ -1563,82 +1511,36 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
     private void updateUiScaleButtons() {
         if (tvScaleStatus != null) {
-            if ("auto".equals(currentUiScale)) {
-                tvScaleStatus.setText("● Otomatik (" + (isTvHardware() ? "TV %130" : "Mobil %100") + ")");
-            } else {
-                tvScaleStatus.setText("● %" + currentUiScale);
-            }
-            tvScaleStatus.setTextColor(Color.parseColor("#34D399"));
+            String label = "auto".equals(currentUiScale)
+                    ? "● Otomatik (" + (isTvHardware() ? "TV %130" : "Mobil %100") + ")"
+                    : "● %" + currentUiScale;
+            tvScaleStatus.setText(label);
+            tvScaleStatus.setTextColor(AppColors.ACTIVE_GREEN);
         }
-
-        if (btnScaleAuto != null) {
-            boolean active = "auto".equals(currentUiScale);
-            btnScaleAuto.setText(active ? "● Otomatik (Akıllı Cihaz Tespiti)" : "Otomatik (Akıllı Cihaz Tespiti)");
-            btnScaleAuto.setTextColor(active ? Color.parseColor("#34D399") : Color.WHITE);
-            btnScaleAuto.setTypeface(null, active ? Typeface.BOLD : Typeface.NORMAL);
-        }
-
-        Button[] btns = { btnScale60, btnScale80, btnScale100, btnScale125, btnScale150, btnScale175, btnScale200 };
-        String[] scales = { "60", "80", "100", "125", "150", "175", "200" };
-        String[] titles = {
-            "%60 (Ultra Mikro)",
-            "%80 (Kompakt)",
-            "%100 (Standart Mobil)",
-            "%125 (Tablet / Küçük TV)",
-            "%150 (Büyük TV / 3m)",
-            "%175 (Dev / 75\"+ TV)",
-            "%200 (Maksimum / 4m+ Salon TV)"
-        };
-
-        for (int i = 0; i < btns.length; i++) {
-            Button b = btns[i];
-            if (b == null) continue;
-            boolean active = scales[i].equals(currentUiScale);
-            b.setText(active ? "● " + titles[i] : titles[i]);
-            b.setTextColor(active ? Color.parseColor("#34D399") : Color.WHITE);
-            b.setTypeface(null, active ? Typeface.BOLD : Typeface.NORMAL);
+        if (uiScaleGroup != null) {
+            uiScaleGroup.updateSelection(currentUiScale);
         }
     }
 
     private void setupOsdTimeoutControls() {
-        SharedPreferences sp = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        currentOsdTimeout = sp.getString(KEY_OSD_TIMEOUT, "3");
+        currentOsdTimeout = AppPreferences.getInstance(this).getOsdTimeout();
 
-        if (btnOsdTimeout2 != null) {
-            btnOsdTimeout2.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setOsdTimeout("2"); }
-            });
-        }
-        if (btnOsdTimeout3 != null) {
-            btnOsdTimeout3.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setOsdTimeout("3"); }
-            });
-        }
-        if (btnOsdTimeout5 != null) {
-            btnOsdTimeout5.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setOsdTimeout("5"); }
-            });
-        }
-        if (btnOsdTimeout10 != null) {
-            btnOsdTimeout10.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setOsdTimeout("10"); }
-            });
-        }
-        if (btnOsdTimeout0 != null) {
-            btnOsdTimeout0.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setOsdTimeout("0"); }
-            });
-        }
+        osdTimeoutGroup = new SelectorGroupHelper<String>()
+                .setOnSelectedListener(new SelectorGroupHelper.OnSelectedListener<String>() {
+                    @Override public void onSelected(String val) { setOsdTimeout(val); }
+                })
+                .addOption(btnOsdTimeout2, "2", "2 sn (Hızlı)")
+                .addOption(btnOsdTimeout3, "3", "3 sn (Standart)")
+                .addOption(btnOsdTimeout5, "5", "5 sn (Geniş)")
+                .addOption(btnOsdTimeout10, "10", "10 sn (Uzun)")
+                .addOption(btnOsdTimeout0, "0", "Süresiz (Manuel)");
 
         updateOsdTimeoutButtons();
     }
 
     private void setOsdTimeout(String timeout) {
         currentOsdTimeout = timeout;
-        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-                .edit()
-                .putString(KEY_OSD_TIMEOUT, timeout)
-                .apply();
+        AppPreferences.getInstance(this).setOsdTimeout(timeout);
         updateOsdTimeoutButtons();
         String label = "0".equals(timeout) ? "Süresiz (Manuel)" : timeout + " Saniye";
         Toast.makeText(this, "OSD Süresi: " + label, Toast.LENGTH_SHORT).show();
@@ -1646,35 +1548,17 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
     private void updateOsdTimeoutButtons() {
         if (tvOsdTimeoutStatus != null) {
-            if ("0".equals(currentOsdTimeout)) {
-                tvOsdTimeoutStatus.setText("● Süresiz (Manuel)");
-            } else {
-                tvOsdTimeoutStatus.setText("● " + currentOsdTimeout + " Saniye");
-            }
-            tvOsdTimeoutStatus.setTextColor(Color.parseColor("#34D399"));
+            String label = "0".equals(currentOsdTimeout) ? "● Süresiz (Manuel)" : "● " + currentOsdTimeout + " Saniye";
+            tvOsdTimeoutStatus.setText(label);
+            tvOsdTimeoutStatus.setTextColor(AppColors.ACTIVE_GREEN);
         }
-
-        Button[] btns = { btnOsdTimeout2, btnOsdTimeout3, btnOsdTimeout5, btnOsdTimeout10, btnOsdTimeout0 };
-        String[] timeouts = { "2", "3", "5", "10", "0" };
-        String[] titles = { "2 sn (Hızlı)", "3 sn (Standart)", "5 sn (Geniş)", "10 sn (Uzun)", "Süresiz (Manuel)" };
-
-        for (int i = 0; i < btns.length; i++) {
-            Button b = btns[i];
-            if (b == null) continue;
-            boolean active = timeouts[i].equals(currentOsdTimeout);
-            b.setText(active ? "● " + titles[i] : titles[i]);
-            b.setTextColor(active ? Color.parseColor("#34D399") : Color.WHITE);
-            b.setTypeface(null, active ? Typeface.BOLD : Typeface.NORMAL);
+        if (osdTimeoutGroup != null) {
+            osdTimeoutGroup.updateSelection(currentOsdTimeout);
         }
     }
 
     private int getOsdTimeoutMs() {
-        try {
-            int sec = Integer.parseInt(currentOsdTimeout);
-            return sec * 1000;
-        } catch (Exception e) {
-            return 3000;
-        }
+        return AppPreferences.getInstance(this).getOsdTimeoutMs();
     }
 
     private void applyUiScale() {
@@ -1731,36 +1615,17 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     }
 
     private void setupSleepTimerControls() {
-        if (btnSleepOff != null) {
-            btnSleepOff.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setSleepTimer(0); }
-            });
-        }
-        if (btnSleep15 != null) {
-            btnSleep15.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setSleepTimer(15); }
-            });
-        }
-        if (btnSleep30 != null) {
-            btnSleep30.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setSleepTimer(30); }
-            });
-        }
-        if (btnSleep60 != null) {
-            btnSleep60.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setSleepTimer(60); }
-            });
-        }
-        if (btnSleep90 != null) {
-            btnSleep90.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setSleepTimer(90); }
-            });
-        }
-        if (btnSleep120 != null) {
-            btnSleep120.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { setSleepTimer(120); }
-            });
-        }
+        sleepTimerGroup = new SelectorGroupHelper<Integer>()
+                .setOnSelectedListener(new SelectorGroupHelper.OnSelectedListener<Integer>() {
+                    @Override public void onSelected(Integer minutes) { setSleepTimer(minutes); }
+                })
+                .addOption(btnSleepOff, 0, "Kapalı")
+                .addOption(btnSleep15, 15, "15 Dakika")
+                .addOption(btnSleep30, 30, "30 Dakika")
+                .addOption(btnSleep60, 60, "60 Dakika")
+                .addOption(btnSleep90, 90, "90 Dakika")
+                .addOption(btnSleep120, 120, "120 Dakika");
+
         updateSleepTimerButtons(0);
         updateSleepTimerDisplay();
     }
@@ -1813,29 +1678,18 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             long mins = remainingSec / 60;
             long secs = remainingSec % 60;
             tvSleepStatus.setText(String.format(Locale.ROOT, "⏳ %02d:%02d kaldı", mins, secs));
-            tvSleepStatus.setTextColor(Color.parseColor("#FBBF24"));
+            tvSleepStatus.setTextColor(AppColors.AMBER_GOLD);
         }
     }
 
     private void updateSleepTimerButtons(int activeMinutes) {
-        Button[] btns = { btnSleepOff, btnSleep15, btnSleep30, btnSleep60, btnSleep90, btnSleep120 };
-        int[] mins = { 0, 15, 30, 60, 90, 120 };
-        for (int i = 0; i < btns.length; i++) {
-            Button b = btns[i];
-            if (b == null) continue;
-            if (mins[i] == activeMinutes) {
-                b.setTextColor(Color.parseColor("#34D399"));
-                b.setTypeface(null, Typeface.BOLD);
-            } else {
-                b.setTextColor(Color.WHITE);
-                b.setTypeface(null, Typeface.NORMAL);
-            }
+        if (sleepTimerGroup != null) {
+            sleepTimerGroup.updateSelection(activeMinutes);
         }
     }
 
     private void setupBackgroundAudio() {
-        SharedPreferences sp = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        isBackgroundAudioEnabled = sp.getBoolean(KEY_BG_AUDIO, false);
+        isBackgroundAudioEnabled = AppPreferences.getInstance(this).isBackgroundAudioEnabled();
         updateBgAudioButton();
 
         if (btnBgAudioToggle != null) {
@@ -1843,10 +1697,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 @Override
                 public void onClick(View v) {
                     isBackgroundAudioEnabled = !isBackgroundAudioEnabled;
-                    getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-                            .edit()
-                            .putBoolean(KEY_BG_AUDIO, isBackgroundAudioEnabled)
-                            .apply();
+                    AppPreferences.getInstance(MainActivity.this).setBackgroundAudioEnabled(isBackgroundAudioEnabled);
                     updateBgAudioButton();
                     String msg = isBackgroundAudioEnabled 
                             ? "✓ Arka planda ses AKTİF (Ekran kilitlendiğinde ses çalmaya devam eder)"
@@ -1877,7 +1728,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         if (btnBgAudioToggle == null) return;
         if (isBackgroundAudioEnabled) {
             btnBgAudioToggle.setText("● Arka Planda Ses: AKTİF (Açık)");
-            btnBgAudioToggle.setTextColor(Color.parseColor("#34D399"));
+            btnBgAudioToggle.setTextColor(AppColors.ACTIVE_GREEN);
             btnBgAudioToggle.setTypeface(null, Typeface.BOLD);
         } else {
             btnBgAudioToggle.setText("✕ Arka Planda Ses: Kapalı (Standart)");
@@ -1948,37 +1799,42 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     }
 
     private void setupQuickQualityControls() {
-        int[] qqIds = {
-                R.id.btn_quick_q_auto,
-                R.id.btn_quick_q_1080,
-                R.id.btn_quick_q_720,
-                R.id.btn_quick_q_480,
-                R.id.btn_quick_q_360,
-                R.id.btn_quick_q_audio_only
-        };
-        final String[] qPrefs = { "auto", "1080p", "720p", "480p", "360p", "audio_only" };
+        quickQualityGroup = new SelectorGroupHelper<String>()
+                .setOnSelectedListener(new SelectorGroupHelper.OnSelectedListener<String>() {
+                    @Override
+                    public void onSelected(String q) {
+                        setStreamQuality(q);
+                        closeQuickQuality();
+                    }
+                })
+                .addOption(btnQuickQAuto, "auto", "Otomatik (Akışa Göre)")
+                .addOption(btnQuickQ1080, "1080p", "1080p Full HD")
+                .addOption(btnQuickQ720, "720p", "720p HD")
+                .addOption(btnQuickQ480, "480p", "480p SD")
+                .addOption(btnQuickQ360, "360p", "360p Tasarruf")
+                .addOption(btnQuickQAudioOnly, "audio_only", "📻 Sadece Ses (Radyo)", AppColors.WARNING_AMBER);
 
-        for (int i = 0; i < qqIds.length; i++) {
-            Button b = findViewById(qqIds[i]);
-            if (b == null) continue;
-            final String q = qPrefs[i];
-            b.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setStreamQuality(q);
-                    closeQuickQuality();
-                }
-            });
-        }
+        settingsQualityGroup = new SelectorGroupHelper<String>()
+                .setOnSelectedListener(new SelectorGroupHelper.OnSelectedListener<String>() {
+                    @Override
+                    public void onSelected(String q) {
+                        setStreamQuality(q);
+                        Toast.makeText(MainActivity.this, "Varsayılan kalite: " + q.toUpperCase(Locale.ROOT), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOption(btnSetQAuto, "auto", "Otomatik (Önerilen - Akışa Göre)")
+                .addOption(btnSetQ1080, "1080p", "1080p Full HD (En Yüksek Çözünürlük)")
+                .addOption(btnSetQ720, "720p", "720p HD (Standart Yüksek Çözünürlük)")
+                .addOption(btnSetQ480, "480p", "480p SD (Düşük Hızlı Bağlantılar)")
+                .addOption(btnSetQ360, "360p", "360p Tasarruf (Mobil Veri Dostu)")
+                .addOption(btnSetQAudioOnly, "audio_only", "📻 Sadece Ses (Radyo / %95+ Veri Tasarrufu)", AppColors.WARNING_AMBER);
+
         updateQualityUi();
     }
 
     private void setStreamQuality(String quality) {
         currentQualityPref = quality;
-        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                .edit()
-                .putString(KEY_QUALITY, quality)
-                .apply();
+        AppPreferences.getInstance(this).setStreamQuality(quality);
 
         String label;
         if (quality.equals("auto")) {
@@ -1986,7 +1842,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         } else if (quality.equals("audio_only")) {
             label = "📻 Sadece Ses (Radyo Modu)";
         } else {
-            label = quality.toUpperCase(java.util.Locale.ROOT);
+            label = quality.toUpperCase(Locale.ROOT);
         }
         Toast.makeText(this, "Yayın Kalitesi: " + label, Toast.LENGTH_SHORT).show();
         updateQualityUi();
@@ -2019,11 +1875,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     }
 
     private Button getQuickQualityButtonForPref(String pref) {
-        if ("1080p".equalsIgnoreCase(pref)) return btnQuickQ1080;
-        if ("720p".equalsIgnoreCase(pref)) return btnQuickQ720;
-        if ("480p".equalsIgnoreCase(pref)) return btnQuickQ480;
-        if ("360p".equalsIgnoreCase(pref)) return btnQuickQ360;
-        if ("audio_only".equalsIgnoreCase(pref)) return btnQuickQAudioOnly;
+        if (quickQualityGroup != null) {
+            Button b = quickQualityGroup.getButtonForValue(pref != null ? pref.toLowerCase(Locale.ROOT) : "auto");
+            if (b != null) return b;
+        }
         return btnQuickQAuto;
     }
 
@@ -2047,36 +1902,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         if (tvSettingsQualityLiveRes != null) tvSettingsQualityLiveRes.setText(liveText);
         if (tvSettingsQualityPrefBadge != null) tvSettingsQualityPrefBadge.setText(prefText);
 
-        Button[] qqBtns = { btnQuickQAuto, btnQuickQ1080, btnQuickQ720, btnQuickQ480, btnQuickQ360, btnQuickQAudioOnly };
-        String[] qPrefs = { "auto", "1080p", "720p", "480p", "360p", "audio_only" };
-        String[] qqTitles = { "Otomatik (Akışa Göre)", "1080p Full HD", "720p HD", "480p SD", "360p Tasarruf", "📻 Sadece Ses (Radyo)" };
-
-        for (int i = 0; i < qqBtns.length; i++) {
-            Button b = qqBtns[i];
-            if (b == null) continue;
-            boolean active = qPrefs[i].equalsIgnoreCase(currentQualityPref);
-            b.setText(active ? "● " + qqTitles[i] : qqTitles[i]);
-            b.setTextColor(active ? Color.parseColor("#34D399") : ("audio_only".equals(qPrefs[i]) ? Color.parseColor("#F59E0B") : Color.WHITE));
-            b.setTypeface(null, active ? Typeface.BOLD : Typeface.NORMAL);
+        String currentPref = currentQualityPref != null ? currentQualityPref.toLowerCase(Locale.ROOT) : "auto";
+        if (quickQualityGroup != null) {
+            quickQualityGroup.updateSelection(currentPref);
         }
-
-        Button[] setBtns = { btnSetQAuto, btnSetQ1080, btnSetQ720, btnSetQ480, btnSetQ360, btnSetQAudioOnly };
-        String[] setTitles = {
-            "Otomatik (Önerilen - Akışa Göre)",
-            "1080p Full HD (En Yüksek Çözünürlük)",
-            "720p HD (Standart Yüksek Çözünürlük)",
-            "480p SD (Düşük Hızlı Bağlantılar)",
-            "360p Tasarruf (Mobil Veri Dostu)",
-            "📻 Sadece Ses (Radyo / %95+ Veri Tasarrufu)"
-        };
-
-        for (int i = 0; i < setBtns.length; i++) {
-            Button b = setBtns[i];
-            if (b == null) continue;
-            boolean active = qPrefs[i].equalsIgnoreCase(currentQualityPref);
-            b.setText(active ? "● " + setTitles[i] : setTitles[i]);
-            b.setTextColor(active ? Color.parseColor("#34D399") : ("audio_only".equals(qPrefs[i]) ? Color.parseColor("#F59E0B") : Color.WHITE));
-            b.setTypeface(null, active ? Typeface.BOLD : Typeface.NORMAL);
+        if (settingsQualityGroup != null) {
+            settingsQualityGroup.updateSelection(currentPref);
         }
     }
 
@@ -2119,10 +1950,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         final Channel channel = channelManager.getChannelByIndex(index);
         if (channel == null) return;
 
-        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                .edit()
-                .putInt(KEY_LAST_CHANNEL, currentChannelIndex)
-                .apply();
+        AppPreferences.getInstance(this).setLastChannelIndex(currentChannelIndex);
 
         channelAdapter.setCurrentPlayingId(channel.getId());
 
@@ -2283,10 +2111,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
     private void toggleAspectRatio() {
         aspectRatioMode = (aspectRatioMode + 1) % 2;
-        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                .edit()
-                .putInt(KEY_ASPECT_RATIO, aspectRatioMode)
-                .apply();
+        AppPreferences.getInstance(this).setAspectRatioMode(aspectRatioMode);
 
         applyAspectRatio();
 
@@ -3277,13 +3102,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
     private void applyQuotaValue(int quotaType, long bytes) {
         if (dataUsageManager == null) return;
-        if (quotaType == 1) {
-            dataUsageManager.setSessionQuotaBytes(bytes);
-        } else if (quotaType == 2) {
-            dataUsageManager.setDailyQuotaBytes(bytes);
-        } else if (quotaType == 3) {
-            dataUsageManager.setMonthlyQuotaBytes(bytes);
-        }
+        dataUsageManager.setQuotaBytes(quotaType, bytes);
         updateSettingsNetworkTab();
         String valStr = bytes > 0 ? DataUsageManager.formatBytes(bytes) : "Kapatıldı";
         Toast.makeText(this, "Kota güncellendi: " + valStr, Toast.LENGTH_SHORT).show();
@@ -3311,23 +3130,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             } catch (Exception ignored) {}
         }
 
-        String msg = "";
-        if (quotaType == DataUsageManager.QUOTA_SESSION_EXCEEDED) {
-            long limit = dataUsageManager.getSessionQuotaBytes();
-            msg = "Belirlediğiniz oturum kotası (" + DataUsageManager.formatBytes(limit) + ") doldu.\n\n"
-                    + "Bu oturumda harcanan: " + DataUsageManager.formatBytes(dataUsageManager.getSessionBytes()) + "\n\n"
-                    + "Yayına devam etmek istiyor musunuz?";
-        } else if (quotaType == DataUsageManager.QUOTA_DAILY_EXCEEDED) {
-            long limit = dataUsageManager.getDailyQuotaBytes();
-            msg = "Belirlediğiniz günlük kota (" + DataUsageManager.formatBytes(limit) + ") doldu.\n\n"
-                    + "Bugün harcanan: " + DataUsageManager.formatBytes(dataUsageManager.getTodayBytes()) + "\n\n"
-                    + "Yayına devam etmek istiyor musunuz?";
-        } else if (quotaType == DataUsageManager.QUOTA_MONTHLY_EXCEEDED) {
-            long limit = dataUsageManager.getMonthlyQuotaBytes();
-            msg = "Belirlediğiniz son 30 günlük kota (" + DataUsageManager.formatBytes(limit) + ") doldu.\n\n"
-                    + "Son 30 günde harcanan: " + DataUsageManager.formatBytes(dataUsageManager.getRolling30DaysBytes()) + "\n\n"
-                    + "Yayına devam etmek istiyor musunuz?";
-        }
+        String period = dataUsageManager != null ? dataUsageManager.getQuotaPeriodName(quotaType) : "";
+        long limit = dataUsageManager != null ? dataUsageManager.getQuotaLimit(quotaType) : 0L;
+        long spent = dataUsageManager != null ? dataUsageManager.getQuotaUsage(quotaType) : 0L;
+        String prefix = quotaType == DataUsageManager.QUOTA_SESSION_EXCEEDED ? "Bu oturumda" :
+                (quotaType == DataUsageManager.QUOTA_DAILY_EXCEEDED ? "Bugün" : "Son 30 günde");
+
+        String msg = "Belirlediğiniz " + period + " kotası (" + DataUsageManager.formatBytes(limit) + ") doldu.\n\n"
+                + prefix + " harcanan: " + DataUsageManager.formatBytes(spent) + "\n\n"
+                + "Yayına devam etmek istiyor musunuz?";
 
         quotaExceededDialog = new AlertDialog.Builder(this)
                 .setTitle("⚠️ KOTA LİMİTİ DOLDU")
@@ -3338,13 +3149,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                     public void onClick(DialogInterface dialog, int which) {
                         quotaExceededDialog = null;
                         if (dataUsageManager != null) {
-                            if (quotaType == DataUsageManager.QUOTA_SESSION_EXCEEDED) {
-                                dataUsageManager.setSessionQuotaDismissed(true);
-                            } else if (quotaType == DataUsageManager.QUOTA_DAILY_EXCEEDED) {
-                                dataUsageManager.setDailyQuotaDismissed(true);
-                            } else if (quotaType == DataUsageManager.QUOTA_MONTHLY_EXCEEDED) {
-                                dataUsageManager.setMonthlyQuotaDismissed(true);
-                            }
+                            dataUsageManager.dismissQuota(quotaType);
                         }
                         if (mediaPlayer != null) {
                             try {
@@ -3703,17 +3508,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
     private void loadDataFromFile(File file) {
         try {
-            FileInputStream fis = new FileInputStream(file);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-            reader.close();
-            fis.close();
-
-            String content = sb.toString().trim();
+            String content = IoUtils.readFileToString(file).trim();
             boolean isM3u = file.getName().toLowerCase().endsWith(".m3u")
                     || file.getName().toLowerCase().endsWith(".m3u8")
                     || content.startsWith("#EXTM3U")
@@ -3747,29 +3542,30 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
                 if (root.has("preferences")) {
                     JSONObject p = root.getJSONObject("preferences");
+                    AppPreferences ap = AppPreferences.getInstance(this);
                     if (p.has(KEY_QUALITY)) {
                         currentQualityPref = p.getString(KEY_QUALITY);
-                        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putString(KEY_QUALITY, currentQualityPref).apply();
+                        ap.setStreamQuality(currentQualityPref);
                     }
                     if (p.has(KEY_ASPECT_RATIO)) {
                         aspectRatioMode = p.getInt(KEY_ASPECT_RATIO);
-                        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putInt(KEY_ASPECT_RATIO, aspectRatioMode).apply();
+                        ap.setAspectRatioMode(aspectRatioMode);
                         applyAspectRatio();
                     }
                     if (p.has(KEY_UI_SCALE)) {
                         currentUiScale = p.getString(KEY_UI_SCALE);
-                        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putString(KEY_UI_SCALE, currentUiScale).apply();
+                        ap.setUiScale(currentUiScale);
                         updateUiScaleButtons();
                         applyUiScale();
                     }
                     if (p.has(KEY_OSD_TIMEOUT)) {
                         currentOsdTimeout = p.getString(KEY_OSD_TIMEOUT);
-                        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putString(KEY_OSD_TIMEOUT, currentOsdTimeout).apply();
+                        ap.setOsdTimeout(currentOsdTimeout);
                         updateOsdTimeoutButtons();
                     }
                     if (p.has(KEY_BG_AUDIO)) {
                         isBackgroundAudioEnabled = p.getBoolean(KEY_BG_AUDIO);
-                        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putBoolean(KEY_BG_AUDIO, isBackgroundAudioEnabled).apply();
+                        ap.setBackgroundAudioEnabled(isBackgroundAudioEnabled);
                         updateBgAudioButton();
                     }
                 }
@@ -3911,16 +3707,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                         return;
                     }
 
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-                    StringBuilder sb = new StringBuilder();
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line).append("\n");
-                    }
-                    reader.close();
+                    final String content = IoUtils.readStreamToString(conn.getInputStream()).trim();
                     conn.disconnect();
-
-                    final String content = sb.toString().trim();
                     boolean parsed = false;
 
                     if (content.toUpperCase().contains("#EXTM3U") || content.toUpperCase().contains("#EXTINF")) {
@@ -4017,15 +3805,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                         conn.setRequestProperty("Pragma", "no-cache");
 
                         if (conn.getResponseCode() == 200) {
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-                            StringBuilder sb = new StringBuilder();
-                            String line;
-                            while ((line = reader.readLine()) != null) {
-                                sb.append(line);
-                            }
-                            reader.close();
+                            String resp = IoUtils.readStreamToString(conn.getInputStream());
                             conn.disconnect();
-                            JSONObject candidate = new JSONObject(sb.toString());
+                            JSONObject candidate = new JSONObject(resp);
                             int candidateVc = candidate.optInt("versionCode", 0);
                             if (candidateVc > maxFoundVc) {
                                 maxFoundVc = candidateVc;

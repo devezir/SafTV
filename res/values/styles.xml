@@ -5,4 +5,23 @@
         <item name="android:colorBackground">@color/bg_dark</item>
         <item name="android:textColor">@color/text_white</item>
     </style>
+
+    <!-- TV / Ayarlar Seçim Butonu Temel Stili -->
+    <style name="TvSettingsButton">
+        <item name="android:layout_height">36dp</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/text_white</item>
+        <item name="android:background">@drawable/selector_chip</item>
+    </style>
+
+    <!-- Satır içi yan yana esnek buton stili (0dp, weight=1) -->
+    <style name="TvSettingsButton.Row">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <!-- Tam genişlikte ayar butonu stili (match_parent) -->
+    <style name="TvSettingsButton.Full">
+        <item name="android:layout_width">match_parent</item>
+    </style>
 </resources>

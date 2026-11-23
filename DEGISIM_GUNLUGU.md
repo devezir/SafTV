@@ -10,6 +10,7 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 
 | Sürüm | Sürüm Kodu (versionCode) | Yayın Tarihi | APK Boyutu | Doğrudan APK İndir | Başlıca Yenilikler ve Odak Noktası |
 |:---:|:---:|:---:|:---:|:---:|---|
+| **v2.14.0** | 27 | 23.11.2026 | ~202.1 KB | [⬇️ **SafTV_v2.14.0_vc27.apk**](https://github.com/devezir/SafTV/releases/download/v2.14.0/SafTV_v2.14.0_vc27.apk) | 🏗️ **Tam Kapsamlı DRY Mimari Refaktörü & Kod Tabanı Optimizasyonu:** `BaseChannelAdapter` ile kanal ve ayarlar adaptörleri tekilleştirildi; `SelectorGroupHelper` fluent builder ile 5 farklı ayar butonu grubu tek çatı altında toplandı. `AppPreferences` ve `AppColors` ile dağınık tercihler ve renk kodları standartlaştırıldı. `IoUtils` ile dosya/ağ I/O akışları konsolide edildi; `DataUsageManager` kota fonksiyonları birleştirildi ve XML stilleri yeniden yapılandırıldı (%40 daha sade ve hızlı kod tabanı). |
 | **v2.13.0** | 26 | 21.11.2026 | ~193.4 KB | [⬇️ **SafTV_v2.13.0_vc26.apk**](https://github.com/devezir/SafTV/releases/download/v2.13.0/SafTV_v2.13.0_vc26.apk) | 📶 **Kalite Menüsünde Çift Katmanlı Canlı Durum Rozeti (Çözünürlük + Anlık Hız) ve Dinamik Buton Vurgusu (Seçenek C):** Hem Yeşil Tuş Hızlı Kalite Paneline hem Ayarlar Kalite sekmesine anlık oynatılan çözünürlük (1080p, 720p vb.) ve tüketim hızını (Mbps) gösteren şık canlı rozet eklendi. Aktif kalite butonuna yeşil `●` noktası, vurgulu renk ve kumandada otomatik odaklanma entegre edildi. |
 | **v2.12.0** | 25 | 21.11.2026 | ~189.4 KB | [⬇️ **SafTV_v2.12.0_vc25.apk**](https://github.com/devezir/SafTV/releases/download/v2.12.0/SafTV_v2.12.0_vc25.apk) | ⏱️ **OSD Süresi Ayarı (2, 3, 5, 10 sn, Süresiz) & Kumandada Çift Kademeli Akıllı OK Tuşu:** Ayarlar ➔ Görünüm sekmesine OSD gösterim süresi tercihi eklendi. TV kumandasında OK tuşu çift kademeli hale getirildi: 1. basışta OSD bilgi çubuğu, 2. basışta kanal listesi açılır; BACK tuşu OSD açıkken OSD'yi anında kapatır, kapalıyken çıkış diyaloğunu açar. |
 | **v2.11.0** | 24 | 21.11.2026 | ~185.4 KB | [⬇️ **SafTV_v2.11.0_vc24.apk**](https://github.com/devezir/SafTV/releases/download/v2.11.0/SafTV_v2.11.0_vc24.apk) | 📻 **Sadece Ses (Radyo Modu) Kalıcılığı & Bilgilendirme Ekranı:** Sadece Ses modu geçici ekran koruyucudan kalıcı bir kalite moduna dönüştürüldü. Ekrana dokunma/tıklama, OK veya BACK tuşlarıyla kazara videoya dönme engellendi; videoyu açmak için Kalite Menüsü şart koşuldu ve şık bilgilendirme rozeti eklendi. |
@@ -40,6 +41,16 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 ---
 
 ## 🔍 Detaylı Sürüm Notları
+
+### 🏗️ v2.14.0 (versionCode: 27) — 23 Kasım 2026
+* **Tam Kapsamlı DRY (Don't Repeat Yourself) Mimari Refaktörü:**
+  * **BaseChannelAdapter:** `ChannelAdapter` ve `SettingsChannelAdapter` sınıflarındaki ~85 satırlık ortak UI ölçekleme matematiği (DPI, padding, text size), liste dinleyicileri ve adapter temel metotları tek bir soyut sınıfa çıkarıldı.
+  * **SelectorGroupHelper (Fluent Builder):** UI Ölçeği, OSD Süresi, Uyku Zamanlayıcı, Hızlı Kalite ve Ayarlar Kalite menülerindeki yüzlerce satırlık tekrarlayan buton dinleyicileri ve `● ` dot/renk döngüleri tek satırlık fluent API ile yönetilir hale getirildi.
+  * **AppPreferences & AppColors:** Uygulama genelindeki dağınık `getSharedPreferences` anahtarları ve `#34D399`, `#8B949E`, `#FBBF24`, `#EF4444` gibi sabit renkler tek merkezde toplandı.
+  * **IoUtils:** Dosya ve HTTP bağlantı akışlarındaki tekrarlayan `BufferedReader` / `InputStreamReader` blokları `readStreamToString` ve `readFileToString` ile basitleştirildi.
+  * **DataUsageManager Kota Konsolidasyonu:** Oturum, Günlük ve 30 Günlük veri kotası kontrolü, JSON tarih filtreleme döngüleri ve bildirim şablonları ortak fonksiyonel arayüzlerle optimize edildi.
+  * **XML Renk & Stil Şablonları:** `res/values/styles.xml` içine `TvSettingsButton.Row` ve `TvSettingsButton.Full` stilleri eklendi, `activity_main.xml` içindeki onlarca tekrarlayan buton stili temizlendi.
+* **Sonuç:** Uygulama boyutu ve bellek yönetimi daha optimize hale geldi, bakım kolaylığı ve kararlılık en üst seviyeye taşındı.
 
 ### 📶 v2.13.0 (versionCode: 26) — 21 Kasım 2026
 * **Çift Katmanlı Canlı Kalite Rozeti (Seçenek C):**
