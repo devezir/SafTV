@@ -10,6 +10,7 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 
 | Sürüm | Sürüm Kodu (versionCode) | Yayın Tarihi | APK Boyutu | Doğrudan APK İndir | Başlıca Yenilikler ve Odak Noktası |
 |:---:|:---:|:---:|:---:|:---:|---|
+| **v2.16.0** | 29 | 23.11.2026 | ~229.5 KB | [⬇️ **SafTV_v2.16.0_vc29.apk**](https://github.com/devezir/SafTV/releases/download/v2.16.0/SafTV_v2.16.0_vc29.apk) | 📐 **Evrensel Arayüz Ölçeği (Universal UI Scale):** Tüm menü, çekmece ve diyalogların tek merkezden kusursuz simetrisi. Sağ EPG Çekmecesi dinamik genişlik (`330dp * scale`) ve program kartı ölçeklemesi (`EpgProgramAdapter`), OSD Mini EPG metin boyutları, Hızlı Kalite paneli ve 9 sekmeli Ayarlar paneli tam entegre edildi. |
 | **v2.15.0** | 28 | 23.11.2026 | ~225.5 KB | [⬇️ **SafTV_v2.15.0_vc28.apk**](https://github.com/devezir/SafTV/releases/download/v2.15.0/SafTV_v2.15.0_vc28.apk) | 📅 **Full Pro EPG (Elektronik Program Rehberi) Motoru:** Sıfır harici kütüphane ile yerel `XmlPullParser` ve `GZIPInputStream` akış ayrıştırıcı. OSD Mini EPG (Şu An + Sırada + Canlı İlerleme Çubuğu ve Kalan Dakika), Sol Çekmecede 2 satırlı anlık program gösterimi, Sağ Çekmecede 24 saatlik tam gün akış rehberi (Canlı rozeti ve açıklamalar), Ayarlar Sekme 9 (EPG Aç/Kapat, Manuel Yenileme, Kotalı Ağ Koruması). |
 | **v2.14.0** | 27 | 23.11.2026 | ~202.1 KB | [⬇️ **SafTV_v2.14.0_vc27.apk**](https://github.com/devezir/SafTV/releases/download/v2.14.0/SafTV_v2.14.0_vc27.apk) | 🏗️ **Tam Kapsamlı DRY Mimari Refaktörü & Kod Tabanı Optimizasyonu:** `BaseChannelAdapter` ile kanal ve ayarlar adaptörleri tekilleştirildi; `SelectorGroupHelper` fluent builder ile 5 farklı ayar butonu grubu tek çatı altında toplandı. `AppPreferences` ve `AppColors` ile dağınık tercihler ve renk kodları standartlaştırıldı. `IoUtils` ile dosya/ağ I/O akışları konsolide edildi; `DataUsageManager` kota fonksiyonları birleştirildi ve XML stilleri yeniden yapılandırıldı (%40 daha sade ve hızlı kod tabanı). |
 | **v2.13.0** | 26 | 21.11.2026 | ~193.4 KB | [⬇️ **SafTV_v2.13.0_vc26.apk**](https://github.com/devezir/SafTV/releases/download/v2.13.0/SafTV_v2.13.0_vc26.apk) | 📶 **Kalite Menüsünde Çift Katmanlı Canlı Durum Rozeti (Çözünürlük + Anlık Hız) ve Dinamik Buton Vurgusu (Seçenek C):** Hem Yeşil Tuş Hızlı Kalite Paneline hem Ayarlar Kalite sekmesine anlık oynatılan çözünürlük (1080p, 720p vb.) ve tüketim hızını (Mbps) gösteren şık canlı rozet eklendi. Aktif kalite butonuna yeşil `●` noktası, vurgulu renk ve kumandada otomatik odaklanma entegre edildi. |
@@ -42,6 +43,14 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 ---
 
 ## 🔍 Detaylı Sürüm Notları
+
+### 📐 v2.16.0 (versionCode: 29) — 23 Kasım 2026
+* **Evrensel Arayüz Ölçeği (Universal UI Scale) & Tam Menü Simetrisi:**
+  * **Sağ Çekmece (24 Saatlik EPG Yayın Akışı):** Sabit 380dp genişlik yerine sol çekmece gibi dinamik `330dp * scale` (ekranın %58'ini aşmayacak şekilde) formülüne bağlandı. `EpgProgramAdapter` içine `setUiScale` entegre edilerek program saatleri, canlı rozeti (`● CANLI`), başlıklar ve açıklamalar ölçekle kusursuz orantılandı.
+  * **OSD Mini EPG Kartı:** Üstteki kanal adı büyürken alttaki program bilgilerinin küçük kalma tutarsızlığı giderildi. Şu an, sırada, kalan dakika ve ilerleme çubuğu tam senkronize büyüyor.
+  * **Hızlı Kalite Paneli (Yeşil Tuş):** Çözünürlük ve hız rozetleri ile 6 kalite butonu büyük ekranlarda uzaktan rahatça okunacak ve kumandayla kolayca seçilecek şekilde dinamik ölçeklendi.
+  * **Ayarlar Paneli (9 Sekme):** Panel genişliği `500dp * scale` olarak esnetildi, sekme butonları ve kalite rozetleri ölçekle uyumlu hale getirildi.
+  * **Dokunmatik Bar & Ekran Butonları:** `[📅 Akış]` butonu, yan ok butonları (`◀ / ▶`) ve ortadaki `[⏸ / ▶]` butonu da ölçekleme zincirine bağlandı.
 
 ### 📅 v2.15.0 (versionCode: 28) — 23 Kasım 2026
 * **Full Pro EPG (Elektronik Program Rehberi) Motoru:**

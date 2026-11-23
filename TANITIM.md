@@ -5,11 +5,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/devezir/SafTV/releases/latest"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v2.15.0_(vc_28)-blue?style=for-the-badge&logo=android" alt="Sürüm v2.15.0"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Boyut-Sadece_225_KB-brightgreen?style=for-the-badge" alt="Boyut 225 KB"></a>
+  <a href="https://github.com/devezir/SafTV/releases/latest"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v2.16.0_(vc_29)-blue?style=for-the-badge&logo=android" alt="Sürüm v2.16.0"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Boyut-Sadece_229_KB-brightgreen?style=for-the-badge" alt="Boyut 229 KB"></a>
   <a href="#"><img src="https://img.shields.io/badge/A%C3%A7%C4%B1l%C4%B1%C5%9F-0.1_Saniye-orange?style=for-the-badge" alt="0.1s Açılış Hızı"></a>
   <a href="#"><img src="https://img.shields.io/badge/Reklam-SIFIR_(%250)-red?style=for-the-badge" alt="Sıfır Reklam"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Mimari-Full_Pro_EPG-blueviolet?style=for-the-badge" alt="Full Pro EPG Motoru"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Mimari-Evrensel_Aray%C3%BCz_%C3%96l%C3%A7e%C4%9Fi-blueviolet?style=for-the-badge" alt="Evrensel Arayüz Ölçeği"></a>
   <a href="#"><img src="https://img.shields.io/badge/Android-5.0%2B_(API_21%2B)-success?style=for-the-badge&logo=android" alt="Android 5.0+"></a>
 </p>
 
@@ -19,11 +19,11 @@
 
 | Dosya | Boyut | Açıklama | Doğrudan İndir |
 |---|---|---|:---:|
-| 🚀 **Saf TV v2.15.0 (En Son Kararlı - Yasal)** | **~225 KB** | Güncel, resmi imzalı en son APK (Full Pro EPG Motoru, Mini OSD, 24 Saatlik Akış Çekmecesi) | [⬇️ **SafTV_v2.15.0_vc28.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.15.0/SafTV_v2.15.0_vc28.apk) |
-| 📱 **SafTV.apk (Sabit Bağlantı)** | **~225 KB** | Daima en son stabil sürümü işaret eder | [⬇️ **SafTV.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.15.0/SafTV.apk) |
-| 📦 **Tüm 28 Sürümün Arşivi (ZIP)** | **~3.0 MB** | v1.0.0'dan v2.15.0'a tüm APK'lar tek pakette | [📦 **SafTV_All_Releases_Archive.zip**](https://github.com/devezir/SafTV/releases/download/v2.15.0/SafTV_All_Releases_Archive.zip) |
+| 🚀 **Saf TV v2.16.0 (En Son Kararlı - Yasal)** | **~229 KB** | Güncel, resmi imzalı en son APK (Evrensel Arayüz Ölçeği, Full Pro EPG Motoru, Tam Menü Simetrisi) | [⬇️ **SafTV_v2.16.0_vc29.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.16.0/SafTV_v2.16.0_vc29.apk) |
+| 📱 **SafTV.apk (Sabit Bağlantı)** | **~229 KB** | Daima en son stabil sürümü işaret eder | [⬇️ **SafTV.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.16.0/SafTV.apk) |
+| 📦 **Tüm 29 Sürümün Arşivi (ZIP)** | **~3.2 MB** | v1.0.0'dan v2.16.0'a tüm APK'lar tek pakette | [📦 **SafTV_All_Releases_Archive.zip**](https://github.com/devezir/SafTV/releases/download/v2.16.0/SafTV_All_Releases_Archive.zip) |
 | 📺 **Kanal Listeleri Kataloğu** | — | M3U8 ve JSON formatında kategori bazlı 120 kanal | [📺 **KANAL_LISTESI.md İncele**](KANAL_LISTESI.md) |
-| 📜 **Değişim Günlüğü** | — | Tüm 28 sürümün kronolojik teknik detayları ve bağımsız APK'ları | [📜 **DEGISIM_GUNLUGU.md İncele**](DEGISIM_GUNLUGU.md) |
+| 📜 **Değişim Günlüğü** | — | Tüm 29 sürümün kronolojik teknik detayları ve bağımsız APK'ları | [📜 **DEGISIM_GUNLUGU.md İncele**](DEGISIM_GUNLUGU.md) |
 
 ---
 
@@ -35,9 +35,9 @@ Piyasadaki popüler televizyon uygulamalarının neredeyse tamamı (İnat Box vb
 
 ### 📊 Karşılaştırma Tablosu
 
-| Kriter | Sıradan TV Uygulamaları (İnat Box vb.) | 📺 **Saf TV (v2.15.0)** |
+| Kriter | Sıradan TV Uygulamaları (İnat Box vb.) | 📺 **Saf TV (v2.16.0)** |
 |---|---|:---:|
-| **Uygulama Boyutu** | 35 MB – 55 MB (Aşırı şişkin) | 🟢 **Sadece 225 KB (200 kat daha hafif!)** |
+| **Uygulama Boyutu** | 35 MB – 55 MB (Aşırı şişkin) | 🟢 **Sadece 229 KB (200 kat daha hafif!)** |
 | **Açılış Hızı (İlk Tıklama)** | 4 – 8 saniye (Bekletici reklamlar ve yükleme) | 🟢 **0.1 saniye (Tıklandığı an canlı yayında)** |
 | **Reklamlar & Tanıtımlar** | Var (Açılış, geçiş, banner, video reklam) | 🟢 **SIFIR (%100 Reklamsız, sonsuza dek)** |
 | **RAM (Bellek) Tüketimi** | 180 MB – 350 MB (Cihazı ısıtır ve dondurur) | 🟢 **25 MB – 35 MB (Eski TV Box'larda bile yağ gibi)** |
