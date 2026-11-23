@@ -8,6 +8,7 @@ public class Channel {
     private final String userAgent;
     private final String referer;
     private boolean active = true;
+    private String epgId;
 
     public Channel(int id, String name, String category, String url, String userAgent, String referer) {
         this.id = id;
@@ -29,6 +30,9 @@ public class Channel {
 
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
+
+    public String getEpgId() { return epgId; }
+    public void setEpgId(String epgId) { this.epgId = epgId; }
 
     @Override
     public String toString() {

@@ -10,6 +10,7 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 
 | Sürüm | Sürüm Kodu (versionCode) | Yayın Tarihi | APK Boyutu | Doğrudan APK İndir | Başlıca Yenilikler ve Odak Noktası |
 |:---:|:---:|:---:|:---:|:---:|---|
+| **v2.15.0** | 28 | 23.11.2026 | ~225.5 KB | [⬇️ **SafTV_v2.15.0_vc28.apk**](https://github.com/devezir/SafTV/releases/download/v2.15.0/SafTV_v2.15.0_vc28.apk) | 📅 **Full Pro EPG (Elektronik Program Rehberi) Motoru:** Sıfır harici kütüphane ile yerel `XmlPullParser` ve `GZIPInputStream` akış ayrıştırıcı. OSD Mini EPG (Şu An + Sırada + Canlı İlerleme Çubuğu ve Kalan Dakika), Sol Çekmecede 2 satırlı anlık program gösterimi, Sağ Çekmecede 24 saatlik tam gün akış rehberi (Canlı rozeti ve açıklamalar), Ayarlar Sekme 9 (EPG Aç/Kapat, Manuel Yenileme, Kotalı Ağ Koruması). |
 | **v2.14.0** | 27 | 23.11.2026 | ~202.1 KB | [⬇️ **SafTV_v2.14.0_vc27.apk**](https://github.com/devezir/SafTV/releases/download/v2.14.0/SafTV_v2.14.0_vc27.apk) | 🏗️ **Tam Kapsamlı DRY Mimari Refaktörü & Kod Tabanı Optimizasyonu:** `BaseChannelAdapter` ile kanal ve ayarlar adaptörleri tekilleştirildi; `SelectorGroupHelper` fluent builder ile 5 farklı ayar butonu grubu tek çatı altında toplandı. `AppPreferences` ve `AppColors` ile dağınık tercihler ve renk kodları standartlaştırıldı. `IoUtils` ile dosya/ağ I/O akışları konsolide edildi; `DataUsageManager` kota fonksiyonları birleştirildi ve XML stilleri yeniden yapılandırıldı (%40 daha sade ve hızlı kod tabanı). |
 | **v2.13.0** | 26 | 21.11.2026 | ~193.4 KB | [⬇️ **SafTV_v2.13.0_vc26.apk**](https://github.com/devezir/SafTV/releases/download/v2.13.0/SafTV_v2.13.0_vc26.apk) | 📶 **Kalite Menüsünde Çift Katmanlı Canlı Durum Rozeti (Çözünürlük + Anlık Hız) ve Dinamik Buton Vurgusu (Seçenek C):** Hem Yeşil Tuş Hızlı Kalite Paneline hem Ayarlar Kalite sekmesine anlık oynatılan çözünürlük (1080p, 720p vb.) ve tüketim hızını (Mbps) gösteren şık canlı rozet eklendi. Aktif kalite butonuna yeşil `●` noktası, vurgulu renk ve kumandada otomatik odaklanma entegre edildi. |
 | **v2.12.0** | 25 | 21.11.2026 | ~189.4 KB | [⬇️ **SafTV_v2.12.0_vc25.apk**](https://github.com/devezir/SafTV/releases/download/v2.12.0/SafTV_v2.12.0_vc25.apk) | ⏱️ **OSD Süresi Ayarı (2, 3, 5, 10 sn, Süresiz) & Kumandada Çift Kademeli Akıllı OK Tuşu:** Ayarlar ➔ Görünüm sekmesine OSD gösterim süresi tercihi eklendi. TV kumandasında OK tuşu çift kademeli hale getirildi: 1. basışta OSD bilgi çubuğu, 2. basışta kanal listesi açılır; BACK tuşu OSD açıkken OSD'yi anında kapatır, kapalıyken çıkış diyaloğunu açar. |
@@ -41,6 +42,15 @@ Aşağıdaki tablodan dilediğiniz sürümün APK dosyasını tek tıkla doğrud
 ---
 
 ## 🔍 Detaylı Sürüm Notları
+
+### 📅 v2.15.0 (versionCode: 28) — 23 Kasım 2026
+* **Full Pro EPG (Elektronik Program Rehberi) Motoru:**
+  * **Sıfır Harici Kütüphane & Yerel XMLTV Ayrıştırıcı:** `EpgManager` ile sıkıştırılmış `.xml.gz` akışları doğrudan `GZIPInputStream` ve Android `XmlPullParser` üzerinden işlenir. 178 kanal ve ~15.000 programlık veriden yalnızca aktif kanallar ve geçerli zaman penceresi filtrelenerek bellek yükü 1 MB'ın altında tutuldu.
+  * **OSD Mini EPG (Canlı Yayın Bilgi Kartı):** Kanal geçişinde veya OK / INFO / SAĞ tuşlarına basıldığında ekran altında açılır. O an yayında olan programın saati, adı, canlı ilerleme çubuğu (`ProgressBar`) ve kalan dakika (`"35 dk kaldı"`) ile sıradaki program bilgisi saniyelik güncellemelerle gösterilir.
+  * **Sol Çekmece (2 Satırlı Kanal Listesi):** Kanal adının hemen altında `🔴 Şu anki program adı` gösterilir; kanalı açmadan önce yayında ne olduğunu görme kolaylığı sağlar.
+  * **Sağ Çekmece (24 Saatlik Tam Gün Yayın Akışı - EPG Drawer):** TV kumandasında OSD açıkken `SAĞ (DPAD_RIGHT)` veya `INFO`, dokunmatik ekranda `[📅 Akış]` butonu veya sağ kenardan sola kaydırma jesti ile açılır. Kanalın 24 saatlik tüm yayın akışını, detaylı açıklamalarını ve canlı rozeti (`● CANLI`) kartlar halinde listeler; o an yayında olan programa otomatik odaklanır.
+  * **Ayarlar Sekme 9 (📅 Yayın Akışı):** EPG Açma/Kapama anahtarı, tek tıkla manuel yenileme (168 KB), son güncelleme durumu ve mobil veri/hotspot kotalı ağ koruması eklendi.
+  * **Yedekleme & Geri Yükleme:** EPG tercihleri ve kotalı ağ güvenlik ayarları JSON yedekleme sistemine tam entegre edildi.
 
 ### 🏗️ v2.14.0 (versionCode: 27) — 23 Kasım 2026
 * **Tam Kapsamlı DRY (Don't Repeat Yourself) Mimari Refaktörü:**

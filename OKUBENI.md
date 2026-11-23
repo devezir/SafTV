@@ -5,11 +5,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/devezir/SafTV/releases/latest"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v2.13.0_(vc_26)-blue?style=for-the-badge&logo=android" alt="Sürüm v2.13.0"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Boyut-Sadece_193_KB-brightgreen?style=for-the-badge" alt="Boyut 193 KB"></a>
+  <a href="https://github.com/devezir/SafTV/releases/latest"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v2.15.0_(vc_28)-blue?style=for-the-badge&logo=android" alt="Sürüm v2.15.0"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Boyut-Sadece_225_KB-brightgreen?style=for-the-badge" alt="Boyut 225 KB"></a>
   <a href="#"><img src="https://img.shields.io/badge/A%C3%A7%C4%B1l%C4%B1%C5%9F-0.1_Saniye-orange?style=for-the-badge" alt="0.1s Açılış Hızı"></a>
   <a href="#"><img src="https://img.shields.io/badge/Reklam-SIFIR_(%250)-red?style=for-the-badge" alt="Sıfır Reklam"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Kalite_Men%C3%BCs%C3%BC-Canl%C4%B1_Durum_Rozeti-blueviolet?style=for-the-badge" alt="Kalite Menüsü Canlı Durum Rozeti"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Mimari-Full_Pro_EPG-blueviolet?style=for-the-badge" alt="Full Pro EPG Motoru"></a>
   <a href="#"><img src="https://img.shields.io/badge/Android-5.0%2B_(API_21%2B)-success?style=for-the-badge&logo=android" alt="Android 5.0+"></a>
 </p>
 
@@ -19,11 +19,11 @@
 
 | Dosya | Boyut | Açıklama | Doğrudan İndir |
 |---|---|---|:---:|
-| 🚀 **Saf TV v2.13.0 (En Son Kararlı - Yasal)** | **~193 KB** | Güncel, resmi imzalı en son APK (Kalite Menüsünde Çift Katmanlı Canlı Rozet & Dinamik Buton Vurgusu) | [⬇️ **SafTV_v2.13.0_vc26.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.13.0/SafTV_v2.13.0_vc26.apk) |
-| 📱 **SafTV.apk (Sabit Bağlantı)** | **~193 KB** | Daima en son stabil sürümü işaret eder | [⬇️ **SafTV.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.13.0/SafTV.apk) |
-| 📦 **Tüm 26 Sürümün Arşivi (ZIP)** | **~2.63 MB** | v1.0.0'dan v2.13.0'a tüm APK'lar tek pakette | [📦 **SafTV_All_Releases_Archive.zip**](https://github.com/devezir/SafTV/releases/download/v2.13.0/SafTV_All_Releases_Archive.zip) |
+| 🚀 **Saf TV v2.15.0 (En Son Kararlı - Yasal)** | **~225 KB** | Güncel, resmi imzalı en son APK (Full Pro EPG Motoru, Mini OSD, 24 Saatlik Akış Çekmecesi) | [⬇️ **SafTV_v2.15.0_vc28.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.15.0/SafTV_v2.15.0_vc28.apk) |
+| 📱 **SafTV.apk (Sabit Bağlantı)** | **~225 KB** | Daima en son stabil sürümü işaret eder | [⬇️ **SafTV.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.15.0/SafTV.apk) |
+| 📦 **Tüm 28 Sürümün Arşivi (ZIP)** | **~3.0 MB** | v1.0.0'dan v2.15.0'a tüm APK'lar tek pakette | [📦 **SafTV_All_Releases_Archive.zip**](https://github.com/devezir/SafTV/releases/download/v2.15.0/SafTV_All_Releases_Archive.zip) |
 | 📺 **Kanal Listeleri Kataloğu** | — | M3U8 ve JSON formatında kategori bazlı 120 kanal | [📺 **KANAL_LISTESI.md İncele**](KANAL_LISTESI.md) |
-| 📜 **Değişim Günlüğü** | — | Tüm sürümlerin kronolojik teknik detayları | [📜 **DEGISIM_GUNLUGU.md İncele**](DEGISIM_GUNLUGU.md) |
+| 📜 **Değişim Günlüğü** | — | Tüm 28 sürümün kronolojik teknik detayları ve bağımsız APK'ları | [📜 **DEGISIM_GUNLUGU.md İncele**](DEGISIM_GUNLUGU.md) |
 
 ---
 
@@ -35,14 +35,16 @@ Piyasadaki popüler televizyon uygulamalarının neredeyse tamamı (İnat Box vb
 
 ### 📊 Karşılaştırma Tablosu
 
-| Kriter | Sıradan TV Uygulamaları (İnat Box vb.) | 📺 **Saf TV (v2.1.0)** |
+| Kriter | Sıradan TV Uygulamaları (İnat Box vb.) | 📺 **Saf TV (v2.15.0)** |
 |---|---|:---:|
-| **Uygulama Boyutu** | 35 MB – 55 MB (Aşırı şişkin) | 🟢 **Sadece 133 KB (300 kat daha hafif!)** |
+| **Uygulama Boyutu** | 35 MB – 55 MB (Aşırı şişkin) | 🟢 **Sadece 225 KB (200 kat daha hafif!)** |
 | **Açılış Hızı (İlk Tıklama)** | 4 – 8 saniye (Bekletici reklamlar ve yükleme) | 🟢 **0.1 saniye (Tıklandığı an canlı yayında)** |
 | **Reklamlar & Tanıtımlar** | Var (Açılış, geçiş, banner, video reklam) | 🟢 **SIFIR (%100 Reklamsız, sonsuza dek)** |
 | **RAM (Bellek) Tüketimi** | 180 MB – 350 MB (Cihazı ısıtır ve dondurur) | 🟢 **25 MB – 35 MB (Eski TV Box'larda bile yağ gibi)** |
 | **Kullanıcı Takipçileri** | 8-15 analitik ve reklam kütüphanesi | 🟢 **SIFIR (İzleyici yok, tam kullanıcı mahremiyeti)** |
 | **Video Kod Çözücü** | Şişkin üçüncü parti ExoPlayer paketleri | 🟢 **Android Saf Donanım Hızlandırması (`MediaPlayer`)** |
+| **Cihaz Uyumu** | Sadece dokunmatik veya sadece kumanda | 🟢 **Hibrit: Android TV (Kumanda) + Mobil (Dokunmatik)** |
+| **Güncelleme Hızı** | Kırık linkler, açılmayan sunucular | 🟢 **GitHub Releases & Raw CDN ile anlık OTA** |
 | **Cihaz Uyumu** | Sadece dokunmatik veya sadece kumanda | 🟢 **Hibrit: Android TV (Kumanda) + Mobil (Dokunmatik)** |
 | **Güncelleme Hızı** | Kırık linkler, açılmayan sunucular | 🟢 **GitHub Releases & Raw CDN ile anlık OTA** |
 
@@ -111,24 +113,20 @@ Piyasadaki popüler televizyon uygulamalarının neredeyse tamamı (İnat Box vb
 
 ---
 
-## 📦 Tüm 14 Sürümün Ayrı Ayrı APK İndirme Listesi
+## 📦 Tüm 27 Sürümün Ayrı Ayrı APK İndirme Listesi ve Değişim Arşivi
 
-| Sürüm | Sürüm Kodu | Boyut | Doğrudan İndir (.apk) |
-|:---:|:---:|:---:|:---:|
-| **v2.1.0** | 14 | ~133 KB | [⬇️ SafTV_v2.1.0_vc14.apk](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v2.1.0_vc14.apk) |
-| **v2.0.0** | 13 | ~129 KB | [⬇️ SafTV_v2.0.0_vc13.apk](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v2.0.0_vc13.apk) |
-| **v1.9.0** | 12 | ~117 KB | [⬇️ SafTV_v1.9.0_vc12.apk](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v1.9.0_vc12.apk) |
-| **v1.8.0** | 11 | ~113 KB | [⬇️ SafTV_v1.8.0_vc11.apk](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v1.8.0_vc11.apk) |
-| **v1.7.0** | 10 | ~109 KB | [⬇️ SafTV_v1.7.0_vc10.apk](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v1.7.0_vc10.apk) |
-| **v1.6.0** | 9 | ~97 KB | [⬇️ SafTV_v1.6.0_vc9.apk](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v1.6.0_vc9.apk) |
-| **v1.5.0** | 8 | ~97 KB | [⬇️ SafTV_v1.5.0_vc8.apk](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v1.5.0_vc8.apk) |
-| **v1.4.1** | 7 | ~89 KB | [⬇️ SafTV_v1.4.1_vc7.apk](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v1.4.1_vc7.apk) |
-| **v1.4.0** | 6 | ~89 KB | [⬇️ SafTV_v1.4.0_vc6.apk](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v1.4.0_vc6.apk) |
-| **v1.3.1** | 5 | ~77 KB | [⬇️ SafTV_v1.3.1_vc5.apk](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v1.3.1_vc5.apk) |
-| **v1.3.0** | 4 | ~77 KB | [⬇️ SafTV_v1.3.0_vc4.apk](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v1.3.0_vc4.apk) |
-| **v1.2.0** | 3 | ~61 KB | [⬇️ SafTV_v1.2.0_vc3.apk](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v1.2.0_vc3.apk) |
-| **v1.1.0** | 2 | ~57 KB | [⬇️ SafTV_v1.1.0_vc2.apk](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v1.1.0_vc2.apk) |
-| **v1.0.0** | 1 | ~53 KB | [⬇️ SafTV_v1.0.0_vc1.apk](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v1.0.0_vc1.apk) |
+Saf TV'nin v1.0.0 ilk temel sürümünden bugünkü en güncel v2.14.0 sürümüne kadar yayınlanan tüm 27 sürümünün detaylı teknik yeniliklerini ve bağımsız APK indirme bağlantılarını [📜 DEGISIM_GUNLUGU.md](DEGISIM_GUNLUGU.md) dosyasından inceleyebilirsiniz.
+
+| Sürüm | Sürüm Kodu | Boyut | Açıklama | Doğrudan İndir (.apk) |
+|:---:|:---:|:---:|:---:|:---:|
+| **v2.14.0** | 27 | ~202 KB | Tam Kapsamlı DRY Mimarisi, Optimize Kod Tabanı | [⬇️ SafTV_v2.14.0_vc27.apk](https://github.com/devezir/SafTV/releases/download/v2.14.0/SafTV_v2.14.0_vc27.apk) |
+| **v2.13.0** | 26 | ~193 KB | Kalite Menüsünde Çift Katmanlı Canlı Rozet | [⬇️ SafTV_v2.13.0_vc26.apk](https://github.com/devezir/SafTV/releases/download/v2.13.0/SafTV_v2.13.0_vc26.apk) |
+| **v2.12.0** | 25 | ~189 KB | OSD Süresi Ayarı & Çift Kademeli Akıllı OK Tuşu | [⬇️ SafTV_v2.12.0_vc25.apk](https://github.com/devezir/SafTV/releases/download/v2.12.0/SafTV_v2.12.0_vc25.apk) |
+| **v2.11.0** | 24 | ~185 KB | Sadece Ses (Radyo Modu) Kalıcılığı | [⬇️ SafTV_v2.11.0_vc24.apk](https://github.com/devezir/SafTV/releases/download/v2.11.0/SafTV_v2.11.0_vc24.apk) |
+| **v2.10.0** | 23 | ~185 KB | Çıkış Diyaloğuna Ayarlar Erişimi | [⬇️ SafTV_v2.10.0_vc23.apk](https://github.com/devezir/SafTV/releases/download/v2.10.0/SafTV_v2.10.0_vc23.apk) |
+| **v2.9.0** | 22 | ~185 KB | Download Klasörüne Dışa Aktarma & 10 Kategori | [⬇️ SafTV_v2.9.0_vc22.apk](https://github.com/devezir/SafTV/releases/download/v2.9.0/SafTV_v2.9.0_vc22.apk) |
+| **v2.8.0** | 21 | ~185 KB | Doğrudan TV İçi OTA Güncelleme Motoru | [⬇️ SafTV_v2.8.0_vc21.apk](https://github.com/devezir/SafTV/releases/download/v2.8.0/SafTV_v2.8.0_vc21.apk) |
+| ... | ... | ... | *Diğer tüm sürümlerin arşivi için:* | [📜 **Tüm Arşivi Gör (DEGISIM_GUNLUGU.md)**](DEGISIM_GUNLUGU.md) |
 
 ---
 
@@ -136,25 +134,28 @@ Piyasadaki popüler televizyon uygulamalarının neredeyse tamamı (İnat Box vb
 
 ### 📺 Android TV Kumandası İle:
 * **Yukarı / Aşağı Tuşları:** Kanalları değiştirir.
-* **Sol / Sağ Tuşları:** Önceki / Sonraki kanala geçer.
-* **OK (Orta Tuş):** Ekranın solundan Kanal Listesi Çekmecesini açar.
+* **OK (Orta Tuş - Çift Kademeli):** 1. basışta OSD Mini EPG bilgi kartını (Şu an yayında + sırada + canlı ilerleme çubuğu) açar; 2. basışta Sol Kanal Listesi Çekmecesini açar.
+* **Sağ Tuşu (DPAD_RIGHT) / INFO:** Canlı yayındayken OSD Mini EPG'yi; OSD açıkken **Sağ 24 Saatlik EPG Yayın Akış Çekmecesini** açar.
+* **Sol Tuşu (DPAD_LEFT) / Geri:** EPG veya kanal çekmecelerini kapatıp canlı yayına döner.
 * **Play / Pause Tuşları:** Canlı yayını duraklatır / devam ettirir.
-* **Yeşil Tuş:** Yayın kalitesini seçer (1080p, 720p, 480p).
+* **Yeşil Tuş:** Hızlı Kalite Seçim panelini açar (Otomatik, 1080p, 720p, 480p, 360p, Sadece Ses).
 * **Sarı Tuş:** Kanalı Favorilere (⭐) ekler / çıkarır.
 * **Mavi Tuş:** Ekranı tam ekran veya orantılı (16:9 Doğal) yapar.
-* **Menü Tuşu:** 4 Sekmeli Ayarlar Menüsünü açar (Kanallar, Tercihler, Yedekleme, Hakkında).
-* **Geri Tuşu:** Menüleri kapatır; canlı yayındayken Onaylı Çıkış Penceresini açar.
+* **Menü Tuşu:** 9 Sekmeli Geniş Ayarlar Menüsünü açar.
+* **Geri Tuşu:** Açık menü veya çekmeceleri kapatır; canlı yayındayken Onaylı Çıkış Penceresini açar.
 * **CH+ / CH-:** 5'er kanal hızlı atlar.
 * **Rakam Tuşları (0-9):** Doğrudan kanal numarasına zıplar.
 
 ### 📱 Telefon & Tablet Dokunmatiği İle:
 * **Yukarı / Aşağı Kaydırma:** Sıradaki veya önceki kanala anında geçer.
-* **Soldan Sağa Çekme:** Kanal listesi çekmecesini açar.
+* **Soldan Sağa Kaydırma:** Kanal listesi çekmecesini açar.
+* **Sağdan Sola Kaydırma:** 24 Saatlik EPG Yayın Akışı çekmecesini açar.
 * **Ekrana Tek Dokunma:** Bilgi kutusunu, üst butonları ve oynat/duraklat tuşunu gösterir / gizler.
 * **Ekrana Çift Dokunma:** Ekran oranını değiştirir (*16:9 Doğal / Tam Ekran*).
+* **[📅 Akış] Butonu:** 24 Saatlik EPG Yayın Akışı çekmecesini açar.
 * **[🗗 PiP] Butonu:** Yayını ekranda yüzen küçük pencereye dönüştürür.
 * **Ortadaki [⏸ / ▶] Butonu:** Canlı yayını duraklatır veya devam ettirir.
-* **Ekran Butonları:** `[📶 Kalite]`, `[📺 Ekran]`, `[🗗 PiP]`, `[⚙️ Ayarlar]`, `[🚪 Çıkış]`, `[◀ Önceki]`, `[▶ Sonraki]`.
+* **Ekran Butonları:** `[📅 Akış]`, `[📶 Kalite]`, `[📺 Ekran]`, `[🗗 PiP]`, `[⚙️ Ayarlar]`, `[🚪 Çıkış]`, `[◀ Önceki]`, `[▶ Sonraki]`.
 
 ---
 
@@ -244,7 +245,7 @@ Tüm yayınlar yayıncı kuruluşların doğrudan resmi CDN sunucularından şif
 ## 📲 Kurulum Rehberi
 
 ### 📱 Android Telefon veya Tablete Kurulum:
-1. [SafTV_v2.1.0_vc14.apk](https://github.com/devezir/SafTV/releases/download/v2.1.0/SafTV_v2.1.0_vc14.apk) bağlantısına tıklayarak APK dosyasını indirin.
+1. [SafTV_v2.14.0_vc27.apk](https://github.com/devezir/SafTV/releases/download/v2.14.0/SafTV_v2.14.0_vc27.apk) bağlantısına tıklayarak APK dosyasını indirin.
 2. İndirilen dosyaya dokunun ve **"Yükle"** deyin *(Bilinmeyen kaynaklara izin vermeniz istenebilir)*.
 3. Uygulama saniyesinde açılacak ve canlı yayın hemen başlayacaktır!
 

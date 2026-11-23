@@ -123,9 +123,12 @@ public class ChannelManager {
                 String url = item.optString("url", "");
                 String ua = item.optString("userAgent", defaultUa);
                 String referer = item.has("referer") && !item.isNull("referer") ? item.optString("referer", null) : null;
+                String epgId = item.has("epgId") && !item.isNull("epgId") ? item.optString("epgId", null) : null;
 
                 if (!url.isEmpty()) {
-                    newChannels.add(new Channel(id, name, category, url, ua, referer));
+                    Channel ch = new Channel(id, name, category, url, ua, referer);
+                    if (epgId != null && !epgId.isEmpty()) ch.setEpgId(epgId);
+                    newChannels.add(ch);
                 }
             }
 
@@ -172,9 +175,11 @@ public class ChannelManager {
             List<Channel> parsed = new ArrayList<>();
             String curName = null;
             String curCat = "Genel";
+            String curEpgId = null;
             String defaultUa = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
 
             Pattern groupPattern = Pattern.compile("group-title=\"([^\"]+)\"", Pattern.CASE_INSENSITIVE);
+            Pattern epgPattern = Pattern.compile("tvg-id=\"([^\"]+)\"", Pattern.CASE_INSENSITIVE);
 
             for (String rawLine : lines) {
                 String line = rawLine.trim();
@@ -188,6 +193,13 @@ public class ChannelManager {
                         curCat = "Genel";
                     }
 
+                    Matcher me = epgPattern.matcher(line);
+                    if (me.find()) {
+                        curEpgId = me.group(1).trim();
+                    } else {
+                        curEpgId = null;
+                    }
+
                     int commaIdx = line.lastIndexOf(',');
                     if (commaIdx != -1 && commaIdx < line.length() - 1) {
                         curName = line.substring(commaIdx + 1).trim();
@@ -198,9 +210,12 @@ public class ChannelManager {
                     if (line.startsWith("http://") || line.startsWith("https://")) {
                         String chName = curName != null ? curName : "Kanal " + (parsed.size() + 1);
                         int id = parsed.size() + 1;
-                        parsed.add(new Channel(id, chName, curCat, line, defaultUa, null));
+                        Channel ch = new Channel(id, chName, curCat, line, defaultUa, null);
+                        if (curEpgId != null && !curEpgId.isEmpty()) ch.setEpgId(curEpgId);
+                        parsed.add(ch);
                         curName = null;
                         curCat = "Genel";
+                        curEpgId = null;
                     }
                 }
             }
@@ -418,6 +433,9 @@ public class ChannelManager {
                 obj.put("userAgent", c.getUserAgent());
                 if (c.getReferer() != null) {
                     obj.put("referer", c.getReferer());
+                }
+                if (c.getEpgId() != null) {
+                    obj.put("epgId", c.getEpgId());
                 }
                 arr.put(obj);
             }

@@ -16,6 +16,9 @@ public class AppPreferences {
     public static final String KEY_UI_SCALE = "pref_ui_scale";          // auto, 60, 80, 100, 125, 150, 175, 200
     public static final String KEY_OSD_TIMEOUT = "pref_osd_timeout";    // 2, 3, 5, 10, 0
     public static final String KEY_BG_AUDIO = "pref_bg_audio";          // boolean
+    public static final String KEY_EPG_ENABLED = "pref_epg_enabled";    // boolean (default: true)
+    public static final String KEY_EPG_METERED_BLOCK = "pref_epg_metered_block"; // boolean (default: true)
+    public static final String KEY_EPG_LAST_UPDATE = "pref_epg_last_update";     // long
 
     private static AppPreferences instance;
     private final SharedPreferences prefs;
@@ -96,5 +99,30 @@ public class AppPreferences {
 
     public void setBackgroundAudioEnabled(boolean enabled) {
         prefs.edit().putBoolean(KEY_BG_AUDIO, enabled).apply();
+    }
+
+    // --- EPG (Yayın Akışı) Tercihleri ---
+    public boolean isEpgEnabled() {
+        return prefs.getBoolean(KEY_EPG_ENABLED, true);
+    }
+
+    public void setEpgEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_EPG_ENABLED, enabled).apply();
+    }
+
+    public boolean isEpgMeteredBlockEnabled() {
+        return prefs.getBoolean(KEY_EPG_METERED_BLOCK, true);
+    }
+
+    public void setEpgMeteredBlockEnabled(boolean block) {
+        prefs.edit().putBoolean(KEY_EPG_METERED_BLOCK, block).apply();
+    }
+
+    public long getEpgLastUpdateTime() {
+        return prefs.getLong(KEY_EPG_LAST_UPDATE, 0L);
+    }
+
+    public void setEpgLastUpdateTime(long timeMs) {
+        prefs.edit().putLong(KEY_EPG_LAST_UPDATE, timeMs).apply();
     }
 }

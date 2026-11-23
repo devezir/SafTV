@@ -1,8 +1,8 @@
 {
-  "versionCode": 27,
-  "versionName": "2.14.0",
-  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.14.0/SafTV_v2.14.0_vc27.apk",
-  "apkName": "SafTV_v2.14.0_vc27.apk",
+  "versionCode": 28,
+  "versionName": "2.15.0",
+  "apkUrl": "https://github.com/devezir/SafTV/releases/download/v2.15.0/SafTV_v2.15.0_vc28.apk",
+  "apkName": "SafTV_v2.15.0_vc28.apk",
   "history": [
     {
       "versionCode": 1,
@@ -192,6 +192,13 @@
       "apkName": "SafTV_v2.14.0_vc27.apk",
       "date": "2026-11-23",
       "description": "v2.14.0: Tam Kapsamli DRY Mimarisi (BaseChannelAdapter, SelectorGroupHelper, AppPreferences, IoUtils, DataUsageManager konsolidasyonu ve XML stilleri)"
+    },
+    {
+      "versionCode": 28,
+      "versionName": "2.15.0",
+      "apkName": "SafTV_v2.15.0_vc28.apk",
+      "date": "2026-11-23",
+      "description": "Full Pro EPG (Elektronik Program Rehberi) Motoru: Canli OSD Mini EPG, 24 Saatlik Akis Cekmecesi, 2 Satirli Kanal Listesi ve Kotali Ag Korumasi"
     }
   ]
 }

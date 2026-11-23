@@ -73,6 +73,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -110,6 +111,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private TextView tvOsdHint;
     private TextView tvOsdNetworkMeter;
 
+    // Mini EPG in OSD
+    private LinearLayout layoutOsdEpg;
+    private TextView tvEpgNowTime;
+    private TextView tvEpgNowTitle;
+    private ProgressBar pbEpgProgress;
+    private TextView tvEpgRemaining;
+    private LinearLayout layoutEpgNextRow;
+    private TextView tvEpgNextTitle;
+
     // Audio-Only / Radio Mode Views
     private FrameLayout layoutAudioOnlyOverlay;
     private View cardAudioOnly;
@@ -132,6 +142,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private Button btnCloseDrawer;
     private Button btnCloseSettingsTop;
     private Button btnCloseQuickQuality;
+    private Button btnTouchEpg;
+    private Button btnCloseEpgDrawer;
 
     // Quality Status Views & Badges (Option C)
     private TextView tvQuickQualityLiveRes;
@@ -216,6 +228,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private ListView lvChannels;
     private ChannelAdapter channelAdapter;
 
+    // 24-Hour EPG Drawer Views
+    private LinearLayout layoutEpgDrawer;
+    private TextView tvEpgDrawerTitle;
+    private TextView tvEpgDrawerInfo;
+    private ListView lvEpgPrograms;
+    private EpgProgramAdapter epgProgramAdapter;
+    private boolean isEpgDrawerOpen = false;
+    private EpgManager epgManager;
+
     // Quick Quality Views
     private LinearLayout layoutQuickQuality;
 
@@ -226,6 +247,18 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private Button btnSortAz;
     private Button btnSortCategory;
     private Button btnSortReset;
+
+    // Settings Tab 9 (EPG) Views
+    private Button btnTabEpg;
+    private View tabContentEpg;
+    private Button btnEpgToggleOn;
+    private Button btnEpgToggleOff;
+    private TextView tvEpgUpdateStatus;
+    private Button btnEpgManualRefresh;
+    private Button btnEpgMeteredBlockOn;
+    private Button btnEpgMeteredBlockOff;
+    private SelectorGroupHelper<Boolean> epgToggleGroup;
+    private SelectorGroupHelper<Boolean> epgMeteredGroup;
 
     // Network Alert Views
     private View layoutNetworkAlert;
@@ -321,6 +354,13 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 updateQualityLiveBadgeIfVisible();
                 checkQuotaLimits();
             }
+            if (layoutOverlay != null && layoutOverlay.getVisibility() == View.VISIBLE) {
+                Channel cur = (channelManager != null && currentChannelIndex >= 0 && currentChannelIndex < channelManager.getChannelCount())
+                        ? channelManager.getChannelByIndex(currentChannelIndex) : null;
+                if (cur != null) {
+                    updateOsdEpg(cur);
+                }
+            }
             handler.postDelayed(this, 1000);
         }
     };
@@ -395,10 +435,36 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         initViews();
         dataUsageManager = DataUsageManager.getInstance(this);
         handler.post(dataUsageRunnable);
+
+        epgManager = EpgManager.getInstance(this);
+        epgManager.initializeAsync(new EpgManager.OnEpgUpdateListener() {
+            @Override
+            public void onEpgUpdateStarted() {}
+
+            @Override
+            public void onEpgUpdateFinished(boolean success, int channelCount, int programCount) {
+                if (channelAdapter != null) {
+                    channelAdapter.notifyDataSetChanged();
+                }
+                if (layoutOverlay != null && layoutOverlay.getVisibility() == View.VISIBLE) {
+                    Channel cur = (channelManager != null && currentChannelIndex >= 0 && currentChannelIndex < channelManager.getChannelCount())
+                            ? channelManager.getChannelByIndex(currentChannelIndex) : null;
+                    if (cur != null) {
+                        updateOsdEpg(cur);
+                    }
+                }
+                if (isEpgDrawerOpen) {
+                    openEpgDrawer();
+                }
+                updateSettingsEpgTab();
+            }
+        });
+
         updateHeaderLayoutOrientation();
         setupGestureDetector();
         setupCategories();
         setupSettingsControls();
+        setupEpgSettingsControls();
         setupQuickQualityControls();
         setupTouchControls();
         setupNetworkMonitoring();
@@ -447,6 +513,14 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         tvOsdHint = findViewById(R.id.tv_osd_hint);
         tvOsdNetworkMeter = findViewById(R.id.tv_osd_network_meter);
 
+        layoutOsdEpg = findViewById(R.id.layout_osd_epg);
+        tvEpgNowTime = findViewById(R.id.tv_epg_now_time);
+        tvEpgNowTitle = findViewById(R.id.tv_epg_now_title);
+        pbEpgProgress = findViewById(R.id.pb_epg_progress);
+        tvEpgRemaining = findViewById(R.id.tv_epg_remaining);
+        layoutEpgNextRow = findViewById(R.id.layout_epg_next_row);
+        tvEpgNextTitle = findViewById(R.id.tv_epg_next_title);
+
         layoutAudioOnlyOverlay = findViewById(R.id.layout_audio_only_overlay);
         cardAudioOnly = findViewById(R.id.card_audio_only);
         tvAudioOnlyChannelName = findViewById(R.id.tv_audio_only_channel_name);
@@ -477,6 +551,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         btnCloseDrawer = findViewById(R.id.btn_close_drawer);
         btnCloseSettingsTop = findViewById(R.id.btn_close_settings_top);
         btnCloseQuickQuality = findViewById(R.id.btn_close_quick_quality);
+        btnTouchEpg = findViewById(R.id.btn_touch_epg);
+        btnCloseEpgDrawer = findViewById(R.id.btn_close_epg_drawer);
 
         tvQuickQualityLiveRes = findViewById(R.id.tv_quick_quality_live_res);
         tvQuickQualityPrefBadge = findViewById(R.id.tv_quick_quality_pref_badge);
@@ -576,6 +652,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         layoutDrawer = findViewById(R.id.layout_drawer);
         tvDrawerSubtitle = null;
         lvChannels = findViewById(R.id.lv_channels);
+
+        layoutEpgDrawer = findViewById(R.id.layout_epg_drawer);
+        tvEpgDrawerTitle = findViewById(R.id.tv_epg_drawer_title);
+        tvEpgDrawerInfo = findViewById(R.id.tv_epg_drawer_info);
+        lvEpgPrograms = findViewById(R.id.lv_epg_programs);
+        epgProgramAdapter = new EpgProgramAdapter(this);
+        if (lvEpgPrograms != null) {
+            lvEpgPrograms.setAdapter(epgProgramAdapter);
+        }
 
         layoutQuickQuality = findViewById(R.id.layout_quick_quality);
 
@@ -735,13 +820,16 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 if (Math.abs(diffX) > Math.abs(diffY)) {
                     if (Math.abs(diffX) > swipeThreshold && Math.abs(velocityX) > swipeVelocityThreshold) {
                         if (diffX > 0) {
-                            // Soldan sağa kaydır -> Kanal listesi aç
-                            if (!isDrawerOpen && !isSettingsOpen && !isQuickQualityOpen) {
+                            // Soldan sağa kaydır -> EPG Çekmecesini kapat veya Kanal listesi aç
+                            if (isEpgDrawerOpen) {
+                                closeEpgDrawer();
+                                return true;
+                            } else if (!isDrawerOpen && !isSettingsOpen && !isQuickQualityOpen) {
                                 openDrawer();
                                 return true;
                             }
                         } else {
-                            // Sağdan sola kaydır -> Açık panelleri kapat
+                            // Sağdan sola kaydır -> Açık sol panelleri kapat veya EPG Çekmecesini aç
                             if (isDrawerOpen) {
                                 closeDrawer();
                                 return true;
@@ -751,13 +839,16 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                             } else if (isQuickQualityOpen) {
                                 closeQuickQuality();
                                 return true;
+                            } else if (!isEpgDrawerOpen) {
+                                openEpgDrawer();
+                                return true;
                             }
                         }
                     }
                 } else {
                     // Dikey kaydırma
                     if (Math.abs(diffY) > swipeThreshold && Math.abs(velocityY) > swipeVelocityThreshold) {
-                        if (!isDrawerOpen && !isSettingsOpen && !isQuickQualityOpen) {
+                        if (!isDrawerOpen && !isSettingsOpen && !isQuickQualityOpen && !isEpgDrawerOpen) {
                             if (diffY < 0) {
                                 // Yukarı kaydır -> Sonraki kanal
                                 nextChannel();
@@ -864,6 +955,24 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             });
         }
 
+        if (btnTouchEpg != null) {
+            btnTouchEpg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openEpgDrawer();
+                }
+            });
+        }
+
+        if (layoutOsdEpg != null) {
+            layoutOsdEpg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openEpgDrawer();
+                }
+            });
+        }
+
         if (btnTouchPlayPause != null) {
             btnTouchPlayPause.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -922,6 +1031,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             });
         }
 
+        if (btnCloseEpgDrawer != null) {
+            btnCloseEpgDrawer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    closeEpgDrawer();
+                }
+            });
+        }
+
         // Karartma katmanına tıklandığında açık panelleri kapat
         if (viewScrim != null) {
             viewScrim.setOnClickListener(new View.OnClickListener() {
@@ -931,6 +1049,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                     closeSettings();
                     closeQuickQuality();
                     closeExitDialog();
+                    closeEpgDrawer();
                 }
             });
         }
@@ -1239,7 +1358,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             }
         });
 
-        // 8 Sekmeli Yatay Kayan Ayarlar Paneli
+        // 9 Sekmeli Yatay Kayan Ayarlar Paneli
         hsvSettingsTabs = findViewById(R.id.hsv_settings_tabs);
         final Button btnTabChannels = findViewById(R.id.btn_tab_channels);
         final Button btnTabQuality = findViewById(R.id.btn_tab_quality);
@@ -1247,6 +1366,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         final Button btnTabSleep = findViewById(R.id.btn_tab_sleep);
         final Button btnTabAudio = findViewById(R.id.btn_tab_audio);
         final Button btnTabNetwork = findViewById(R.id.btn_tab_network);
+        btnTabEpg = findViewById(R.id.btn_tab_epg);
         final Button btnTabBackup = findViewById(R.id.btn_tab_backup);
         final Button btnTabAbout = findViewById(R.id.btn_tab_about);
 
@@ -1256,11 +1376,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         final View contentSleep = findViewById(R.id.tab_content_sleep);
         final View contentAudio = findViewById(R.id.tab_content_audio);
         final View contentNetwork = findViewById(R.id.tab_content_network);
+        tabContentEpg = findViewById(R.id.tab_content_epg);
         final View contentBackup = findViewById(R.id.tab_content_backup);
         final View contentAbout = findViewById(R.id.tab_content_about);
 
-        settingsTabBtns = new Button[] { btnTabChannels, btnTabQuality, btnTabScale, btnTabSleep, btnTabAudio, btnTabNetwork, btnTabBackup, btnTabAbout };
-        settingsTabContents = new View[] { contentChannels, contentQuality, contentScale, contentSleep, contentAudio, contentNetwork, contentBackup, contentAbout };
+        settingsTabBtns = new Button[] { btnTabChannels, btnTabQuality, btnTabScale, btnTabSleep, btnTabAudio, btnTabNetwork, btnTabEpg, btnTabBackup, btnTabAbout };
+        settingsTabContents = new View[] { contentChannels, contentQuality, contentScale, contentSleep, contentAudio, contentNetwork, tabContentEpg, contentBackup, contentAbout };
 
         for (int i = 0; i < settingsTabBtns.length; i++) {
             final int tabIndex = i;
@@ -2053,6 +2174,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         } catch (Exception ignored) {}
 
         updateOsdNetworkMeter();
+        updateOsdEpg(channel);
 
         updateTouchUiVisibility();
 
@@ -2062,6 +2184,67 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         int timeoutMs = getOsdTimeoutMs();
         if (timeoutMs > 0) {
             handler.postDelayed(hideOsdRunnable, timeoutMs);
+        }
+    }
+
+    private void updateOsdEpg(Channel channel) {
+        if (layoutOsdEpg == null) return;
+        AppPreferences ap = AppPreferences.getInstance(this);
+        if (!ap.isEpgEnabled() || epgManager == null || channel == null) {
+            layoutOsdEpg.setVisibility(View.GONE);
+            if (btnTouchEpg != null) btnTouchEpg.setVisibility(View.GONE);
+            return;
+        }
+
+        if (btnTouchEpg != null && isTouchDevice) {
+            btnTouchEpg.setVisibility(View.VISIBLE);
+        }
+
+        EpgProgram now = epgManager.getCurrentProgram(channel);
+        EpgProgram next = epgManager.getNextProgram(channel);
+
+        if (now != null) {
+            layoutOsdEpg.setVisibility(View.VISIBLE);
+            if (tvEpgNowTime != null) {
+                tvEpgNowTime.setText(now.getTimeRangeStr());
+            }
+            if (tvEpgNowTitle != null) {
+                tvEpgNowTitle.setText(now.getTitle());
+            }
+            if (pbEpgProgress != null) {
+                pbEpgProgress.setProgress(now.getProgressPercentage());
+            }
+            if (tvEpgRemaining != null) {
+                int rem = now.getRemainingMinutes();
+                tvEpgRemaining.setText(rem > 0 ? (rem + " dk kaldı") : "Bitiyor");
+            }
+            if (next != null) {
+                if (layoutEpgNextRow != null) layoutEpgNextRow.setVisibility(View.VISIBLE);
+                if (tvEpgNextTitle != null) {
+                    tvEpgNextTitle.setText(next.getStartTimeStr() + "  " + next.getTitle());
+                }
+            } else {
+                if (layoutEpgNextRow != null) layoutEpgNextRow.setVisibility(View.GONE);
+            }
+        } else if (next != null) {
+            layoutOsdEpg.setVisibility(View.VISIBLE);
+            if (tvEpgNowTime != null) {
+                tvEpgNowTime.setText("Sırada");
+            }
+            if (tvEpgNowTitle != null) {
+                tvEpgNowTitle.setText(next.getTitle());
+            }
+            if (pbEpgProgress != null) {
+                pbEpgProgress.setProgress(0);
+            }
+            if (tvEpgRemaining != null) {
+                tvEpgRemaining.setText(next.getStartTimeStr());
+            }
+            if (layoutEpgNextRow != null) {
+                layoutEpgNextRow.setVisibility(View.GONE);
+            }
+        } else {
+            layoutOsdEpg.setVisibility(View.GONE);
         }
     }
 
@@ -2150,6 +2333,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         isDrawerOpen = true;
         closeSettings();
         closeQuickQuality();
+        closeEpgDrawer();
         if (viewScrim != null) viewScrim.setVisibility(View.VISIBLE);
         layoutOverlay.setVisibility(View.GONE);
         layoutDrawer.setVisibility(View.VISIBLE);
@@ -2193,7 +2377,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             etChannelSearch.setText("");
         }
         hideKeyboard(etChannelSearch);
-        if (!isSettingsOpen && !isQuickQualityOpen && viewScrim != null) {
+        if (!isSettingsOpen && !isQuickQualityOpen && !isEpgDrawerOpen && viewScrim != null) {
             viewScrim.setVisibility(View.GONE);
         }
         surfaceView.requestFocus();
@@ -2220,6 +2404,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             updateQualityUi();
         } else if (index == 5) {
             updateSettingsNetworkTab();
+        } else if (index == 6) {
+            updateSettingsEpgTab();
         }
         final View activeTab = settingsTabBtns[index];
         if (hsvSettingsTabs != null && activeTab != null) {
@@ -2237,6 +2423,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         isSettingsOpen = true;
         closeDrawer();
         closeQuickQuality();
+        closeEpgDrawer();
         if (viewScrim != null) viewScrim.setVisibility(View.VISIBLE);
         layoutOverlay.setVisibility(View.GONE);
         layoutSettings.setVisibility(View.VISIBLE);
@@ -2252,7 +2439,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private void closeSettings() {
         isSettingsOpen = false;
         layoutSettings.setVisibility(View.GONE);
-        if (!isDrawerOpen && !isQuickQualityOpen && viewScrim != null) {
+        if (!isDrawerOpen && !isQuickQualityOpen && !isEpgDrawerOpen && viewScrim != null) {
             viewScrim.setVisibility(View.GONE);
         }
         surfaceView.requestFocus();
@@ -2262,6 +2449,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         isQuickQualityOpen = true;
         closeDrawer();
         closeSettings();
+        closeEpgDrawer();
         if (viewScrim != null) viewScrim.setVisibility(View.VISIBLE);
         layoutOverlay.setVisibility(View.GONE);
         layoutQuickQuality.setVisibility(View.VISIBLE);
@@ -2281,7 +2469,85 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
     private void closeQuickQuality() {
         isQuickQualityOpen = false;
         layoutQuickQuality.setVisibility(View.GONE);
-        if (!isDrawerOpen && !isSettingsOpen && viewScrim != null) {
+        if (!isDrawerOpen && !isSettingsOpen && !isEpgDrawerOpen && viewScrim != null) {
+            viewScrim.setVisibility(View.GONE);
+        }
+        surfaceView.requestFocus();
+    }
+
+    private void openEpgDrawer() {
+        if (channelManager == null || currentChannelIndex < 0 || currentChannelIndex >= channelManager.getChannelCount()) return;
+        Channel currentChannel = channelManager.getChannelByIndex(currentChannelIndex);
+        if (currentChannel == null) return;
+
+        isEpgDrawerOpen = true;
+        closeDrawer();
+        closeSettings();
+        closeQuickQuality();
+        if (viewScrim != null) viewScrim.setVisibility(View.VISIBLE);
+        if (layoutOverlay != null) layoutOverlay.setVisibility(View.GONE);
+        handler.removeCallbacks(hideOsdRunnable);
+
+        if (layoutEpgDrawer != null) {
+            layoutEpgDrawer.setVisibility(View.VISIBLE);
+        }
+
+        if (tvEpgDrawerTitle != null) {
+            tvEpgDrawerTitle.setText("📅 " + currentChannel.getName() + " - Yayın Akışı");
+        }
+
+        List<EpgProgram> programs = (epgManager != null && AppPreferences.getInstance(this).isEpgEnabled())
+                ? epgManager.getProgramsForChannel(currentChannel)
+                : Collections.<EpgProgram>emptyList();
+
+        if (epgProgramAdapter != null) {
+            epgProgramAdapter.setPrograms(programs);
+        }
+
+        if (tvEpgDrawerInfo != null) {
+            if (!AppPreferences.getInstance(this).isEpgEnabled()) {
+                tvEpgDrawerInfo.setText("⚠️ Program Rehberi (EPG) ayarlardan kapatıldı.");
+                tvEpgDrawerInfo.setVisibility(View.VISIBLE);
+            } else if (programs.isEmpty()) {
+                if (epgManager != null && epgManager.isUpdating()) {
+                    tvEpgDrawerInfo.setText("⏳ EPG verileri güncelleniyor, lütfen bekleyin...");
+                } else {
+                    tvEpgDrawerInfo.setText("ℹ️ Bu kanal için yayın akışı bulunamadı.");
+                }
+                tvEpgDrawerInfo.setVisibility(View.VISIBLE);
+            } else {
+                tvEpgDrawerInfo.setVisibility(View.GONE);
+            }
+        }
+
+        if (lvEpgPrograms != null) {
+            lvEpgPrograms.requestFocus();
+            int liveIndex = -1;
+            for (int i = 0; i < programs.size(); i++) {
+                if (programs.get(i).isCurrentlyAiring()) {
+                    liveIndex = i;
+                    break;
+                }
+            }
+            if (liveIndex >= 0) {
+                final int pos = liveIndex;
+                lvEpgPrograms.setSelection(pos);
+                lvEpgPrograms.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        lvEpgPrograms.setSelection(pos);
+                    }
+                });
+            }
+        }
+    }
+
+    private void closeEpgDrawer() {
+        isEpgDrawerOpen = false;
+        if (layoutEpgDrawer != null) {
+            layoutEpgDrawer.setVisibility(View.GONE);
+        }
+        if (!isDrawerOpen && !isSettingsOpen && !isQuickQualityOpen && viewScrim != null) {
             viewScrim.setVisibility(View.GONE);
         }
         surfaceView.requestFocus();
@@ -2449,6 +2715,20 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             return super.onKeyDown(keyCode, event);
         }
 
+        // 3.5. 24 Saatlik EPG Program Rehberi Çekmecesi Açıkken:
+        if (isEpgDrawerOpen) {
+            if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+                closeEpgDrawer();
+                return true;
+            }
+            if (keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_M) {
+                closeEpgDrawer();
+                openSettings();
+                return true;
+            }
+            return super.onKeyDown(keyCode, event);
+        }
+
         // 4. Canlı yayın izlenirken kumanda kontrolleri:
         if (isEnterKey) {
             // Çift Kademeli Akıllı Tuş: OSD kapalıysa -> OSD'yi aç (1. basış); OSD zaten açıksa -> Kanal çekmecesini aç (2. basış)
@@ -2509,7 +2789,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
             case KeyEvent.KEYCODE_DPAD_RIGHT:
             case KeyEvent.KEYCODE_INFO:
-                showOsd(channelManager.getChannelByIndex(currentChannelIndex));
+                if (layoutOverlay != null && layoutOverlay.getVisibility() == View.VISIBLE) {
+                    openEpgDrawer();
+                } else {
+                    showOsd(channelManager.getChannelByIndex(currentChannelIndex));
+                }
                 return true;
 
             case KeyEvent.KEYCODE_DPAD_LEFT:
@@ -2995,6 +3279,115 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         updateSettingsNetworkTab();
     }
 
+    private void setupEpgSettingsControls() {
+        btnEpgToggleOn = findViewById(R.id.btn_epg_toggle_on);
+        btnEpgToggleOff = findViewById(R.id.btn_epg_toggle_off);
+        tvEpgUpdateStatus = findViewById(R.id.tv_epg_update_status);
+        btnEpgManualRefresh = findViewById(R.id.btn_epg_manual_refresh);
+        btnEpgMeteredBlockOn = findViewById(R.id.btn_epg_metered_block_on);
+        btnEpgMeteredBlockOff = findViewById(R.id.btn_epg_metered_block_off);
+
+        final AppPreferences ap = AppPreferences.getInstance(this);
+
+        epgToggleGroup = new SelectorGroupHelper<Boolean>()
+                .setOnSelectedListener(new SelectorGroupHelper.OnSelectedListener<Boolean>() {
+                    @Override
+                    public void onSelected(Boolean enabled) {
+                        ap.setEpgEnabled(enabled);
+                        updateSettingsEpgTab();
+                        if (enabled && epgManager != null) {
+                            epgManager.initializeAsync();
+                        }
+                        if (channelAdapter != null) {
+                            channelAdapter.notifyDataSetChanged();
+                        }
+                        Toast.makeText(MainActivity.this, enabled ? "EPG (Yayın Akışı) Aktifleştirildi" : "EPG Devre Dışı Bırakıldı", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOption(btnEpgToggleOn, true, "Açık (Önerilen)")
+                .addOption(btnEpgToggleOff, false, "Kapalı");
+
+        epgToggleGroup.updateSelection(ap.isEpgEnabled());
+
+        epgMeteredGroup = new SelectorGroupHelper<Boolean>()
+                .setOnSelectedListener(new SelectorGroupHelper.OnSelectedListener<Boolean>() {
+                    @Override
+                    public void onSelected(Boolean block) {
+                        ap.setEpgMeteredBlockEnabled(block);
+                        Toast.makeText(MainActivity.this, block ? "Kotalı ağda EPG indirme engellendi" : "Kotalı ağda EPG indirmeye izin verildi", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOption(btnEpgMeteredBlockOn, true, "Koru (Veri Tasarrufu)")
+                .addOption(btnEpgMeteredBlockOff, false, "Her Zaman İndir");
+
+        epgMeteredGroup.updateSelection(ap.isEpgMeteredBlockEnabled());
+
+        if (btnEpgManualRefresh != null) {
+            btnEpgManualRefresh.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (epgManager == null) return;
+                    if (epgManager.isUpdating()) {
+                        Toast.makeText(MainActivity.this, "EPG güncellemesi zaten devam ediyor...", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Toast.makeText(MainActivity.this, "EPG verileri indiriliyor (168 KB)...", Toast.LENGTH_SHORT).show();
+                    if (tvEpgUpdateStatus != null) {
+                        tvEpgUpdateStatus.setText("⏳ EPG verileri sunucudan çekiliyor, lütfen bekleyin...");
+                    }
+                    epgManager.refreshAsync(true, new EpgManager.OnEpgUpdateListener() {
+                        @Override
+                        public void onEpgUpdateStarted() {
+                            if (tvEpgUpdateStatus != null) {
+                                tvEpgUpdateStatus.setText("⏳ EPG verileri sunucudan çekiliyor...");
+                            }
+                        }
+
+                        @Override
+                        public void onEpgUpdateFinished(boolean success, int channelCount, int programCount) {
+                            updateSettingsEpgTab();
+                            if (channelAdapter != null) {
+                                channelAdapter.notifyDataSetChanged();
+                            }
+                            if (success) {
+                                Toast.makeText(MainActivity.this, "✓ EPG Güncellendi: " + channelCount + " kanal, " + programCount + " program", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MainActivity.this, "⚠️ EPG güncellenemedi, internet bağlantınızı kontrol edin.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        updateSettingsEpgTab();
+    }
+
+    private void updateSettingsEpgTab() {
+        if (tvEpgUpdateStatus == null) return;
+        AppPreferences ap = AppPreferences.getInstance(this);
+        long lastTime = ap.getEpgLastUpdateTime();
+        int loadedCh = (epgManager != null) ? epgManager.getLoadedChannelCount() : 0;
+        String timeStr;
+        if (lastTime > 0) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
+            timeStr = sdf.format(new Date(lastTime));
+        } else {
+            timeStr = "Henüz güncellenmedi";
+        }
+        boolean isEnabled = ap.isEpgEnabled();
+        String status = "● Durum: " + (isEnabled ? "Aktif ✓" : "Devre Dışı ✕") + "\n"
+                + "● Son Güncelleme: " + timeStr + "\n"
+                + "● Yüklü Kanal: " + loadedCh + " kanal (Önbellekte)";
+        tvEpgUpdateStatus.setText(status);
+        if (epgToggleGroup != null) {
+            epgToggleGroup.updateSelection(isEnabled);
+        }
+        if (epgMeteredGroup != null) {
+            epgMeteredGroup.updateSelection(ap.isEpgMeteredBlockEnabled());
+        }
+    }
+
     private void showQuotaPickerDialog(final int quotaType) {
         if (isFinishing() || isDestroyed()) return;
 
@@ -3295,6 +3688,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
             prefsObj.put(KEY_UI_SCALE, currentUiScale);
             prefsObj.put(KEY_OSD_TIMEOUT, currentOsdTimeout);
             prefsObj.put(KEY_BG_AUDIO, isBackgroundAudioEnabled);
+            prefsObj.put(AppPreferences.KEY_EPG_ENABLED, AppPreferences.getInstance(this).isEpgEnabled());
+            prefsObj.put(AppPreferences.KEY_EPG_METERED_BLOCK, AppPreferences.getInstance(this).isEpgMeteredBlockEnabled());
             root.put("preferences", prefsObj);
 
             JSONArray favArray = new JSONArray();
@@ -3568,6 +3963,13 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                         ap.setBackgroundAudioEnabled(isBackgroundAudioEnabled);
                         updateBgAudioButton();
                     }
+                    if (p.has(AppPreferences.KEY_EPG_ENABLED)) {
+                        ap.setEpgEnabled(p.getBoolean(AppPreferences.KEY_EPG_ENABLED));
+                    }
+                    if (p.has(AppPreferences.KEY_EPG_METERED_BLOCK)) {
+                        ap.setEpgMeteredBlockEnabled(p.getBoolean(AppPreferences.KEY_EPG_METERED_BLOCK));
+                    }
+                    updateSettingsEpgTab();
                 }
 
                 if (root.has("favorites")) {

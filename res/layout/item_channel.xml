@@ -28,55 +28,64 @@
         android:textStyle="bold"
         android:text="1" />
 
-    <!-- Channel Name & Category in a Single Compact Line -->
+    <!-- Channel Name & Live Program in a Two-Line Container -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
+        android:orientation="vertical"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="6dp">
 
-        <TextView
-            android:id="@+id/tv_item_name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_white"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:text="TRT 1" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tv_item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:text="TRT 1" />
+
+            <TextView
+                android:id="@+id/tv_item_fav"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/accent_yellow"
+                android:textSize="13sp"
+                android:layout_marginLeft="4dp"
+                android:text="★"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_item_cat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_gray"
+                android:textSize="10sp"
+                android:layout_marginLeft="6dp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:text="• Ulusal" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_item_fav"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_item_epg"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/accent_yellow"
-            android:textSize="13sp"
-            android:layout_marginLeft="4dp"
-            android:text="★"
+            android:textColor="#38BDF8"
+            android:textSize="11sp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="🔴 Alişan İle Hayata Gülümse"
             android:visibility="gone" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" • "
-            android:textColor="#556677"
-            android:textSize="11sp"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp" />
-
-        <TextView
-            android:id="@+id/tv_item_cat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_gray"
-            android:textSize="11sp"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:text="Ulusal" />
     </LinearLayout>
 
     <!-- Live Badge -->

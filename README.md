@@ -5,11 +5,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/devezir/SafTV/releases/latest"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v2.14.0_(vc_27)-blue?style=for-the-badge&logo=android" alt="Sürüm v2.14.0"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Boyut-Sadece_202_KB-brightgreen?style=for-the-badge" alt="Boyut 202 KB"></a>
+  <a href="https://github.com/devezir/SafTV/releases/latest"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v2.15.0_(vc_28)-blue?style=for-the-badge&logo=android" alt="Sürüm v2.15.0"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Boyut-Sadece_225_KB-brightgreen?style=for-the-badge" alt="Boyut 225 KB"></a>
   <a href="#"><img src="https://img.shields.io/badge/A%C3%A7%C4%B1l%C4%B1%C5%9F-0.1_Saniye-orange?style=for-the-badge" alt="0.1s Açılış Hızı"></a>
   <a href="#"><img src="https://img.shields.io/badge/Reklam-SIFIR_(%250)-red?style=for-the-badge" alt="Sıfır Reklam"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Mimari-DRY_Refakt%C3%B6r-blueviolet?style=for-the-badge" alt="DRY Mimari Refaktör"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Mimari-Full_Pro_EPG-blueviolet?style=for-the-badge" alt="Full Pro EPG Motoru"></a>
   <a href="#"><img src="https://img.shields.io/badge/Android-5.0%2B_(API_21%2B)-success?style=for-the-badge&logo=android" alt="Android 5.0+"></a>
 </p>
 
@@ -19,11 +19,11 @@
 
 | Dosya | Boyut | Açıklama | Doğrudan İndir |
 |---|---|---|:---:|
-| 🚀 **Saf TV v2.14.0 (En Son Kararlı - Yasal)** | **~202 KB** | Güncel, resmi imzalı en son APK (Tam Kapsamlı DRY Mimarisi, Akıcı ve Optimize Kod Tabanı) | [⬇️ **SafTV_v2.14.0_vc27.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.14.0/SafTV_v2.14.0_vc27.apk) |
-| 📱 **SafTV.apk (Sabit Bağlantı)** | **~202 KB** | Daima en son stabil sürümü işaret eder | [⬇️ **SafTV.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.14.0/SafTV.apk) |
-| 📦 **Tüm 27 Sürümün Arşivi (ZIP)** | **~2.83 MB** | v1.0.0'dan v2.14.0'a tüm APK'lar tek pakette | [📦 **SafTV_All_Releases_Archive.zip**](https://github.com/devezir/SafTV/releases/download/v2.14.0/SafTV_All_Releases_Archive.zip) |
+| 🚀 **Saf TV v2.15.0 (En Son Kararlı - Yasal)** | **~225 KB** | Güncel, resmi imzalı en son APK (Full Pro EPG Motoru, Mini OSD, 24 Saatlik Akış Çekmecesi) | [⬇️ **SafTV_v2.15.0_vc28.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.15.0/SafTV_v2.15.0_vc28.apk) |
+| 📱 **SafTV.apk (Sabit Bağlantı)** | **~225 KB** | Daima en son stabil sürümü işaret eder | [⬇️ **SafTV.apk İndir**](https://github.com/devezir/SafTV/releases/download/v2.15.0/SafTV.apk) |
+| 📦 **Tüm 28 Sürümün Arşivi (ZIP)** | **~3.0 MB** | v1.0.0'dan v2.15.0'a tüm APK'lar tek pakette | [📦 **SafTV_All_Releases_Archive.zip**](https://github.com/devezir/SafTV/releases/download/v2.15.0/SafTV_All_Releases_Archive.zip) |
 | 📺 **Kanal Listeleri Kataloğu** | — | M3U8 ve JSON formatında kategori bazlı 120 kanal | [📺 **KANAL_LISTESI.md İncele**](KANAL_LISTESI.md) |
-| 📜 **Değişim Günlüğü** | — | Tüm 27 sürümün kronolojik teknik detayları ve bağımsız APK'ları | [📜 **DEGISIM_GUNLUGU.md İncele**](DEGISIM_GUNLUGU.md) |
+| 📜 **Değişim Günlüğü** | — | Tüm 28 sürümün kronolojik teknik detayları ve bağımsız APK'ları | [📜 **DEGISIM_GUNLUGU.md İncele**](DEGISIM_GUNLUGU.md) |
 
 ---
 
@@ -35,14 +35,16 @@ Piyasadaki popüler televizyon uygulamalarının neredeyse tamamı (İnat Box vb
 
 ### 📊 Karşılaştırma Tablosu
 
-| Kriter | Sıradan TV Uygulamaları (İnat Box vb.) | 📺 **Saf TV (v2.14.0)** |
+| Kriter | Sıradan TV Uygulamaları (İnat Box vb.) | 📺 **Saf TV (v2.15.0)** |
 |---|---|:---:|
-| **Uygulama Boyutu** | 35 MB – 55 MB (Aşırı şişkin) | 🟢 **Sadece 202 KB (250 kat daha hafif!)** |
+| **Uygulama Boyutu** | 35 MB – 55 MB (Aşırı şişkin) | 🟢 **Sadece 225 KB (200 kat daha hafif!)** |
 | **Açılış Hızı (İlk Tıklama)** | 4 – 8 saniye (Bekletici reklamlar ve yükleme) | 🟢 **0.1 saniye (Tıklandığı an canlı yayında)** |
 | **Reklamlar & Tanıtımlar** | Var (Açılış, geçiş, banner, video reklam) | 🟢 **SIFIR (%100 Reklamsız, sonsuza dek)** |
 | **RAM (Bellek) Tüketimi** | 180 MB – 350 MB (Cihazı ısıtır ve dondurur) | 🟢 **25 MB – 35 MB (Eski TV Box'larda bile yağ gibi)** |
 | **Kullanıcı Takipçileri** | 8-15 analitik ve reklam kütüphanesi | 🟢 **SIFIR (İzleyici yok, tam kullanıcı mahremiyeti)** |
 | **Video Kod Çözücü** | Şişkin üçüncü parti ExoPlayer paketleri | 🟢 **Android Saf Donanım Hızlandırması (`MediaPlayer`)** |
+| **Cihaz Uyumu** | Sadece dokunmatik veya sadece kumanda | 🟢 **Hibrit: Android TV (Kumanda) + Mobil (Dokunmatik)** |
+| **Güncelleme Hızı** | Kırık linkler, açılmayan sunucular | 🟢 **GitHub Releases & Raw CDN ile anlık OTA** |
 | **Cihaz Uyumu** | Sadece dokunmatik veya sadece kumanda | 🟢 **Hibrit: Android TV (Kumanda) + Mobil (Dokunmatik)** |
 | **Güncelleme Hızı** | Kırık linkler, açılmayan sunucular | 🟢 **GitHub Releases & Raw CDN ile anlık OTA** |
 
@@ -132,25 +134,28 @@ Saf TV'nin v1.0.0 ilk temel sürümünden bugünkü en güncel v2.14.0 sürümü
 
 ### 📺 Android TV Kumandası İle:
 * **Yukarı / Aşağı Tuşları:** Kanalları değiştirir.
-* **Sol / Sağ Tuşları:** Önceki / Sonraki kanala geçer.
-* **OK (Orta Tuş):** Ekranın solundan Kanal Listesi Çekmecesini açar.
+* **OK (Orta Tuş - Çift Kademeli):** 1. basışta OSD Mini EPG bilgi kartını (Şu an yayında + sırada + canlı ilerleme çubuğu) açar; 2. basışta Sol Kanal Listesi Çekmecesini açar.
+* **Sağ Tuşu (DPAD_RIGHT) / INFO:** Canlı yayındayken OSD Mini EPG'yi; OSD açıkken **Sağ 24 Saatlik EPG Yayın Akış Çekmecesini** açar.
+* **Sol Tuşu (DPAD_LEFT) / Geri:** EPG veya kanal çekmecelerini kapatıp canlı yayına döner.
 * **Play / Pause Tuşları:** Canlı yayını duraklatır / devam ettirir.
-* **Yeşil Tuş:** Yayın kalitesini seçer (1080p, 720p, 480p).
+* **Yeşil Tuş:** Hızlı Kalite Seçim panelini açar (Otomatik, 1080p, 720p, 480p, 360p, Sadece Ses).
 * **Sarı Tuş:** Kanalı Favorilere (⭐) ekler / çıkarır.
 * **Mavi Tuş:** Ekranı tam ekran veya orantılı (16:9 Doğal) yapar.
-* **Menü Tuşu:** 4 Sekmeli Ayarlar Menüsünü açar (Kanallar, Tercihler, Yedekleme, Hakkında).
-* **Geri Tuşu:** Menüleri kapatır; canlı yayındayken Onaylı Çıkış Penceresini açar.
+* **Menü Tuşu:** 9 Sekmeli Geniş Ayarlar Menüsünü açar.
+* **Geri Tuşu:** Açık menü veya çekmeceleri kapatır; canlı yayındayken Onaylı Çıkış Penceresini açar.
 * **CH+ / CH-:** 5'er kanal hızlı atlar.
 * **Rakam Tuşları (0-9):** Doğrudan kanal numarasına zıplar.
 
 ### 📱 Telefon & Tablet Dokunmatiği İle:
 * **Yukarı / Aşağı Kaydırma:** Sıradaki veya önceki kanala anında geçer.
-* **Soldan Sağa Çekme:** Kanal listesi çekmecesini açar.
+* **Soldan Sağa Kaydırma:** Kanal listesi çekmecesini açar.
+* **Sağdan Sola Kaydırma:** 24 Saatlik EPG Yayın Akışı çekmecesini açar.
 * **Ekrana Tek Dokunma:** Bilgi kutusunu, üst butonları ve oynat/duraklat tuşunu gösterir / gizler.
 * **Ekrana Çift Dokunma:** Ekran oranını değiştirir (*16:9 Doğal / Tam Ekran*).
+* **[📅 Akış] Butonu:** 24 Saatlik EPG Yayın Akışı çekmecesini açar.
 * **[🗗 PiP] Butonu:** Yayını ekranda yüzen küçük pencereye dönüştürür.
 * **Ortadaki [⏸ / ▶] Butonu:** Canlı yayını duraklatır veya devam ettirir.
-* **Ekran Butonları:** `[📶 Kalite]`, `[📺 Ekran]`, `[🗗 PiP]`, `[⚙️ Ayarlar]`, `[🚪 Çıkış]`, `[◀ Önceki]`, `[▶ Sonraki]`.
+* **Ekran Butonları:** `[📅 Akış]`, `[📶 Kalite]`, `[📺 Ekran]`, `[🗗 PiP]`, `[⚙️ Ayarlar]`, `[🚪 Çıkış]`, `[◀ Önceki]`, `[▶ Sonraki]`.
 
 ---
 

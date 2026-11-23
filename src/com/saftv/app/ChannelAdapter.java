@@ -34,6 +34,7 @@ public class ChannelAdapter extends BaseChannelAdapter {
             holder.tvCat = convertView.findViewById(R.id.tv_item_cat);
             holder.tvLive = convertView.findViewById(R.id.tv_item_live);
             holder.tvFav = convertView.findViewById(R.id.tv_item_fav);
+            holder.tvEpg = convertView.findViewById(R.id.tv_item_epg);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -77,6 +78,18 @@ public class ChannelAdapter extends BaseChannelAdapter {
         }
         holder.tvLive.setTextSize(TypedValue.COMPLEX_UNIT_SP, getScaledSp(10));
 
+        if (holder.tvEpg != null) {
+            EpgManager epgMgr = EpgManager.getInstance(context);
+            EpgProgram p = epgMgr.getCurrentProgram(channel);
+            if (p != null) {
+                holder.tvEpg.setVisibility(View.VISIBLE);
+                holder.tvEpg.setText("🔴 " + p.getTitle());
+                holder.tvEpg.setTextSize(TypedValue.COMPLEX_UNIT_SP, getScaledSp(11));
+            } else {
+                holder.tvEpg.setVisibility(View.GONE);
+            }
+        }
+
         return convertView;
     }
 
@@ -86,5 +99,6 @@ public class ChannelAdapter extends BaseChannelAdapter {
         TextView tvCat;
         TextView tvLive;
         TextView tvFav;
+        TextView tvEpg;
     }
 }
